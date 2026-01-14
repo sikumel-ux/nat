@@ -3,147 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Dashboard</title>
+    <title>Selamat Datang | Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        .card-custom { background: white; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 91, 150, 0.1); }
-        .bg-ocean-deep { background-color: #005b96; }
-        .text-ocean-medium { color: #6497b1; }
-        .bg-ocean-light { background-color: #b3cde0; }
-        ::-webkit-scrollbar { display: none; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: var(--primary-blue); margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: white; }
+
+        .bus-container { 
+            position: relative; 
+            width: 100%; 
+            height: 100px; /* Tinggi untuk bus dan "jalan" */
+            overflow: hidden; 
+        }
+
+        .bus {
+            position: absolute;
+            bottom: 0px; /* Busnya pas di atas "jalan" */
+            left: -100px; /* Start dari luar layar */
+            font-size: 60px; /* Ukuran icon bus */
+            color: var(--gold);
+            animation: driveBus 3s linear forwards; /* Animasi jalan selama 3 detik */
+        }
+
+        .road {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: #334155; /* Warna jalan */
+            z-index: -1; /* Di belakang bus */
+        }
+
+        @keyframes driveBus {
+            0% { left: -100px; }
+            100% { left: calc(100% + 100px); } /* End di luar layar sebelah kanan */
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
     </style>
 </head>
-<body class="bg-[#f8fafc] pb-24">
+<body>
 
-    <header class="bg-ocean-deep p-6 rounded-b-[2.5rem] shadow-xl text-white">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-black tracking-tighter italic">MAHIKA TRANS</h1>
-                <p class="text-[10px] uppercase font-bold text-white/60">Administrator Panel</p>
-            </div>
-            <button onclick="logoutAdmin()" class="bg-white/20 px-4 py-2 rounded-full text-xs font-bold">Logout</button>
-        </div>
-    </header>
+    <h1 class="text-3xl font-bold mb-8 italic">Mahika Trans</h1>
+    <p class="text-sm mb-12 opacity-80">Mengarahkan Anda...</p>
 
-    <main class="p-4 -mt-4 space-y-6">
-        <section class="card-custom p-6 border-t-8 border-[#005b96]">
-            <h2 class="font-black text-[#005b96] mb-4 flex items-center italic"><i class="fas fa-ticket-alt mr-2 text-[#6497b1]"></i> INPUT TIKET</h2>
-            <div class="space-y-3">
-                <input type="text" id="nama" placeholder="Nama Penumpang" class="w-full p-4 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-[#6497b1]">
-                <input type="number" id="hp" placeholder="No WhatsApp (628...)" class="w-full p-4 bg-gray-50 rounded-xl outline-none">
-                <div class="flex gap-2">
-                    <input type="date" id="tgl" class="w-full p-4 bg-gray-50 rounded-xl text-sm outline-none">
-                    <input type="time" id="jam" class="w-full p-4 bg-gray-50 rounded-xl text-sm outline-none">
-                </div>
-                <div class="flex gap-2">
-                    <select id="armada" class="w-full p-4 bg-gray-50 rounded-xl text-sm outline-none appearance-none">
-                        <option value="Hiace Premio">Hiace Premio</option>
-                        <option value="Innova Reborn">Innova Reborn</option>
-                        <option value="Hiace Commuter">Hiace Commuter</option>
-                    </select>
-                    <input type="text" id="kursi" placeholder="Kursi" class="w-24 p-4 bg-gray-50 rounded-xl outline-none text-center">
-                </div>
-                <input type="text" id="tujuan" placeholder="Tujuan / Rute" class="w-full p-4 bg-gray-50 rounded-xl outline-none">
-                <input type="number" id="harga" placeholder="Harga Tiket (Rp)" class="w-full p-4 bg-gray-50 rounded-xl outline-none">
-                
-                <button onclick="saveTicket()" id="btnSave" class="w-full bg-ocean-deep text-white font-black py-4 rounded-2xl shadow-lg mt-2 active:scale-95 transition-all">
-                    SIMPAN & GENERATE TIKET
-                </button>
-            </div>
-        </section>
+    <div class="bus-container">
+        <div class="bus"><i class="fas fa-bus"></i></div>
+        <div class="road"></div>
+    </div>
 
-        <section class="card-custom overflow-hidden">
-            <div class="bg-ocean-deep p-4 text-white font-bold text-sm">MANIFES PENUMPANG (30 HARI)</div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-xs">
-                    <tbody id="manifesList" class="divide-y divide-gray-100">
-                        <tr id="emptyMsg"><td class="p-6 text-center text-gray-400">Memuat data manifes...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
-            authDomain: "mahika-trans.firebaseapp.com",
-            projectId: "mahika-trans",
-            storageBucket: "mahika-trans.firebasestorage.app",
-            messagingSenderId: "1087881066133",
-            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = "login.html";
-            else loadManifes();
-        });
-
-        window.logoutAdmin = () => signOut(auth).then(() => window.location.reload());
-
-        window.saveTicket = async () => {
-            const btn = document.getElementById('btnSave');
-            const data = {
-                nama: document.getElementById('nama').value,
-                hp: document.getElementById('hp').value,
-                tgl: document.getElementById('tgl').value,
-                jam: document.getElementById('jam').value,
-                armada: document.getElementById('armada').value,
-                tujuan: document.getElementById('tujuan').value,
-                kursi: document.getElementById('kursi').value,
-                harga: document.getElementById('harga').value,
-                createdAt: serverTimestamp()
-            };
-
-            if(!data.nama || !data.hp) return alert("Lengkapi data minimal Nama & WhatsApp!");
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang Menyimpan...';
-
-            try {
-                const docRef = await addDoc(collection(db, "bookings"), data);
-                const etiketURL = `https://${window.location.hostname}/etiket.html?id=${docRef.id}`;
-                const waText = `*E-TICKET MAHIKA TRANS*\nan. ${data.nama}\n\nJadwal: ${data.tgl} | ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\nTujuan: ${data.tujuan}\n\nTiket & Barcode:\n${etiketURL}`;
-                
-                alert("Sukses! Data tersimpan.");
-                window.open(`https://wa.me/${data.hp}?text=${encodeURIComponent(waText)}`, '_blank');
-                location.reload();
-            } catch (e) {
-                alert("Gagal simpan: " + e.message);
-                btn.disabled = false;
-                btn.innerText = "SIMPAN & GENERATE TIKET";
-            }
-        };
-
-        async function loadManifes() {
-            const list = document.getElementById('manifesList');
-            try {
-                // Hapus orderBy dulu buat ngecek apakah indexing jadi masalah
-                const snap = await getDocs(collection(db, "bookings"));
-                list.innerHTML = "";
-                if(snap.empty) { list.innerHTML = "<tr><td class='p-6 text-center'>Belum ada booking.</td></tr>"; return; }
-                
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    list.innerHTML += `
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4"><strong>${d.nama}</strong><br><span class="text-[10px] text-gray-400">${d.tgl} | ${d.jam}</span></td>
-                            <td class="p-4 text-center"><strong>${d.kursi}</strong><br><span class="text-[10px]">${d.armada}</span></td>
-                            <td class="p-4 text-right font-bold text-[#005b96] uppercase">${d.tujuan}</td>
-                        </tr>`;
-                });
-            } catch (e) { list.innerHTML = `<tr><td class='p-6 text-red-500'>Error: ${e.message}</td></tr>`; }
+    <script>
+        // Cek login dulu, kalau sudah login, baru redirect ke dashboard
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            setTimeout(() => {
+                window.location.href = "dashboard.html"; // Atau ke index.html kalau dashboardnya itu sendiri
+            }, 3500); // Setelah animasi bus selesai
+        } else {
+            // Kalau belum login, arahkan ke halaman login
+            setTimeout(() => {
+                window.location.href = "login.html"; // Asumsi ada halaman login.html
+            }, 3500); // Setelah animasi bus selesai
         }
+        
+        // --- Contoh Redirect ke Google.com (Kalau mau) ---
+        // setTimeout(() => {
+        //     window.location.href = "https://mahikatrans.my.id"; 
+        // }, 3500); // Redirect setelah 3.5 detik (sesuai durasi animasi)
     </script>
 </body>
-    </html>
-    
+</html>
