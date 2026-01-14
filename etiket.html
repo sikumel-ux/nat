@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Ticket Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-4">
+    <div id="loader" class="text-center mt-20 text-[#003399]">
+        <i class="fas fa-spinner fa-spin text-4xl"></i>
+    </div>
+
+    <div id="ticket" class="hidden max-w-sm mx-auto">
+        <div class="bg-[#003399] p-6 rounded-t-3xl text-center text-white border-b-2 border-dashed border-white/30 relative">
+            <h1 class="text-2xl font-bold italic">MAHIKA TRANS</h1>
+            <p class="text-xs opacity-70">Tiket Elektronik Resmi</p>
+            <div class="absolute -bottom-3 -left-3 w-6 h-6 bg-gray-100 rounded-full"></div>
+            <div class="absolute -bottom-3 -right-3 w-6 h-6 bg-gray-100 rounded-full"></div>
+        </div>
+
+        <div class="bg-white p-6 rounded-b-3xl shadow-xl">
+            <div id="qrcode" class="flex justify-center mb-6"></div>
+            
+            <div class="space-y-4 border-t pt-4 text-gray-700">
+                <div class="flex justify-between">
+                    <span class="text-xs text-gray-400">Nama Penumpang</span>
+                    <span id="view-nama" class="font-bold text-[#003399]"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-xs text-gray-400">Tujuan</span>
+                    <span id="view-tujuan" class="font-bold"></span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-[10px] text-gray-400 block">Tanggal</span>
+                        <span id="view-tgl" class="font-bold text-sm"></span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-gray-400 block text-right">Jam</span>
+                        <span id="view-jam" class="font-bold text-sm block text-right"></span>
+                    </div>
+                </div>
+                <div class="flex justify-between bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                    <div>
+                        <span class="text-[10px] text-yellow-700 block">Armada</span>
+                        <span id="view-armada" class="font-bold text-sm"></span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-yellow-700 block text-right">No. Kursi</span>
+                        <span id="view-kursi" class="font-bold text-xl text-[#003399]"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <p class="text-[10px] text-gray-400 italic">Harap tunjukkan QR Code ini kepada petugas saat keberangkatan.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { /* COPY CONFIG KAMU DISINI */ };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticketId = urlParams.get('id');
+
+        if (ticketId) {
+            const docRef = doc(db, "bookings", ticketId);
+            const snap = await getDoc(docRef);
+
+            if (snap.exists()) {
+                const d = snap.data();
+                document.getElementById('view-nama').innerText = d.nama;
+                document.getElementById('view-tujuan').innerText = d.tujuan;
+                document.getElementById('view-tgl').innerText = d.tgl;
+                document.getElementById('view-jam').innerText = d.jam;
+                document.getElementById('view-armada').innerText = d.armada;
+                document.getElementById('view-kursi').innerText = d.kursi;
+
+                // QR DATA
+                const qrContent = `MAHIKA TRANS | ${d.nama} | ${d.tujuan} | ${d.tgl} | Seat: ${d.kursi}`;
+                document.getElementById('qrcode').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrContent)}" class="rounded-lg shadow-sm" />`;
+                
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('ticket').classList.remove('hidden');
+            } else {
+                document.getElementById('loader').innerHTML = "Tiket Tidak Ditemukan!";
+            }
+        }
+    </script>
+</body>
+</html>
