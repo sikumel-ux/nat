@@ -3,94 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Mahika Trans</title>
+    <title>Mahika Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .bg-ocean { background-color: #f0f4f8; }
-        .text-primary { color: #005b96; }
-        .bg-primary { background-color: #005b96; }
-        .bg-secondary { background-color: #6497b1; }
-        .bg-light { background-color: #b3cde0; }
-        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        .card-custom { background: white; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 91, 150, 0.1); }
+        .bg-ocean-deep { background-color: #005b96; }
+        .text-ocean-medium { color: #6497b1; }
+        .bg-ocean-light { background-color: #b3cde0; }
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-ocean pb-24">
-    <header class="bg-primary p-6 rounded-b-[2.5rem] shadow-xl">
-        <div class="flex justify-between items-center text-white">
+<body class="bg-[#f8fafc] pb-24">
+
+    <header class="bg-ocean-deep p-6 rounded-b-[2.5rem] shadow-xl text-white">
+        <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-xl font-black italic tracking-wider">MAHIKA TRANS</h1>
-                <p class="text-[10px] opacity-80 uppercase tracking-widest font-bold">Main Console</p>
+                <h1 class="text-xl font-black tracking-tighter italic">MAHIKA TRANS</h1>
+                <p class="text-[10px] uppercase font-bold text-white/60">Administrator Panel</p>
             </div>
-            <button onclick="window.logout()" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fas fa-sign-out-alt"></i></button>
+            <button onclick="logoutAdmin()" class="bg-white/20 px-4 py-2 rounded-full text-xs font-bold">Logout</button>
         </div>
     </header>
 
-    <main class="p-4 space-y-6 -mt-4">
-        <div class="flex space-x-2 overflow-x-auto pb-2 no-scrollbar">
-            <button class="bg-primary text-white px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-lg">Input Tiket</button>
-            <button class="bg-white text-primary px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-md">Manifes</button>
-            <button class="bg-white text-primary px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-md">Keuangan</button>
-        </div>
-
-        <section class="card p-6 border-t-8 border-primary">
-            <h2 class="font-black text-primary mb-5 flex items-center"><i class="fas fa-plus-circle mr-2"></i> BOOKING BARU</h2>
-            <div class="grid grid-cols-1 gap-4">
-                <input type="text" id="nama" placeholder="Nama Penumpang" class="w-full p-4 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-primary outline-none">
-                <input type="number" id="hp" placeholder="No WhatsApp (62812...)" class="w-full p-4 bg-gray-50 rounded-xl border-none outline-none">
+    <main class="p-4 -mt-4 space-y-6">
+        <section class="card-custom p-6 border-t-8 border-[#005b96]">
+            <h2 class="font-black text-[#005b96] mb-4 flex items-center italic"><i class="fas fa-ticket-alt mr-2 text-[#6497b1]"></i> INPUT TIKET</h2>
+            <div class="space-y-3">
+                <input type="text" id="nama" placeholder="Nama Penumpang" class="w-full p-4 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-[#6497b1]">
+                <input type="number" id="hp" placeholder="No WhatsApp (628...)" class="w-full p-4 bg-gray-50 rounded-xl outline-none">
                 <div class="flex gap-2">
-                    <input type="date" id="tgl" class="flex-1 p-4 bg-gray-50 rounded-xl border-none text-sm outline-none">
-                    <input type="time" id="jam" class="flex-1 p-4 bg-gray-50 rounded-xl border-none text-sm outline-none">
+                    <input type="date" id="tgl" class="w-full p-4 bg-gray-50 rounded-xl text-sm outline-none">
+                    <input type="time" id="jam" class="w-full p-4 bg-gray-50 rounded-xl text-sm outline-none">
                 </div>
-                <select id="armada" class="w-full p-4 bg-gray-50 rounded-xl border-none outline-none">
-                    <option value="Hiace Premio">Hiace Premio</option>
-                    <option value="Innova Reborn">Innova Reborn</option>
-                    <option value="Big Bus">Big Bus</option>
-                </select>
-                <input type="text" id="tujuan" placeholder="Tujuan / Rute" class="w-full p-4 bg-gray-50 rounded-xl border-none outline-none">
                 <div class="flex gap-2">
-                    <input type="text" id="kursi" placeholder="No Kursi" class="flex-1 p-4 bg-gray-50 rounded-xl border-none outline-none">
-                    <input type="number" id="harga" placeholder="Harga Jual" class="flex-1 p-4 bg-gray-50 rounded-xl border-none outline-none">
+                    <select id="armada" class="w-full p-4 bg-gray-50 rounded-xl text-sm outline-none appearance-none">
+                        <option value="Hiace Premio">Hiace Premio</option>
+                        <option value="Innova Reborn">Innova Reborn</option>
+                        <option value="Hiace Commuter">Hiace Commuter</option>
+                    </select>
+                    <input type="text" id="kursi" placeholder="Kursi" class="w-24 p-4 bg-gray-50 rounded-xl outline-none text-center">
                 </div>
-                <button onclick="saveTicket()" id="btnSave" class="bg-primary text-white font-black py-4 rounded-2xl shadow-lg mt-2 active:scale-95 transition-all">
+                <input type="text" id="tujuan" placeholder="Tujuan / Rute" class="w-full p-4 bg-gray-50 rounded-xl outline-none">
+                <input type="number" id="harga" placeholder="Harga Tiket (Rp)" class="w-full p-4 bg-gray-50 rounded-xl outline-none">
+                
+                <button onclick="saveTicket()" id="btnSave" class="w-full bg-ocean-deep text-white font-black py-4 rounded-2xl shadow-lg mt-2 active:scale-95 transition-all">
                     SIMPAN & GENERATE TIKET
                 </button>
             </div>
         </section>
 
-        <section class="card overflow-hidden">
-            <div class="bg-secondary p-4 text-white font-bold flex justify-between items-center">
-                <span><i class="fas fa-users mr-2"></i> MANIFES PENUMPANG</span>
-                <i class="fas fa-calendar-alt text-light"></i>
-            </div>
+        <section class="card-custom overflow-hidden">
+            <div class="bg-ocean-deep p-4 text-white font-bold text-sm">MANIFES PENUMPANG (30 HARI)</div>
             <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead class="bg-light/30 text-primary font-bold">
-                        <tr>
-                            <th class="p-4">Nama/Jam</th>
-                            <th class="p-4">Armada/Seat</th>
-                            <th class="p-4">Tujuan</th>
-                        </tr>
-                    </thead>
+                <table class="w-full text-xs">
                     <tbody id="manifesList" class="divide-y divide-gray-100">
-                        </tbody>
+                        <tr id="emptyMsg"><td class="p-6 text-center text-gray-400">Memuat data manifes...</td></tr>
+                    </tbody>
                 </table>
             </div>
-        </section>
-
-        <section class="card p-6 border-l-8 border-green-500">
-            <h2 class="font-black text-gray-700 mb-4"><i class="fas fa-wallet mr-2 text-green-500"></i> INPUT KOMISI BUS</h2>
-            <div class="grid grid-cols-2 gap-2">
-                <input type="month" id="blnCuan" class="p-3 bg-gray-50 rounded-xl outline-none">
-                <input type="number" id="nominalCuan" placeholder="Rp Komisi" class="p-3 bg-gray-50 rounded-xl outline-none">
-            </div>
-            <button onclick="saveIncome()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl mt-3">SUBMIT LAPORAN</button>
         </section>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -111,7 +88,7 @@
             else loadManifes();
         });
 
-        window.logout = () => signOut(auth).then(() => location.reload());
+        window.logoutAdmin = () => signOut(auth).then(() => window.location.reload());
 
         window.saveTicket = async () => {
             const btn = document.getElementById('btnSave');
@@ -127,37 +104,46 @@
                 createdAt: serverTimestamp()
             };
 
-            if(!data.nama || !data.hp) return alert("Nama & HP wajib diisi!");
+            if(!data.nama || !data.hp) return alert("Lengkapi data minimal Nama & WhatsApp!");
 
             btn.disabled = true;
-            btn.innerText = "Processing...";
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang Menyimpan...';
 
             try {
                 const docRef = await addDoc(collection(db, "bookings"), data);
                 const etiketURL = `https://${window.location.hostname}/etiket.html?id=${docRef.id}`;
-                const waText = `*MAHIKA TRANS - E-TICKET*\n\nNama: ${data.nama}\nJadwal: ${data.tgl} | ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\nTujuan: ${data.tujuan}\n\nLihat Tiket & Barcode di sini:\n${etiketURL}`;
+                const waText = `*E-TICKET MAHIKA TRANS*\nan. ${data.nama}\n\nJadwal: ${data.tgl} | ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\nTujuan: ${data.tujuan}\n\nTiket & Barcode:\n${etiketURL}`;
                 
+                alert("Sukses! Data tersimpan.");
                 window.open(`https://wa.me/${data.hp}?text=${encodeURIComponent(waText)}`, '_blank');
                 location.reload();
-            } catch (e) { alert(e); btn.disabled = false; }
+            } catch (e) {
+                alert("Gagal simpan: " + e.message);
+                btn.disabled = false;
+                btn.innerText = "SIMPAN & GENERATE TIKET";
+            }
         };
 
         async function loadManifes() {
             const list = document.getElementById('manifesList');
-            const q = query(collection(db, "bookings"), orderBy("tgl", "asc"));
-            const snap = await getDocs(q);
-            list.innerHTML = "";
-            snap.forEach(doc => {
-                const d = doc.data();
-                list.innerHTML += `
-                    <tr class="border-b border-gray-50">
-                        <td class="p-4"><span class="font-bold text-primary">${d.nama}</span><br><span class="text-[10px] text-gray-400">${d.tgl} | ${d.jam}</span></td>
-                        <td class="p-4 text-xs font-medium text-gray-600">${d.armada}<br><span class="text-primary font-black">Seat: ${d.kursi}</span></td>
-                        <td class="p-4 text-xs font-bold text-secondary">${d.tujuan}</td>
-                    </tr>
-                `;
-            });
+            try {
+                // Hapus orderBy dulu buat ngecek apakah indexing jadi masalah
+                const snap = await getDocs(collection(db, "bookings"));
+                list.innerHTML = "";
+                if(snap.empty) { list.innerHTML = "<tr><td class='p-6 text-center'>Belum ada booking.</td></tr>"; return; }
+                
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    list.innerHTML += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-4"><strong>${d.nama}</strong><br><span class="text-[10px] text-gray-400">${d.tgl} | ${d.jam}</span></td>
+                            <td class="p-4 text-center"><strong>${d.kursi}</strong><br><span class="text-[10px]">${d.armada}</span></td>
+                            <td class="p-4 text-right font-bold text-[#005b96] uppercase">${d.tujuan}</td>
+                        </tr>`;
+                });
+            } catch (e) { list.innerHTML = `<tr><td class='p-6 text-red-500'>Error: ${e.message}</td></tr>`; }
         }
     </script>
 </body>
-</html>
+    </html>
+    
