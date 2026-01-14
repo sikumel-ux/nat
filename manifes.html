@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifes | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; }
+        
+        /* Header Center */
+        .header-curvy { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 50px 25px 80px 25px; 
+            border-radius: 0 0 50px 50px; 
+            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3);
+            text-align: center;
+        }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; italic; }
+        
+        /* List Container */
+        .manifes-container { margin-top: -50px; padding: 0 20px 120px; position: relative; z-index: 10; }
+        
+        .card-manifes { 
+            background: white; border-radius: 25px; padding: 15px; margin-bottom: 12px; 
+            display: flex; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-blue);
+        }
+        
+        .tgl-box { 
+            width: 50px; height: 50px; background: #f1f5f9; color: var(--primary-blue); 
+            border-radius: 15px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-right: 15px; 
+        }
+        .tgl-box b { font-size: 16px; line-height: 1; }
+
+        .info-pax { flex: 1; }
+        .info-pax b { font-size: 14px; color: var(--primary-blue); display: block; text-transform: uppercase; }
+        .info-pax span { font-size: 11px; color: #666; font-weight: 500; }
+        
+        .seat-badge { background: var(--bg-darker); color: var(--gold); padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 800; }
+
+        /* Floating Filter Date */
+        .filter-info { text-align: center; margin-bottom: 15px; font-size: 11px; font-weight: 600; color: white; opacity: 0.8; }
+
+        .nav-bottom { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); 
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
+        }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-curvy">
+    <h2>MANIFES PENUMPANG</h2>
+    <div class="filter-info">Jadwal 30 Hari Ke Depan</div>
+</div>
+
+<div class="manifes-container">
+    <div id="loading" class="text-center p-10 text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><br>Sinkronisasi Firebase...</div>
+    <div id="listManifes"></div>
+</div>
+
+<div class="nav-bottom">
+    <a href="index.html"><i class="fas fa-house"></i>Home</a>
+    <a href="input.html"><i class="fas fa-circle-plus"></i>Input</a>
+    <a href="manifes.html" class="active"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i>Logout</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, getDocs, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        messagingSenderId: "1087881066133",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    async function loadManifes() {
+        const listDiv = document.getElementById('listManifes');
+        const loader = document.getElementById('loading');
+        
+        // Ambil Tanggal Hari Ini (Format YYYY-MM-DD)
+        const skrg = new Date();
+        const todayStr = skrg.toISOString().split('T')[0];
+
+        try {
+            // Query: Ambil data yang tanggalnya >= HARI INI, Urutkan paling dekat
+            const q = query(
+                collection(db, "bookings"), 
+                where("tgl", ">=", todayStr),
+                orderBy("tgl", "asc")
+            );
+            
+            const snap = await getDocs(q);
+            loader.style.display = 'none';
+            listDiv.innerHTML = "";
+
+            if (snap.empty) {
+                listDiv.innerHTML = "<div class='text-center text-gray-400 mt-10'>Belum ada jadwal keberangkatan.</div>";
+                return;
+            }
+
+            snap.forEach(doc => {
+                const d = doc.data();
+                const dObj = new Date(d.tgl);
+                const tglRapi = dObj.getDate();
+                const blnRapi = dObj.toLocaleDateString('id-ID', { month: 'short' });
+
+                listDiv.innerHTML += `
+                    <div class="card-manifes" onclick="window.location.href='etiket.html?id=${doc.id}'">
+                        <div class="tgl-box"><b>${tglRapi}</b>${blnRapi}</div>
+                        <div class="info-pax">
+                            <b>${d.nama}</b>
+                            <span>${d.jam} • ${d.armada}</span><br>
+                            <span class="text-blue-500 font-bold"><i class="fas fa-map-marker-alt mr-1"></i>${d.tujuan}</span>
+                        </div>
+                        <div class="seat-badge">${d.kursi}</div>
+                    </div>
+                `;
+            });
+
+        } catch (e) {
+            console.error(e);
+            listDiv.innerHTML = "<div class='text-center text-red-500 mt-10'>Gagal load data. Pastikan Index Firestore sudah aktif.</div>";
+        }
+    }
+
+    document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => location.href = "login.html");
+    
+    // Jalankan Fungsi
+    loadManifes();
+</script>
+
+</body>
+  </html>
+  
