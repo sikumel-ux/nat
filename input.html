@@ -11,30 +11,36 @@
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; }
         
-        /* Header Card Curvy */
+        /* Header Card Curvy - Text Center */
         .header-curvy { 
             background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
-            padding: 40px 25px 60px 25px; 
-            border-radius: 0 0 40px 40px; 
+            padding: 60px 25px 80px 25px; 
+            border-radius: 0 0 50px 50px; 
             box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3);
-            position: relative;
+            text-align: center; /* Text di tengah */
         }
-        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 22px; margin: 0; italic; }
-        .header-curvy p { color: white; opacity: 0.8; font-size: 12px; }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; italic; }
+        .header-curvy p { color: white; opacity: 0.8; font-size: 13px; margin-top: 5px; }
 
-        /* Form Styling */
-        .form-container { margin-top: -30px; padding: 0 20px 120px; }
+        /* Form Container - Dibuat Naik Ke Atas Header */
+        .form-container { 
+            margin-top: -50px; /* Menarik form ke atas header */
+            padding: 0 20px 120px; 
+            position: relative;
+            z-index: 10;
+        }
         .input-card { 
             background: white; 
-            padding: 25px; 
-            border-radius: 30px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            padding: 30px 25px; 
+            border-radius: 35px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
         }
-        .field-group { margin-bottom: 18px; }
-        .field-group label { display: block; font-size: 11px; font-weight: 700; color: var(--primary-blue); margin-bottom: 5px; margin-left: 5px; text-transform: uppercase; }
+        
+        .field-group { margin-bottom: 20px; }
+        .field-group label { display: block; font-size: 11px; font-weight: 700; color: var(--primary-blue); margin-bottom: 6px; margin-left: 5px; text-transform: uppercase; }
         .custom-input { 
-            width: 100%; padding: 14px 18px; border-radius: 18px; 
-            background: #f8fafc; border: 1px solid #e2e8f0; 
+            width: 100%; padding: 15px 20px; border-radius: 20px; 
+            background: #f1f5f9; border: 1px solid #e2e8f0; 
             font-size: 14px; outline: none; transition: all 0.3s; 
         }
         .custom-input:focus { border-color: var(--primary-blue); background: white; box-shadow: 0 0 0 4px rgba(6, 80, 132, 0.1); }
@@ -42,68 +48,68 @@
         /* Nav Bottom */
         .nav-bottom { 
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); 
+            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); 
             display: flex; justify-content: space-around; padding: 15px 0; 
-            border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 100; 
+            border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
         }
-        .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
-        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
         .nav-bottom a.active { color: var(--primary-blue); }
     </style>
 </head>
 <body>
 
 <div class="header-curvy">
-    <h2><i class="fas fa-file-signature mr-2"></i> Booking Baru</h2>
-    <p>Silahkan lengkapi data manifest penumpang.</p>
+    <h2>MAHIKA TRANS</h2>
+    <p><i class="fas fa-edit mr-1"></i> Form Input Manifest</p>
 </div>
 
 <div class="form-container">
     <div class="input-card">
         <div class="field-group">
-            <label>Nama Lengkap</label>
-            <input type="text" id="nama" class="custom-input" placeholder="Masukkan nama penumpang">
+            <label>Nama Penumpang</label>
+            <input type="text" id="nama" class="custom-input" placeholder="Nama lengkap...">
         </div>
         
         <div class="field-group">
-            <label>No. WhatsApp</label>
-            <input type="number" id="hp" class="custom-input" placeholder="Contoh: 628123456789">
+            <label>WhatsApp</label>
+            <input type="number" id="hp" class="custom-input" placeholder="628xxx">
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="grid grid-cols-2 gap-4">
             <div class="field-group">
                 <label>Tanggal</label>
                 <input type="date" id="tgl" class="custom-input">
             </div>
             <div class="field-group">
-                <label>Jam (Manual)</label>
-                <input type="text" id="jam" class="custom-input" placeholder="12:30 WIB">
+                <label>Jam</label>
+                <input type="text" id="jam" class="custom-input" placeholder="12:00 WIB">
             </div>
         </div>
 
         <div class="field-group">
-            <label>Armada (Manual)</label>
-            <input type="text" id="armada" class="custom-input" placeholder="Contoh: Hiace Premio Silver">
+            <label>Armada</label>
+            <input type="text" id="armada" class="custom-input" placeholder="Contoh: Hiace Premio">
         </div>
 
         <div class="field-group">
-            <label>Tujuan / Rute</label>
-            <input type="text" id="tujuan" class="custom-input" placeholder="Contoh: Semarang - Jakarta">
+            <label>Tujuan</label>
+            <input type="text" id="tujuan" class="custom-input" placeholder="Rute perjalanan...">
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="grid grid-cols-2 gap-4 mb-4">
             <div class="field-group">
                 <label>No. Kursi</label>
-                <input type="text" id="kursi" class="custom-input" placeholder="Ex: 2A">
+                <input type="text" id="kursi" class="custom-input" placeholder="Ex: 1A">
             </div>
             <div class="field-group">
-                <label>Harga Tiket</label>
-                <input type="number" id="harga" class="custom-input" placeholder="350000">
+                <label>Harga (Rp)</label>
+                <input type="number" id="harga" class="custom-input" placeholder="0">
             </div>
         </div>
 
-        <button id="btnSave" class="w-full bg-[#065084] text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all uppercase tracking-widest">
-            SIMPAN & KIRIM TIKET
+        <button id="btnSave" class="w-full bg-[#065084] hover:bg-[#043a60] text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all uppercase tracking-widest text-sm">
+            Simpan & Kirim Tiket
         </button>
     </div>
 </div>
@@ -138,7 +144,7 @@
         const data = {
             nama: document.getElementById('nama').value,
             hp: document.getElementById('hp').value,
-            tgl: document.getElementById('tgl').value, // Simpan format YYYY-MM-DD agar mudah difilter
+            tgl: document.getElementById('tgl').value,
             jam: document.getElementById('jam').value,
             armada: document.getElementById('armada').value,
             tujuan: document.getElementById('tujuan').value,
@@ -147,29 +153,24 @@
             createdAt: serverTimestamp()
         };
 
-        if(!data.nama || !data.hp || !data.tgl) {
-            alert("Nama, No. HP, dan Tanggal wajib diisi!");
-            return;
-        }
+        if(!data.nama || !data.hp || !data.tgl) return alert("Lengkapi data yang wajib diisi!");
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
 
         try {
             const docRef = await addDoc(collection(db, "bookings"), data);
-            
-            // Format Tanggal untuk WA
             const tglIndo = new Date(data.tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             
             const etiketURL = `https://${window.location.hostname}/etiket.html?id=${docRef.id}`;
-            const waText = `*E-TICKET MAHIKA TRANS*\n\nNama: ${data.nama}\nTanggal: ${tglIndo}\nJam: ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\n\nLihat Tiket & Barcode:\n${etiketURL}`;
+            const waText = `*TIKET MAHIKA TRANS*\n\nNama: ${data.nama}\nTanggal: ${tglIndo}\nJam: ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\n\nTiket Digital:\n${etiketURL}`;
             
             window.open(`https://wa.me/${data.hp}?text=${encodeURIComponent(waText)}`, '_blank');
             location.href = "index.html";
         } catch (e) {
             alert("Error: " + e.message);
             btn.disabled = false;
-            btn.innerText = "SIMPAN & KIRIM TIKET";
+            btn.innerText = "Simpan & Kirim Tiket";
         }
     };
 
