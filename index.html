@@ -3,125 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Trans - Admin Dashboard</title>
+    <title>Dashboard - Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .bca-blue { background-color: #003399; } /* Biru BCA */
-        .gold-mahika { background-color: #FFD700; } /* Gold */
-        .text-bca { color: #003399; }
-        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        .nav-fixed { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; }
+        .bg-ocean { background-color: #f0f4f8; }
+        .text-primary { color: #005b96; }
+        .bg-primary { background-color: #005b96; }
+        .bg-secondary { background-color: #6497b1; }
+        .bg-light { background-color: #b3cde0; }
+        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
     </style>
 </head>
-<body class="pb-24">
-
-    <div class="bca-blue p-6 rounded-b-[30px] shadow-lg mb-6">
+<body class="bg-ocean pb-24">
+    <header class="bg-primary p-6 rounded-b-[2.5rem] shadow-xl">
         <div class="flex justify-between items-center text-white">
             <div>
-                <p class="text-xs opacity-80">Halo Admin,</p>
-                <h1 class="text-xl font-bold italic">MAHIKA TRANS</h1>
+                <h1 class="text-xl font-black italic tracking-wider">MAHIKA TRANS</h1>
+                <p class="text-[10px] opacity-80 uppercase tracking-widest font-bold">Main Console</p>
             </div>
-            <button onclick="logout()" class="bg-white/20 p-2 rounded-full"><i class="fas fa-sign-out-alt"></i></button>
+            <button onclick="window.logout()" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fas fa-sign-out-alt"></i></button>
         </div>
-    </div>
+    </header>
 
-    <div class="px-4 space-y-6">
-        
-        <div class="bg-white p-5 rounded-2xl card-shadow border-l-4 border-yellow-400">
-            <h2 class="font-bold text-bca mb-4"><i class="fas fa-ticket-alt mr-2"></i> Input Tiket Baru</h2>
-            <div class="grid grid-cols-1 gap-3">
-                <input type="text" id="nama" placeholder="Nama Penumpang" class="p-3 bg-gray-50 border rounded-xl outline-none focus:border-blue-600">
-                <input type="number" id="hp" placeholder="No WhatsApp (62812...)" class="p-3 bg-gray-50 border rounded-xl outline-none">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="date" id="tgl" class="p-3 bg-gray-50 border rounded-xl outline-none">
-                    <input type="time" id="jam" class="p-3 bg-gray-50 border rounded-xl outline-none">
+    <main class="p-4 space-y-6 -mt-4">
+        <div class="flex space-x-2 overflow-x-auto pb-2 no-scrollbar">
+            <button class="bg-primary text-white px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-lg">Input Tiket</button>
+            <button class="bg-white text-primary px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-md">Manifes</button>
+            <button class="bg-white text-primary px-6 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-md">Keuangan</button>
+        </div>
+
+        <section class="card p-6 border-t-8 border-primary">
+            <h2 class="font-black text-primary mb-5 flex items-center"><i class="fas fa-plus-circle mr-2"></i> BOOKING BARU</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <input type="text" id="nama" placeholder="Nama Penumpang" class="w-full p-4 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-primary outline-none">
+                <input type="number" id="hp" placeholder="No WhatsApp (62812...)" class="w-full p-4 bg-gray-50 rounded-xl border-none outline-none">
+                <div class="flex gap-2">
+                    <input type="date" id="tgl" class="flex-1 p-4 bg-gray-50 rounded-xl border-none text-sm outline-none">
+                    <input type="time" id="jam" class="flex-1 p-4 bg-gray-50 rounded-xl border-none text-sm outline-none">
                 </div>
-                <select id="armada" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                <select id="armada" class="w-full p-4 bg-gray-50 rounded-xl border-none outline-none">
                     <option value="Hiace Premio">Hiace Premio</option>
                     <option value="Innova Reborn">Innova Reborn</option>
                     <option value="Big Bus">Big Bus</option>
                 </select>
-                <input type="text" id="tujuan" placeholder="Tujuan" class="p-3 bg-gray-50 border rounded-xl outline-none">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="kursi" placeholder="No. Kursi" class="p-3 bg-gray-50 border rounded-xl outline-none">
-                    <input type="number" id="harga" placeholder="Harga" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                <input type="text" id="tujuan" placeholder="Tujuan / Rute" class="w-full p-4 bg-gray-50 rounded-xl border-none outline-none">
+                <div class="flex gap-2">
+                    <input type="text" id="kursi" placeholder="No Kursi" class="flex-1 p-4 bg-gray-50 rounded-xl border-none outline-none">
+                    <input type="number" id="harga" placeholder="Harga Jual" class="flex-1 p-4 bg-gray-50 rounded-xl border-none outline-none">
                 </div>
-                <button onclick="saveTicket()" id="btnSave" class="bca-blue text-white font-bold p-4 rounded-xl mt-2 active:scale-95 transition">
-                    <i class="fab fa-whatsapp mr-2"></i> Simpan & Kirim WA
+                <button onclick="saveTicket()" id="btnSave" class="bg-primary text-white font-black py-4 rounded-2xl shadow-lg mt-2 active:scale-95 transition-all">
+                    SIMPAN & GENERATE TIKET
                 </button>
             </div>
-        </div>
+        </section>
 
-        <div class="bg-white rounded-2xl card-shadow overflow-hidden">
-            <div class="p-4 bca-blue text-white flex justify-between items-center">
-                <h2 class="font-bold"><i class="fas fa-clipboard-list mr-2"></i> Manifes Penumpang</h2>
-                <span class="text-xs bg-yellow-400 text-blue-900 px-2 py-1 rounded-full font-bold">30 Hari</span>
+        <section class="card overflow-hidden">
+            <div class="bg-secondary p-4 text-white font-bold flex justify-between items-center">
+                <span><i class="fas fa-users mr-2"></i> MANIFES PENUMPANG</span>
+                <i class="fas fa-calendar-alt text-light"></i>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-100 text-bca uppercase text-[10px] font-bold">
+                <table class="w-full text-sm">
+                    <thead class="bg-light/30 text-primary font-bold">
                         <tr>
-                            <th class="p-3">Waktu</th>
-                            <th class="p-3">Nama/Tujuan</th>
-                            <th class="p-3">Armada</th>
+                            <th class="p-4">Nama/Jam</th>
+                            <th class="p-4">Armada/Seat</th>
+                            <th class="p-4">Tujuan</th>
                         </tr>
                     </thead>
-                    <tbody id="manifesList">
+                    <tbody id="manifesList" class="divide-y divide-gray-100">
                         </tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
-        <div class="bg-white p-5 rounded-2xl card-shadow border-l-4 border-green-500">
-            <h2 class="font-bold text-gray-700 mb-4"><i class="fas fa-wallet mr-2"></i> Input Komisi</h2>
-            <div class="flex gap-2">
-                <input type="month" id="blnPendapatan" class="flex-1 p-3 bg-gray-50 border rounded-xl outline-none">
-                <input type="number" id="jmlPendapatan" placeholder="Rp" class="flex-1 p-3 bg-gray-50 border rounded-xl outline-none">
-                <button onclick="saveIncome()" class="bg-green-600 text-white p-3 rounded-xl"><i class="fas fa-check"></i></button>
+        <section class="card p-6 border-l-8 border-green-500">
+            <h2 class="font-black text-gray-700 mb-4"><i class="fas fa-wallet mr-2 text-green-500"></i> INPUT KOMISI BUS</h2>
+            <div class="grid grid-cols-2 gap-2">
+                <input type="month" id="blnCuan" class="p-3 bg-gray-50 rounded-xl outline-none">
+                <input type="number" id="nominalCuan" placeholder="Rp Komisi" class="p-3 bg-gray-50 rounded-xl outline-none">
             </div>
-        </div>
-
-    </div>
-
-    <div class="nav-fixed flex justify-around p-3 text-gray-400">
-        <button class="text-bca"><i class="fas fa-home block text-xl"></i><span class="text-[10px]">Home</span></button>
-        <button><i class="fas fa-chart-line block text-xl"></i><span class="text-[10px]">Laporan</span></button>
-        <button><i class="fas fa-user block text-xl"></i><span class="text-[10px]">Profil</span></button>
-    </div>
+            <button onclick="saveIncome()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl mt-3">SUBMIT LAPORAN</button>
+        </section>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
-  authDomain: "mahika-trans.firebaseapp.com",
-  projectId: "mahika-trans",
-  storageBucket: "mahika-trans.firebasestorage.app",
-  messagingSenderId: "1087881066133",
-  appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+            authDomain: "mahika-trans.firebaseapp.com",
+            projectId: "mahika-trans",
+            storageBucket: "mahika-trans.firebasestorage.app",
+            messagingSenderId: "1087881066133",
+            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Check Login
         onAuthStateChanged(auth, (user) => {
             if (!user) window.location.href = "login.html";
             else loadManifes();
         });
 
-        // Simpan Tiket
+        window.logout = () => signOut(auth).then(() => location.reload());
+
         window.saveTicket = async () => {
             const btn = document.getElementById('btnSave');
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Memproses...";
-            
-            const payload = {
+            const data = {
                 nama: document.getElementById('nama').value,
                 hp: document.getElementById('hp').value,
                 tgl: document.getElementById('tgl').value,
@@ -129,40 +123,41 @@ const firebaseConfig = {
                 armada: document.getElementById('armada').value,
                 tujuan: document.getElementById('tujuan').value,
                 kursi: document.getElementById('kursi').value,
-                harga: document.getElementById('harga').value
+                harga: document.getElementById('harga').value,
+                createdAt: serverTimestamp()
             };
 
+            if(!data.nama || !data.hp) return alert("Nama & HP wajib diisi!");
+
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
             try {
-                const docRef = await addDoc(collection(db, "bookings"), payload);
+                const docRef = await addDoc(collection(db, "bookings"), data);
                 const etiketURL = `https://${window.location.hostname}/etiket.html?id=${docRef.id}`;
-                const waText = `*MAHIKA TRANS*\n\nTiket an. ${payload.nama}\nTujuan: ${payload.tujuan}\nJadwal: ${payload.tgl} | ${payload.jam}\nKursi: ${payload.kursi}\n\nE-Ticket: ${etiketURL}`;
+                const waText = `*MAHIKA TRANS - E-TICKET*\n\nNama: ${data.nama}\nJadwal: ${data.tgl} | ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\nTujuan: ${data.tujuan}\n\nLihat Tiket & Barcode di sini:\n${etiketURL}`;
                 
-                window.open(`https://wa.me/${payload.hp}?text=${encodeURIComponent(waText)}`, '_blank');
+                window.open(`https://wa.me/${data.hp}?text=${encodeURIComponent(waText)}`, '_blank');
                 location.reload();
-            } catch (e) { alert("Error: " + e); }
+            } catch (e) { alert(e); btn.disabled = false; }
         };
 
-        // Load Manifes 30 Hari
         async function loadManifes() {
             const list = document.getElementById('manifesList');
             const q = query(collection(db, "bookings"), orderBy("tgl", "asc"));
             const snap = await getDocs(q);
-            
             list.innerHTML = "";
             snap.forEach(doc => {
                 const d = doc.data();
                 list.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-3"><strong>${d.tgl}</strong><br><span class="text-gray-400">${d.jam}</span></td>
-                        <td class="p-3"><strong>${d.nama}</strong><br><span class="text-blue-600">${d.tujuan}</span></td>
-                        <td class="p-3 text-[10px]"><span class="bg-blue-100 p-1 rounded">${d.armada}</span><br>Seat: ${d.kursi}</td>
+                    <tr class="border-b border-gray-50">
+                        <td class="p-4"><span class="font-bold text-primary">${d.nama}</span><br><span class="text-[10px] text-gray-400">${d.tgl} | ${d.jam}</span></td>
+                        <td class="p-4 text-xs font-medium text-gray-600">${d.armada}<br><span class="text-primary font-black">Seat: ${d.kursi}</span></td>
+                        <td class="p-4 text-xs font-bold text-secondary">${d.tujuan}</td>
                     </tr>
                 `;
             });
         }
-
-        window.logout = () => signOut(auth).then(() => location.reload());
     </script>
 </body>
-  </html>
-  
+</html>
