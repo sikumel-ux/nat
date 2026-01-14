@@ -11,18 +11,21 @@
         :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; margin: 0; }
         
+        /* Header Curvy ala Mahika */
         .header-curvy { 
             background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
             padding: 40px 20px 70px; 
             border-radius: 0 0 40px 40px; 
             text-align: center;
+            box-shadow: 0 10px 20px rgba(4, 58, 96, 0.2);
         }
-        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 22px; margin: 0; font-style: italic; }
-        .header-curvy p { color: white; font-size: 11px; opacity: 0.8; letter-spacing: 2px; }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 22px; margin: 0; font-style: italic; letter-spacing: 1px; }
+        .header-curvy p { color: white; font-size: 10px; opacity: 0.8; letter-spacing: 3px; font-weight: 300; }
 
+        /* Container Tiket */
         .ticket-body { margin-top: -40px; padding: 0 20px 50px; }
         
-        /* Card Info Modern */
+        /* Info Card Modern dengan Shadow */
         .info-card { 
             background: white; 
             padding: 15px 20px; 
@@ -31,86 +34,104 @@
             display: flex; 
             align-items: center; 
             margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.8);
         }
         .info-icon { 
-            width: 42px; height: 42px; background: #eff6ff; 
+            width: 42px; height: 42px; background: #f0f7ff; 
             color: var(--primary-blue); border-radius: 12px; 
             display: flex; align-items: center; justify-content: center; 
             margin-right: 15px; font-size: 18px;
         }
+        .info-content { flex: 1; }
         .info-val { font-size: 14px; font-weight: 600; color: #1e293b; }
 
-        /* QR Section */
+        /* QR & Barcode Card */
         .barcode-card {
             background: white; border-radius: 30px; padding: 30px;
             text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
-        .terms { margin-top: 20px; padding: 20px; background: #e2e8f0; border-radius: 20px; }
-        .terms h4 { font-size: 11px; font-weight: 800; color: var(--primary-blue); margin-bottom: 8px; text-transform: uppercase; }
-        .terms li { font-size: 10px; color: #475569; margin-bottom: 4px; list-style: none; position: relative; padding-left: 15px; }
-        .terms li::before { content: '•'; position: absolute; left: 0; color: var(--primary-blue); }
+        /* Box Perhatian */
+        .terms { margin-top: 25px; padding: 20px; background: #cbd5e1; border-radius: 20px; }
+        .terms h4 { font-size: 11px; font-weight: 800; color: var(--primary-blue); margin-bottom: 10px; text-transform: uppercase; display: flex; align-items: center; }
+        .terms li { font-size: 11px; color: #475569; margin-bottom: 6px; list-style: none; position: relative; padding-left: 18px; line-height: 1.4; }
+        .terms li::before { content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: 0; color: var(--primary-blue); font-size: 10px; }
 
         .hidden { display: none !important; }
+
+        /* Animasi Loader */
+        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
     </style>
 </head>
 <body>
 
-<div id="loader" class="flex flex-col items-center justify-center min-h-screen">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
-    <p class="text-gray-400 text-xs mt-4 italic">Memproses Tiket...</p>
+<div id="loader" class="loader-container">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#065084]"></div>
+    <p class="text-gray-400 text-xs mt-4 italic font-medium">Memvalidasi Kode Tiket...</p>
 </div>
 
 <div id="ticketContent" class="hidden">
     <div class="header-curvy">
         <h2>MAHIKA TRANS</h2>
-        <p>E-TICKET PERJALANAN</p>
+        <p>E-TICKET MANIFEST</p>
     </div>
 
     <div class="ticket-body">
-        <div class="grid grid-cols-12 gap-3">
-            <div class="col-span-8 info-card">
-                <div class="info-icon"><i class="fas fa-user"></i></div>
-                <div class="info-val" id="paxName">...</div>
-            </div>
-            <div class="col-span-4 info-card">
-                <div class="info-icon"><i class="fas fa-couch text-orange-500"></i></div>
-                <div class="info-val font-bold text-orange-600" id="paxSeat">...</div>
-            </div>
-        </div>
-
         <div class="info-card">
-            <div class="info-icon"><i class="fas fa-map-marked-alt"></i></div>
-            <div class="info-val" id="paxRoute">...</div>
+            <div class="info-icon"><i class="fas fa-user"></i></div>
+            <div class="info-content">
+                <div class="info-val uppercase" id="paxName">...</div>
+            </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
             <div class="info-card">
-                <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
-                <div class="info-val text-[12px]" id="paxDate">...</div>
+                <div class="info-icon"><i class="fas fa-couch text-orange-500"></i></div>
+                <div class="info-content">
+                    <div class="info-val font-bold text-orange-600" id="paxSeat">...</div>
+                </div>
             </div>
             <div class="info-card">
                 <div class="info-icon"><i class="fas fa-clock text-blue-500"></i></div>
-                <div class="info-val" id="paxTime">...</div>
+                <div class="info-content">
+                    <div class="info-val" id="paxTime">...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon"><i class="fas fa-map-location-dot"></i></div>
+            <div class="info-content">
+                <div class="info-val text-sm" id="paxRoute">...</div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="info-content">
+                <div class="info-val" id="paxDate">...</div>
             </div>
         </div>
 
         <div class="barcode-card">
-            <img id="qrImg" src="" class="mx-auto w-44 h-44 mb-4 rounded-xl">
-            <p class="text-blue-900 font-bold text-xs italic">"Terima kasih telah memilih Mahika Trans"</p>
+            <p class="text-[10px] text-gray-400 font-bold mb-4 uppercase tracking-[3px]">Security Code</p>
+            <img id="qrImg" src="" class="mx-auto w-48 h-48 mb-4 rounded-2xl p-2 border border-gray-100 shadow-inner">
+            <p class="text-blue-900 font-bold text-sm italic">"Terima Kasih Atas Kepercayaan Anda"</p>
         </div>
 
         <div class="terms">
-            <h4><i class="fas fa-info-circle mr-1"></i> Perhatian:</h4>
+            <h4><i class="fas fa-shield-halved mr-2"></i> Ketentuan Perjalanan:</h4>
             <ul>
-                <li>Datang 30 menit sebelum jam keberangkatan.</li>
-                <li>Anak usia di atas 3 tahun wajib memiliki tiket.</li>
-                <li>Tiket yang sudah dibeli tidak dapat dibatalkan.</li>
+                <li>Mohon standby 30 menit sebelum jam penjemputan.</li>
+                <li>Anak usia di atas 3 tahun wajib memiliki tiket sendiri.</li>
+                <li>Tiket yang sudah diterbitkan tidak dapat dibatalkan.</li>
             </ul>
         </div>
 
-        <p class="text-center text-[9px] text-gray-400 mt-6 tracking-widest uppercase">Mahika Trans Travel Service</p>
+        <div class="mt-8 text-center">
+            <p class="text-[9px] text-gray-400 font-bold tracking-widest uppercase">Travel Service © 2026 Mahika Trans</p>
+        </div>
     </div>
 </div>
 
@@ -118,6 +139,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // Pastikan Config ini sama dengan project Firebase kamu
     const firebaseConfig = { 
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
         authDomain: "mahika-trans.firebaseapp.com", 
@@ -130,43 +152,49 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Ambil ID dari URL
+    // Ambil ID dari URL (Contoh: /t/?id=KODE)
     const urlParams = new URLSearchParams(window.location.search);
     const bookingID = urlParams.get('id');
 
+    // JIKA TIDAK ADA ID, TENDANG KE HOME (DI LUAR FOLDER T)
     if (!bookingID) {
-        window.location.href = "../index.html";
+        window.location.href = "../index.html"; 
     } else {
-        loadData();
+        getTicket(bookingID);
     }
 
-    async function loadData() {
+    async function getTicket(id) {
         try {
-            const snap = await getDoc(doc(db, "bookings", bookingID));
-            if (snap.exists()) {
-                const d = snap.data();
-                document.getElementById('paxName').innerText = d.nama;
-                document.getElementById('paxSeat').innerText = d.kursi;
-                document.getElementById('paxRoute').innerText = d.tujuan;
-                document.getElementById('paxTime').innerText = d.jam;
-                
-                // Format Tanggal
-                const dateObj = new Date(d.tgl);
-                document.getElementById('paxDate').innerText = dateObj.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-                
-                // QR Code
-                document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${bookingID}`;
+            const docRef = doc(db, "bookings", id);
+            const docSnap = await getDoc(docRef);
 
-                // Sembunyikan Loader, Munculkan Konten
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // Isi Data ke HTML
+                document.getElementById('paxName').innerText = data.nama;
+                document.getElementById('paxSeat').innerText = "Seat: " + data.kursi;
+                document.getElementById('paxRoute').innerText = data.tujuan;
+                document.getElementById('paxTime').innerText = data.jam + " WIB";
+                
+                // Format Tanggal Indonesia
+                const d = new Date(data.tgl);
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                document.getElementById('paxDate').innerText = d.toLocaleDateString('id-ID', options);
+
+                // Generate QR Code otomatis dari ID Booking
+                document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${id}`;
+
+                // Sembunyikan Loader & Munculkan Konten
                 document.getElementById('loader').classList.add('hidden');
                 document.getElementById('ticketContent').classList.remove('hidden');
             } else {
-                alert("Data Tiket Tidak Ada!");
+                alert("Tiket tidak ditemukan atau sudah kadaluarsa.");
                 window.location.href = "../index.html";
             }
-        } catch (e) {
-            console.error(e);
-            document.body.innerHTML = "<div class='p-10 text-center'>Terjadi gangguan koneksi. Coba refresh halaman.</div>";
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Gagal memuat data. Periksa koneksi internet.");
         }
     }
 </script>
