@@ -64,7 +64,14 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = { /* COPY CONFIG KAMU DISINI */ };
+        const firebaseConfig =  {
+  apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+  authDomain: "mahika-trans.firebaseapp.com",
+  projectId: "mahika-trans",
+  storageBucket: "mahika-trans.firebasestorage.app",
+  messagingSenderId: "1087881066133",
+  appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+} ;
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
