@@ -3,31 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin - Mahika Trans</title>
+    <title>Login - Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #005b96 0%, #6497b1 100%); }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
 </head>
-<body class="bg-[#003399] flex items-center justify-center min-h-screen p-6">
-    <div class="bg-white w-full max-w-md p-8 rounded-[30px] shadow-2xl text-center">
-        <div class="mb-6">
-            <div class="bg-yellow-400 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <i class="fas fa-bus text-[#003399] text-3xl"></i>
+<body class="flex items-center justify-center min-h-screen p-6">
+    <div class="glass w-full max-w-md p-8 rounded-[2rem] shadow-2xl text-center">
+        <div class="mb-8">
+            <div class="bg-[#005b96] w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 rotate-12 shadow-lg">
+                <i class="fas fa-bus-alt text-white text-3xl -rotate-12"></i>
             </div>
-            <h1 class="text-2xl font-bold text-[#003399] italic">MAHIKA TRANS</h1>
-            <p class="text-gray-400 text-sm">Management System Admin</p>
+            <h1 class="text-3xl font-black text-[#005b96] tracking-tighter">MAHIKA TRANS</h1>
+            <p class="text-[#6497b1] font-medium">Admin Dashboard</p>
         </div>
 
         <div class="space-y-4">
-            <div class="relative">
-                <i class="fas fa-envelope absolute left-4 top-4 text-gray-400"></i>
-                <input type="email" id="email" placeholder="Email Admin" class="w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl outline-none focus:border-yellow-500">
+            <div class="text-left">
+                <label class="text-xs font-bold text-[#005b96] ml-2 uppercase">Email Admin</label>
+                <input type="email" id="email" class="w-full px-5 py-4 bg-[#b3cde0]/30 border-2 border-transparent focus:border-[#005b96] rounded-2xl outline-none transition-all" placeholder="admin@mahika.com">
             </div>
-            <div class="relative">
-                <i class="fas fa-lock absolute left-4 top-4 text-gray-400"></i>
-                <input type="password" id="pass" placeholder="Password" class="w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl outline-none focus:border-yellow-500">
+            <div class="text-left">
+                <label class="text-xs font-bold text-[#005b96] ml-2 uppercase">Password</label>
+                <input type="password" id="pass" class="w-full px-5 py-4 bg-[#b3cde0]/30 border-2 border-transparent focus:border-[#005b96] rounded-2xl outline-none transition-all" placeholder="••••••••">
             </div>
-            <button onclick="login()" id="btnLogin" class="w-full bg-[#003399] text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition">
-                Masuk Sekarang
+            <button onclick="login()" id="btnLogin" class="w-full bg-[#005b96] hover:bg-[#01497c] text-white font-bold py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all mt-4">
+                MASUK SEKARANG <i class="fas fa-arrow-right ml-2"></i>
             </button>
         </div>
     </div>
@@ -37,28 +41,34 @@
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
-  apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
-  authDomain: "mahika-trans.firebaseapp.com",
-  projectId: "mahika-trans",
-  storageBucket: "mahika-trans.firebasestorage.app",
-  messagingSenderId: "1087881066133",
-  appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
-};
+            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+            authDomain: "mahika-trans.firebaseapp.com",
+            projectId: "mahika-trans",
+            storageBucket: "mahika-trans.firebasestorage.app",
+            messagingSenderId: "1087881066133",
+            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
         window.login = async () => {
+            const btn = document.getElementById('btnLogin');
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
-            const btn = document.getElementById('btnLogin');
 
-            btn.innerText = "Mengecek...";
+            if(!email || !pass) return alert("Isi semua data!");
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Loading...';
+
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
                 window.location.href = "index.html";
             } catch (e) {
-                alert("Login Gagal! Pastikan email & pass benar.");
-                btn.innerText = "Masuk Sekarang";
+                alert("Login Gagal: " + e.message);
+                btn.disabled = false;
+                btn.innerHTML = 'MASUK SEKARANG <i class="fas fa-arrow-right ml-2"></i>';
             }
         };
     </script>
