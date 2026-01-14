@@ -11,7 +11,6 @@
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; overflow-x: hidden; }
         
-        /* Header Mewah */
         .header-komisi { 
             background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
             padding: 50px 25px 90px 25px; 
@@ -24,29 +23,26 @@
 
         .content-komisi { margin-top: -50px; padding: 0 20px 120px; position: relative; z-index: 10; }
         
-        /* Dropdown Filter */
         .filter-bulan { background: white; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; }
         .filter-bulan select { border: none; font-weight: 700; color: var(--primary-blue); outline: none; background: transparent; cursor: pointer; font-size: 14px; }
 
-        /* Item List */
-        .card-komisi { background: white; border-radius: 22px; padding: 18px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
+        .card-komisi { background: white; border-radius: 22px; padding: 18px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); position: relative; }
         .pax-circle { width: 45px; height: 45px; background: #e0f2fe; color: var(--primary-blue); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-right: 15px; font-size: 14px; }
         .info-komisi { flex: 1; }
-        .info-komisi b { font-size: 14px; color: #333; display: block; text-transform: uppercase; }
+        .info-komisi b { font-size: 14px; color: #333; display: block; text-transform: uppercase; padding-right: 25px; }
         .info-komisi small { font-size: 11px; color: #999; font-weight: 500; }
         .amount-komisi { font-weight: 700; color: #10b981; font-size: 15px; }
+        
+        .btn-delete { position: absolute; top: 18px; right: 15px; color: #ef4444; opacity: 0.3; font-size: 14px; padding: 5px; }
+        .btn-delete:active { opacity: 1; transform: scale(1.2); }
 
-        /* Floating Button + */
         .fab-add { position: fixed; bottom: 100px; right: 25px; width: 65px; height: 65px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 10px 25px rgba(6, 80, 132, 0.4); z-index: 90; cursor: pointer; transition: 0.3s; }
-        .fab-add:active { transform: scale(0.9); }
 
-        /* Slide Form (Bottom Sheet) */
         #bottomSheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-radius: 35px 35px 0 0; padding: 35px 25px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; box-shadow: 0 -10px 50px rgba(0,0,0,0.3); }
         #bottomSheet.active { bottom: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 999; backdrop-filter: blur(4px); }
         .overlay.active { display: block; }
 
-        /* Nav Bottom */
         .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; }
         .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
         .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
@@ -76,7 +72,6 @@
 </div>
 
 <div class="fab-add" onclick="toggleForm(true)"><i class="fas fa-plus"></i></div>
-
 <div class="overlay" id="overlay" onclick="toggleForm(false)"></div>
 
 <div id="bottomSheet">
@@ -123,7 +118,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, getDocs, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, getDocs, orderBy, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     
     const firebaseConfig = { apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", authDomain: "mahika-trans.firebaseapp.com", projectId: "mahika-trans", storageBucket: "mahika-trans.firebasestorage.app", messagingSenderId: "1087881066133", appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" };
     const app = initializeApp(firebaseConfig);
@@ -134,12 +129,23 @@
         document.getElementById('overlay').classList.toggle('active', show);
     };
 
+    // FUNGSI HAPUS DATA
+    window.hapusKomisi = async (id, nama) => {
+        if (confirm(`Hapus data komisi "${nama}"?`)) {
+            try {
+                await deleteDoc(doc(db, "komisi", id));
+                window.loadKomisi(); // Reload list
+            } catch (e) {
+                alert("Gagal hapus: " + e.message);
+            }
+        }
+    };
+
     window.loadKomisi = async () => {
         const listDiv = document.getElementById('listKomisi');
         const filterVal = document.getElementById('selectBulan').value;
         
         try {
-            // Kita pakai query sederhana supaya tidak minta Index lagi
             const q = query(collection(db, "komisi"), orderBy("tgl", "desc"));
             const snap = await getDocs(q);
             
@@ -147,9 +153,9 @@
             let total = 0;
             let count = 0;
 
-            snap.forEach(doc => {
-                const d = doc.data();
-                // Filter dilakukan di browser
+            snap.forEach(docSnap => {
+                const d = docSnap.data();
+                const id = docSnap.id;
                 if (d.bulan === filterVal) {
                     count++;
                     total += parseInt(d.komisi);
@@ -161,24 +167,20 @@
                                 <small><i class="far fa-calendar-alt mr-1"></i>${d.tgl}</small>
                             </div>
                             <div class="amount-komisi">Rp ${parseInt(d.komisi).toLocaleString('id-ID')}</div>
+                            <div class="btn-delete" onclick="hapusKomisi('${id}', '${d.nama}')">
+                                <i class="fas fa-trash-can"></i>
+                            </div>
                         </div>
                     `;
                 }
             });
 
             document.getElementById('totalKomisi').innerText = "Rp " + total.toLocaleString('id-ID');
-            
             if (count === 0) {
-                listDiv.innerHTML = `
-                    <div class="text-center mt-10">
-                        <i class="fas fa-folder-open text-gray-200 text-5xl mb-3"></i>
-                        <p class="text-gray-400 text-sm italic">Belum ada data di bulan ini.</p>
-                    </div>`;
+                listDiv.innerHTML = `<div class="text-center mt-10"><i class="fas fa-folder-open text-gray-200 text-5xl mb-3"></i><p class="text-gray-400 text-sm italic">Kosong, Bro.</p></div>`;
             }
-
         } catch (e) {
-            console.error(e);
-            listDiv.innerHTML = "<p class='text-center text-red-500 mt-10'>Terjadi kesalahan koneksi.</p>";
+            listDiv.innerHTML = "<p class='text-center text-red-500 mt-10'>Koneksi Error.</p>";
         }
     };
 
@@ -189,35 +191,22 @@
         const pax = document.getElementById('k-pax').value;
         const rp = document.getElementById('k-rp').value;
 
-        if(!tgl || !nama || !rp) return alert("Waduh, isi dulu semua kolomnya, Bro!");
+        if(!tgl || !nama || !rp) return alert("Isi semua dulu!");
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> MENYIMPAN...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>';
 
         try {
             await addDoc(collection(db, "komisi"), {
-                tgl: tgl,
-                bulan: tgl.substring(0, 7), 
-                nama: nama,
-                pax: pax || 0,
-                komisi: rp,
-                createdAt: serverTimestamp()
+                tgl: tgl, bulan: tgl.substring(0, 7), nama: nama, pax: pax || 0, komisi: rp, createdAt: serverTimestamp()
             });
-            
             toggleForm(false);
-            window.loadKomisi(); // Reload data tanpa refresh seluruh halaman
-            
-            // Reset Form
-            document.getElementById('k-nama').value = "";
-            document.getElementById('k-pax').value = "";
-            document.getElementById('k-rp').value = "";
-            btn.disabled = false;
-            btn.innerText = "SIMPAN DATA KOMISI";
-            
+            window.loadKomisi();
+            document.getElementById('k-nama').value = ""; document.getElementById('k-pax').value = ""; document.getElementById('k-rp').value = "";
+            btn.disabled = false; btn.innerText = "SIMPAN DATA KOMISI";
         } catch (e) {
             alert("Gagal: " + e.message);
             btn.disabled = false;
-            btn.innerText = "SIMPAN DATA KOMISI";
         }
     };
 
