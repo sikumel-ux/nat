@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Trans - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .bca-blue { background-color: #003399; } /* Biru BCA */
+        .gold-mahika { background-color: #FFD700; } /* Gold */
+        .text-bca { color: #003399; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .nav-fixed { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <div class="bca-blue p-6 rounded-b-[30px] shadow-lg mb-6">
+        <div class="flex justify-between items-center text-white">
+            <div>
+                <p class="text-xs opacity-80">Halo Admin,</p>
+                <h1 class="text-xl font-bold italic">MAHIKA TRANS</h1>
+            </div>
+            <button onclick="logout()" class="bg-white/20 p-2 rounded-full"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+
+    <div class="px-4 space-y-6">
+        
+        <div class="bg-white p-5 rounded-2xl card-shadow border-l-4 border-yellow-400">
+            <h2 class="font-bold text-bca mb-4"><i class="fas fa-ticket-alt mr-2"></i> Input Tiket Baru</h2>
+            <div class="grid grid-cols-1 gap-3">
+                <input type="text" id="nama" placeholder="Nama Penumpang" class="p-3 bg-gray-50 border rounded-xl outline-none focus:border-blue-600">
+                <input type="number" id="hp" placeholder="No WhatsApp (62812...)" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="date" id="tgl" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                    <input type="time" id="jam" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                </div>
+                <select id="armada" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                    <option value="Hiace Premio">Hiace Premio</option>
+                    <option value="Innova Reborn">Innova Reborn</option>
+                    <option value="Big Bus">Big Bus</option>
+                </select>
+                <input type="text" id="tujuan" placeholder="Tujuan" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="kursi" placeholder="No. Kursi" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                    <input type="number" id="harga" placeholder="Harga" class="p-3 bg-gray-50 border rounded-xl outline-none">
+                </div>
+                <button onclick="saveTicket()" id="btnSave" class="bca-blue text-white font-bold p-4 rounded-xl mt-2 active:scale-95 transition">
+                    <i class="fab fa-whatsapp mr-2"></i> Simpan & Kirim WA
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+            <div class="p-4 bca-blue text-white flex justify-between items-center">
+                <h2 class="font-bold"><i class="fas fa-clipboard-list mr-2"></i> Manifes Penumpang</h2>
+                <span class="text-xs bg-yellow-400 text-blue-900 px-2 py-1 rounded-full font-bold">30 Hari</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-100 text-bca uppercase text-[10px] font-bold">
+                        <tr>
+                            <th class="p-3">Waktu</th>
+                            <th class="p-3">Nama/Tujuan</th>
+                            <th class="p-3">Armada</th>
+                        </tr>
+                    </thead>
+                    <tbody id="manifesList">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl card-shadow border-l-4 border-green-500">
+            <h2 class="font-bold text-gray-700 mb-4"><i class="fas fa-wallet mr-2"></i> Input Komisi</h2>
+            <div class="flex gap-2">
+                <input type="month" id="blnPendapatan" class="flex-1 p-3 bg-gray-50 border rounded-xl outline-none">
+                <input type="number" id="jmlPendapatan" placeholder="Rp" class="flex-1 p-3 bg-gray-50 border rounded-xl outline-none">
+                <button onclick="saveIncome()" class="bg-green-600 text-white p-3 rounded-xl"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-fixed flex justify-around p-3 text-gray-400">
+        <button class="text-bca"><i class="fas fa-home block text-xl"></i><span class="text-[10px]">Home</span></button>
+        <button><i class="fas fa-chart-line block text-xl"></i><span class="text-[10px]">Laporan</span></button>
+        <button><i class="fas fa-user block text-xl"></i><span class="text-[10px]">Profil</span></button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // CONFIG FIREBASE (Silahkan ganti sesuai console kamu)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            projectId: "YOUR_PROJECT_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Check Login
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = "login.html";
+            else loadManifes();
+        });
+
+        // Simpan Tiket
+        window.saveTicket = async () => {
+            const btn = document.getElementById('btnSave');
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Memproses...";
+            
+            const payload = {
+                nama: document.getElementById('nama').value,
+                hp: document.getElementById('hp').value,
+                tgl: document.getElementById('tgl').value,
+                jam: document.getElementById('jam').value,
+                armada: document.getElementById('armada').value,
+                tujuan: document.getElementById('tujuan').value,
+                kursi: document.getElementById('kursi').value,
+                harga: document.getElementById('harga').value
+            };
+
+            try {
+                const docRef = await addDoc(collection(db, "bookings"), payload);
+                const etiketURL = `https://${window.location.hostname}/etiket.html?id=${docRef.id}`;
+                const waText = `*MAHIKA TRANS*\n\nTiket an. ${payload.nama}\nTujuan: ${payload.tujuan}\nJadwal: ${payload.tgl} | ${payload.jam}\nKursi: ${payload.kursi}\n\nE-Ticket: ${etiketURL}`;
+                
+                window.open(`https://wa.me/${payload.hp}?text=${encodeURIComponent(waText)}`, '_blank');
+                location.reload();
+            } catch (e) { alert("Error: " + e); }
+        };
+
+        // Load Manifes 30 Hari
+        async function loadManifes() {
+            const list = document.getElementById('manifesList');
+            const q = query(collection(db, "bookings"), orderBy("tgl", "asc"));
+            const snap = await getDocs(q);
+            
+            list.innerHTML = "";
+            snap.forEach(doc => {
+                const d = doc.data();
+                list.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-3"><strong>${d.tgl}</strong><br><span class="text-gray-400">${d.jam}</span></td>
+                        <td class="p-3"><strong>${d.nama}</strong><br><span class="text-blue-600">${d.tujuan}</span></td>
+                        <td class="p-3 text-[10px]"><span class="bg-blue-100 p-1 rounded">${d.armada}</span><br>Seat: ${d.kursi}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.logout = () => signOut(auth).then(() => location.reload());
+    </script>
+</body>
+  </html>
+  
