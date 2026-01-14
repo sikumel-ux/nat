@@ -3,82 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Datang | Mahika Trans</title>
+    <title>Mahika Trans | Menuju Tujuan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: var(--primary-blue); margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: white; }
-
-        .bus-container { 
-            position: relative; 
-            width: 100%; 
-            height: 100px; /* Tinggi untuk bus dan "jalan" */
-            overflow: hidden; 
+        :root { --primary-blue: #065084; --gold: #FFD700; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #111; /* Background gelap biar dramatis */
+            margin: 0; overflow: hidden; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 100vh; 
         }
 
-        .bus {
-            position: absolute;
-            bottom: 0px; /* Busnya pas di atas "jalan" */
-            left: -100px; /* Start dari luar layar */
-            font-size: 60px; /* Ukuran icon bus */
-            color: var(--gold);
-            animation: driveBus 3s linear forwards; /* Animasi jalan selama 3 detik */
-        }
-
+        /* Jalan Raya Perspektif 3D */
         .road {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: #334155; /* Warna jalan */
-            z-index: -1; /* Di belakang bus */
+            position: absolute; bottom: 0; width: 100%; height: 50vh;
+            background: #222;
+            clip-path: polygon(45% 0%, 55% 0%, 100% 100%, 0% 100%);
+            border-bottom: 5px solid #444;
         }
 
-        @keyframes driveBus {
-            0% { left: -100px; }
-            100% { left: calc(100% + 100px); } /* End di luar layar sebelah kanan */
+        /* Garis Putih Jalan */
+        .road::after {
+            content: ''; position: absolute; left: 50%; top: 0;
+            width: 10px; height: 100%;
+            background: repeating-linear-gradient(transparent, transparent 20px, white 20px, white 40px);
+            transform: translateX(-50%);
+            animation: moveRoad 0.5s linear infinite;
         }
 
-        .fade-out {
-            animation: fadeOut 0.5s forwards;
+        @keyframes moveRoad {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 40px; }
         }
 
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; display: none; }
+        /* Bus Maju ke Layar */
+        .bus-container {
+            position: relative; z-index: 10;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            animation: busMaju 3s ease-in forwards;
+        }
+
+        .bus-icon {
+            font-size: 20px; /* Mulai dari kecil */
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes busMaju {
+            0% { transform: scale(1) translateY(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { transform: scale(50) translateY(10px); opacity: 1; }
+            100% { transform: scale(150) translateY(20px); opacity: 0; } /* Efek menabrak layar */
+        }
+
+        .text-overlay {
+            position: absolute; top: 20%; text-align: center; width: 100%;
+            z-index: 20; color: white;
+        }
+        
+        .overlay-black {
+            position: fixed; inset: 0; background: black; opacity: 0;
+            pointer-events: none; z-index: 99;
+            animation: darken 3s forwards;
+        }
+
+        @keyframes darken {
+            0%, 80% { opacity: 0; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <h1 class="text-3xl font-bold mb-8 italic">Mahika Trans</h1>
-    <p class="text-sm mb-12 opacity-80">Mengarahkan Anda...</p>
-
-    <div class="bus-container">
-        <div class="bus"><i class="fas fa-bus"></i></div>
-        <div class="road"></div>
+    <div class="text-overlay">
+        <h1 class="text-3xl font-bold italic tracking-wider text-[#FFD700]">MAHIKA TRANS</h1>
+        <p class="text-[10px] text-gray-400 mt-2 tracking-[5px] uppercase">Otw Google.com...</p>
     </div>
 
+    <div class="road"></div>
+
+    <div class="bus-container">
+        <i class="fas fa-bus bus-icon"></i>
+    </div>
+
+    <div class="overlay-black"></div>
+
     <script>
-        // Cek login dulu, kalau sudah login, baru redirect ke dashboard
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            setTimeout(() => {
-                window.location.href = "dashboard.html"; // Atau ke index.html kalau dashboardnya itu sendiri
-            }, 3500); // Setelah animasi bus selesai
-        } else {
-            // Kalau belum login, arahkan ke halaman login
-            setTimeout(() => {
-                window.location.href = "login.html"; // Asumsi ada halaman login.html
-            }, 3500); // Setelah animasi bus selesai
-        }
-        
-        // --- Contoh Redirect ke Google.com (Kalau mau) ---
-        // setTimeout(() => {
-        //     window.location.href = "https://mahikatrans.my.id"; 
-        // }, 3500); // Redirect setelah 3.5 detik (sesuai durasi animasi)
+        // Tunggu animasi selesai (3 detik), baru pindah
+        setTimeout(() => {
+            window.location.href = "https://mahikatrans.my.id";
+        }, 3000);
     </script>
 </body>
 </html>
