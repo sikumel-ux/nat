@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Ticket | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="robots" content="noindex, nofollow">
+</head>
+<body class="bg-gray-100">
+
+<div id="ticketContent" class="hidden">
+    <div class="p-5 text-center">
+        <h1 class="font-bold text-xl">TIKET PERJALANAN</h1>
+        <p id="paxName" class="text-blue-600 font-bold"></p>
+        <p id="paxRoute"></p>
+        </div>
+</div>
+
+<div id="loader" class="flex items-center justify-center min-height-screen p-20">
+    <p class="text-gray-400 italic">Mengecek tiket...</p>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        messagingSenderId: "1087881066133", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 1. LOGIKA TENDANG: Cek ID di URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookingID = urlParams.get('id');
+
+    if (!bookingID) {
+        // Jika tidak ada ID, langsung lempar ke halaman utama
+        window.location.href = "../index.html";
+    } else {
+        // 2. Jika ada ID, tarik data dari Firestore
+        loadTicketData(bookingID);
+    }
+
+    async function loadTicketData(id) {
+        try {
+            const docRef = doc(db, "bookings", id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // Masukkan data ke HTML
+                document.getElementById('paxName').innerText = data.nama;
+                document.getElementById('paxRoute').innerText = data.tujuan;
+                
+                // Tampilkan tiket, sembunyikan loader
+                document.getElementById('ticketContent').classList.remove('hidden');
+                document.getElementById('loader').classList.add('hidden');
+            } else {
+                alert("Tiket tidak ditemukan!");
+                window.location.href = "../index.html";
+            }
+        } catch (e) {
+            console.error(e);
+            window.location.href = "../index.html";
+        }
+    }
+</script>
+</body>
+</html>
