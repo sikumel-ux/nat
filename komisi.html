@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komisi | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; }
+        
+        .header-komisi { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 50px 25px 80px 25px; 
+            border-radius: 0 0 50px 50px; 
+            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3);
+            text-align: center;
+        }
+        .header-komisi span { color: white; opacity: 0.8; font-size: 12px; text-transform: uppercase; font-weight: 600; }
+        .header-komisi h1 { color: var(--gold); font-weight: 800; font-size: 32px; margin-top: 5px; }
+
+        .content-komisi { margin-top: -40px; padding: 0 20px 120px; position: relative; z-index: 10; }
+        
+        /* Dropdown Filter */
+        .filter-bulan { background: white; border-radius: 20px; padding: 10px 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; }
+        .filter-bulan select { border: none; font-weight: 700; color: var(--primary-blue); outline: none; background: transparent; cursor: pointer; }
+
+        /* Item List */
+        .card-komisi { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.03); }
+        .pax-circle { width: 45px; height: 45px; background: #e0f2fe; color: var(--primary-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-right: 15px; font-size: 14px; }
+        .info-komisi { flex: 1; }
+        .info-komisi b { font-size: 14px; color: #333; display: block; }
+        .info-komisi small { font-size: 11px; color: #999; }
+        .amount-komisi { font-weight: 700; color: #10b981; font-size: 14px; }
+
+        /* Floating Button */
+        .fab-add { position: fixed; bottom: 100px; right: 25px; width: 60px; height: 60px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 25px rgba(6, 80, 132, 0.4); z-index: 90; cursor: pointer; }
+
+        /* Slide Form (Bottom Sheet) */
+        #bottomSheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-radius: 30px 30px 0 0; padding: 30px 25px; transition: 0.4s ease; z-index: 1000; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
+        #bottomSheet.active { bottom: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; }
+        .overlay.active { display: block; }
+
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-komisi">
+    <span>Estimasi Komisi</span>
+    <h1 id="totalKomisi">Rp 0</h1>
+</div>
+
+<div class="content-komisi">
+    <div class="filter-bulan">
+        <span>Bulan Berjalan</span>
+        <select id="selectBulan" onchange="loadKomisi()">
+            <option value="2026-01">Januari 2026</option>
+            <option value="2026-02">Februari 2026</option>
+            </select>
+    </div>
+
+    <div id="listKomisi">
+        <p class="text-center text-gray-400 mt-10">Loading data...</p>
+    </div>
+</div>
+
+<div class="fab-add" onclick="toggleForm(true)"><i class="fas fa-plus"></i></div>
+
+<div class="overlay" id="overlay" onclick="toggleForm(false)"></div>
+
+<div id="bottomSheet">
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-[#065084]">Input Komisi</h3>
+        <i class="fas fa-times text-gray-400" onclick="toggleForm(false)"></i>
+    </div>
+    <div class="space-y-4">
+        <input type="date" id="k-tgl" class="w-full p-4 bg-gray-100 rounded-2xl outline-none text-sm">
+        <input type="text" id="k-nama" placeholder="Nama Penumpang / Order" class="w-full p-4 bg-gray-100 rounded-2xl outline-none text-sm">
+        <div class="grid grid-cols-2 gap-3">
+            <input type="number" id="k-pax" placeholder="Jumlah Pax" class="w-full p-4 bg-gray-100 rounded-2xl outline-none text-sm">
+            <input type="number" id="k-rp" placeholder="Komisi (Rp)" class="w-full p-4 bg-gray-100 rounded-2xl outline-none text-sm">
+        </div>
+        <button id="btnSaveKomisi" class="w-full bg-[#065084] text-white font-bold py-4 rounded-2xl shadow-lg mt-4">SIMPAN KOMISI</button>
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="index.html"><i class="fas fa-house"></i>Home</a>
+    <a href="input.html"><i class="fas fa-circle-plus"></i>Input</a>
+    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="komisi.html" class="active"><i class="fas fa-wallet"></i>Komisi</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    
+    const firebaseConfig = { apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", authDomain: "mahika-trans.firebaseapp.com", projectId: "mahika-trans", storageBucket: "mahika-trans.firebasestorage.app", messagingSenderId: "1087881066133", appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.toggleForm = (show) => {
+        document.getElementById('bottomSheet').classList.toggle('active', show);
+        document.getElementById('overlay').classList.toggle('active', show);
+    };
+
+    window.loadKomisi = async () => {
+        const listDiv = document.getElementById('listKomisi');
+        const filterVal = document.getElementById('selectBulan').value; // Contoh: "2026-01"
+        
+        try {
+            const q = query(
+                collection(db, "komisi"),
+                where("bulan", "==", filterVal),
+                orderBy("tgl", "desc")
+            );
+            
+            const snap = await getDocs(q);
+            listDiv.innerHTML = "";
+            let total = 0;
+
+            if (snap.empty) {
+                listDiv.innerHTML = "<p class='text-center text-gray-400 mt-10'>Belum ada data komisi bulan ini.</p>";
+                document.getElementById('totalKomisi').innerText = "Rp 0";
+                return;
+            }
+
+            snap.forEach(doc => {
+                const d = doc.data();
+                total += parseInt(d.komisi);
+                listDiv.innerHTML += `
+                    <div class="card-komisi">
+                        <div class="pax-circle">${d.pax}</div>
+                        <div class="info-komisi">
+                            <b>${d.nama}</b>
+                            <small>${d.tgl}</small>
+                        </div>
+                        <div class="amount-komisi">+ Rp ${parseInt(d.komisi).toLocaleString()}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('totalKomisi').innerText = "Rp " + total.toLocaleString();
+
+        } catch (e) {
+            console.error(e);
+            listDiv.innerHTML = "<p class='text-center text-red-500 mt-10'>Gagal memuat data.</p>";
+        }
+    };
+
+    document.getElementById('btnSaveKomisi').onclick = async () => {
+        const btn = document.getElementById('btnSaveKomisi');
+        const tgl = document.getElementById('k-tgl').value;
+        const nama = document.getElementById('k-nama').value;
+        const pax = document.getElementById('k-pax').value;
+        const rp = document.getElementById('k-rp').value;
+
+        if(!tgl || !nama || !rp) return alert("Lengkapi datanya, Bro!");
+
+        btn.disabled = true;
+        btn.innerText = "Saving...";
+
+        const data = {
+            tgl: tgl,
+            bulan: tgl.substring(0, 7), // Ambil "YYYY-MM" untuk filter
+            nama: nama,
+            pax: pax,
+            komisi: rp,
+            createdAt: serverTimestamp()
+        };
+
+        try {
+            await addDoc(collection(db, "komisi"), data);
+            toggleForm(false);
+            location.reload(); // Reload otomatis seperti permintaanmu
+        } catch (e) {
+            alert(e.message);
+            btn.disabled = false;
+        }
+    };
+
+    // Jalankan pas awal buka
+    window.onload = loadKomisi;
+</script>
+
+</body>
+  </html>
+  
