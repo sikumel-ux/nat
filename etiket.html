@@ -3,52 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Ticket Mahika Trans</title>
+    <title>E-Ticket Modern | Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; margin: 0; }
+        
+        /* Header Curvy */
+        .header-curvy { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 40px 20px 70px; 
+            border-radius: 0 0 40px 40px; 
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(4, 58, 96, 0.2);
+        }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 22px; margin: 0; font-style: italic; }
+        .header-curvy p { color: white; font-size: 11px; opacity: 0.8; letter-spacing: 2px; }
+
+        /* Ticket Container */
+        .ticket-body { margin-top: -40px; padding: 0 20px 50px; }
+        
+        /* Info Card Style */
+        .info-card { 
+            background: white; 
+            padding: 15px 20px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04); 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 12px;
+        }
+        .info-icon { 
+            width: 40px; height: 40px; background: #f0f7ff; 
+            color: var(--primary-blue); border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; 
+            margin-right: 15px; font-size: 18px;
+        }
+        .info-val { font-size: 14px; font-weight: 600; color: #334155; }
+
+        /* Barcode Section */
+        .barcode-card {
+            background: white; border-radius: 30px; padding: 30px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            margin-top: 20px; border: 2px solid #fff;
+        }
+        
+        /* Terms Section */
+        .terms { margin-top: 25px; padding: 20px; background: #e2e8f0; border-radius: 20px; }
+        .terms h4 { font-size: 12px; font-weight: 700; color: var(--primary-blue); margin-bottom: 10px; text-transform: uppercase; }
+        .terms li { font-size: 11px; color: #64748b; margin-bottom: 5px; list-style: none; position: relative; padding-left: 15px; }
+        .terms li::before { content: '•'; position: absolute; left: 0; color: var(--primary-blue); font-weight: bold; }
+
+        .hidden { display: none; }
+    </style>
 </head>
-<body class="bg-[#b3cde0] p-6 flex items-center justify-center min-h-screen font-sans">
-    <div id="ticket" class="hidden w-full max-w-sm bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border-b-8 border-[#005b96]">
-        <div class="bg-[#005b96] p-8 text-white text-center">
-            <h1 class="text-3xl font-black italic tracking-tighter">MAHIKA TRANS</h1>
-            <p class="text-[10px] opacity-60 font-bold uppercase tracking-widest mt-1">E-Ticket Penumpang</p>
-        </div>
-        <div class="p-8">
-            <div id="qrcode" class="flex justify-center p-4 border-2 border-dashed border-[#b3cde0] rounded-3xl mb-6"></div>
-            <div class="grid grid-cols-2 gap-4 text-sm mb-6">
-                <div><p class="text-[10px] text-gray-400 font-bold uppercase">Nama</p><p id="v-nama" class="font-black text-[#005b96]"></p></div>
-                <div class="text-right"><p class="text-[10px] text-gray-400 font-bold uppercase">Armada</p><p id="v-armada" class="font-bold"></p></div>
-                <div><p class="text-[10px] text-gray-400 font-bold uppercase">Jadwal</p><p id="v-tgl" class="font-bold"></p><p id="v-jam" class="text-xs text-gray-500"></p></div>
-                <div class="text-right"><p class="text-[10px] text-gray-400 font-bold uppercase">Kursi</p><p id="v-kursi" class="text-3xl font-black text-[#005b96]"></p></div>
-            </div>
-            <div class="bg-gray-50 p-4 rounded-2xl text-center border">
-                <p class="text-[10px] text-gray-400 font-bold uppercase">Rute Tujuan</p>
-                <p id="v-tujuan" class="font-black text-[#6497b1]"></p>
-            </div>
-        </div>
+<body>
+
+<div id="loader" class="flex flex-col items-center justify-center min-h-screen">
+    <i class="fas fa-circle-notch fa-spin text-3xl text-blue-900 mb-4"></i>
+    <p class="text-gray-400 text-xs italic">Menyiapkan Tiket Anda...</p>
+</div>
+
+<div id="ticketContent" class="hidden">
+    <div class="header-curvy">
+        <h2>MAHIKA TRANS</h2>
+        <p>E-TICKET MANIFEST</p>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        const firebaseConfig = { apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", authDomain: "mahika-trans.firebaseapp.com", projectId: "mahika-trans", storageBucket: "mahika-trans.firebasestorage.app", messagingSenderId: "1087881066133", appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const id = new URLSearchParams(window.location.search).get('id');
-        if(id){
+    <div class="ticket-body">
+        <div class="grid grid-cols-12 gap-3">
+            <div class="col-span-8 info-card">
+                <div class="info-icon"><i class="fas fa-user"></i></div>
+                <div class="info-val" id="paxName">-</div>
+            </div>
+            <div class="col-span-4 info-card">
+                <div class="info-icon"><i class="fas fa-couch text-orange-500"></i></div>
+                <div class="info-val font-bold text-orange-600" id="paxSeat">-</div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon"><i class="fas fa-map-location-dot"></i></div>
+            <div class="info-val" id="paxRoute">-</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-calendar-day"></i></div>
+                <div class="info-val text-xs" id="paxDate">-</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-clock"></i></div>
+                <div class="info-val" id="paxTime">-</div>
+            </div>
+        </div>
+
+        <div class="barcode-card">
+            <p class="text-[10px] text-gray-400 font-bold mb-4 uppercase tracking-widest">Pindai Saat Penjemputan</p>
+            <img id="qrCode" src="" class="mx-auto w-40 h-40 mb-4 rounded-xl border-4 border-gray-50">
+            <h4 class="text-blue-900 font-bold text-sm" id="ticketCode">-</h4>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+                <p class="text-blue-600 font-bold italic text-sm">Terima kasih telah memilih Mahika Trans!</p>
+            </div>
+        </div>
+
+        <div class="terms">
+            <h4><i class="fas fa-circle-exclamation mr-2"></i>Perhatian:</h4>
+            <ul>
+                <li>Datang 30 menit sebelum jam keberangkatan.</li>
+                <li>Anak usia di atas 3 tahun wajib memiliki tiket sendiri.</li>
+                <li>Tiket yang sudah dibeli tidak bisa dibatalkan/diuangkan.</li>
+            </ul>
+        </div>
+
+        <p class="text-center text-[9px] text-gray-400 mt-6 uppercase tracking-widest">© 2026 Mahika Trans Perjalanan Nyaman Aman</p>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        messagingSenderId: "1087881066133", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const bookingID = params.get('id');
+
+    if (!bookingID) {
+        window.location.href = "/index.html";
+    } else {
+        loadData(bookingID);
+    }
+
+    async function loadData(id) {
+        try {
             const snap = await getDoc(doc(db, "bookings", id));
-            if(snap.exists()){
+            if (snap.exists()) {
                 const d = snap.data();
-                document.getElementById('v-nama').innerText = d.nama;
-                document.getElementById('v-armada').innerText = d.armada;
-                document.getElementById('v-tgl').innerText = d.tgl;
-                document.getElementById('v-jam').innerText = d.jam;
-                document.getElementById('v-kursi').innerText = d.kursi;
-                document.getElementById('v-tujuan').innerText = d.tujuan;
-                const qrVal = `MAHIKA TRANS | ${d.nama} | ${d.tgl} | Seat: ${d.kursi}`;
-                document.getElementById('qrcode').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrVal)}" />`;
-                document.getElementById('ticket').classList.remove('hidden');
+                
+                document.getElementById('paxName').innerText = d.nama;
+                document.getElementById('paxSeat').innerText = d.kursi;
+                document.getElementById('paxRoute').innerText = d.tujuan;
+                document.getElementById('paxTime').innerText = d.jam;
+                document.getElementById('ticketCode').innerText = id.substring(0, 8).toUpperCase();
+                
+                const tgl = new Date(d.tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                document.getElementById('paxDate').innerText = tgl;
+
+                document.getElementById('qrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${id}`;
+
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('ticketContent').classList.remove('hidden');
+            } else {
+                window.location.href = "/index.html";
             }
+        } catch (e) {
+            console.error(e);
+            alert("Terjadi kesalahan teknis.");
         }
-    </script>
+    }
+</script>
 </body>
-</html>
+    </html>
+    
