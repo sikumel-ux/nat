@@ -5,21 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Ticket | Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        .ticket-card { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .dashed-line { border-top: 2px dashed #e2e8f0; position: relative; margin: 20px 0; }
+        .dashed-line::before, .dashed-line::after { content: ''; position: absolute; top: -11px; width: 22px; height: 22px; background: #f1f5f9; border-radius: 50%; }
+        .dashed-line::before { left: -32px; }
+        .dashed-line::after { right: -32px; }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="p-6">
 
-<div id="ticketContent" class="hidden">
-    <div class="p-5 text-center">
-        <h1 class="font-bold text-xl">TIKET PERJALANAN</h1>
-        <p id="paxName" class="text-blue-600 font-bold"></p>
-        <p id="paxRoute"></p>
+    <div id="loader" class="text-center py-20">
+        <i class="fas fa-spinner fa-spin text-3xl text-blue-900 mb-3"></i>
+        <p class="text-gray-400 text-sm italic">Memvalidasi tiket...</p>
+    </div>
+
+    <div id="ticketContent" class="hidden max-w-md mx-auto">
+        <div class="ticket-card">
+            <div class="bg-[#065084] p-6 text-center text-white">
+                <h2 class="font-bold text-lg tracking-widest">MAHIKA TRANS</h2>
+                <p class="text-[10px] opacity-70">Electronic Travel Document</p>
+            </div>
+
+            <div class="p-8">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Penumpang</p>
+                        <h3 id="paxName" class="text-lg font-bold text-blue-900">-</h3>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Kursi</p>
+                        <h3 id="paxSeat" class="text-lg font-bold text-orange-500">-</h3>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase">Rute Tujuan</p>
+                    <p id="paxRoute" class="text-sm font-semibold text-gray-700">-</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Tanggal</p>
+                        <p id="paxDate" class="text-sm font-semibold text-gray-700">-</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Jam</p>
+                        <p id="paxTime" class="text-sm font-semibold text-gray-700">-</p>
+                    </div>
+                </div>
+
+                <div class="dashed-line"></div>
+
+                <div class="text-center">
+                    <p class="text-[10px] text-gray-400 font-bold mb-3 uppercase">Barcode Tiket</p>
+                    <img id="barcode" src="" alt="Barcode" class="mx-auto mb-2">
+                    <p id="ticketID" class="text-[9px] text-gray-300 tracking-widest uppercase"></p>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 text-center">
+                <p class="text-[9px] text-gray-400 italic">Harap tunjukkan e-tiket ini kepada kru saat penjemputan.</p>
+            </div>
         </div>
-</div>
-
-<div id="loader" class="flex items-center justify-center min-height-screen p-20">
-    <p class="text-gray-400 italic">Mengecek tiket...</p>
-</div>
+        
+        <button onclick="window.print()" class="w-full mt-6 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-400 text-xs font-bold uppercase tracking-widest">
+            <i class="fas fa-print mr-2"></i> Download / Print
+        </button>
+    </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -37,40 +93,46 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 1. LOGIKA TENDANG: Cek ID di URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const bookingID = urlParams.get('id');
+    // Ambil ID dari URL (?id=...)
+    const params = new URLSearchParams(window.location.search);
+    const bookingID = params.get('id');
 
     if (!bookingID) {
-        // Jika tidak ada ID, langsung lempar ke halaman utama
-        window.location.href = "../index.html";
+        window.location.href = "../index.html"; // Tendang ke home jika id kosong
     } else {
-        // 2. Jika ada ID, tarik data dari Firestore
-        loadTicketData(bookingID);
+        fetchData(bookingID);
     }
 
-    async function loadTicketData(id) {
+    async function fetchData(id) {
         try {
-            const docRef = doc(db, "bookings", id);
-            const docSnap = await getDoc(docRef);
+            const snap = await getDoc(doc(db, "bookings", id));
+            if (snap.exists()) {
+                const d = snap.data();
+                
+                // Isi ke HTML
+                document.getElementById('paxName').innerText = d.nama;
+                document.getElementById('paxSeat').innerText = d.kursi;
+                document.getElementById('paxRoute').innerText = d.tujuan;
+                document.getElementById('paxTime').innerText = d.jam;
+                document.getElementById('ticketID').innerText = id;
+                
+                // Format Tanggal Indo
+                const tgl = new Date(d.tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                document.getElementById('paxDate').innerText = tgl;
 
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                
-                // Masukkan data ke HTML
-                document.getElementById('paxName').innerText = data.nama;
-                document.getElementById('paxRoute').innerText = data.tujuan;
-                
-                // Tampilkan tiket, sembunyikan loader
-                document.getElementById('ticketContent').classList.remove('hidden');
+                // QR Code / Barcode (Pakai API Gratis)
+                document.getElementById('barcode').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${id}`;
+
+                // Tampilkan konten
                 document.getElementById('loader').classList.add('hidden');
+                document.getElementById('ticketContent').classList.remove('hidden');
             } else {
                 alert("Tiket tidak ditemukan!");
                 window.location.href = "../index.html";
             }
         } catch (e) {
             console.error(e);
-            window.location.href = "../index.html";
+            alert("Error memuat data.");
         }
     }
 </script>
