@@ -8,47 +8,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; margin: 0; padding-bottom: 100px; }
         
-        .header-curvy { 
+        .header-input { 
             background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
-            padding: 60px 25px 90px 25px; 
-            border-radius: 0 0 50px 50px; 
-            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3);
-            text-align: center;
+            padding: 30px 20px; border-radius: 0 0 30px 30px; color: white;
         }
-        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; font-style: italic; }
-        .header-curvy p { color: white; opacity: 0.8; font-size: 13px; margin-top: 5px; }
 
-        .form-container { 
-            margin-top: -60px; 
-            padding: 0 20px 120px; 
-            position: relative;
-            z-index: 10;
-        }
-        .input-card { 
-            background: white; 
-            padding: 30px 25px; 
-            border-radius: 35px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
-        }
-        
-        .field-group { margin-bottom: 20px; }
-        .field-group label { display: block; font-size: 11px; font-weight: 700; color: var(--primary-blue); margin-bottom: 6px; margin-left: 5px; text-transform: uppercase; }
-        .custom-input { 
-            width: 100%; padding: 15px 20px; border-radius: 20px; 
-            background: #f1f5f9; border: 1px solid #e2e8f0; 
-            font-size: 14px; outline: none; transition: all 0.3s; 
-        }
-        .custom-input:focus { border-color: var(--primary-blue); background: white; box-shadow: 0 0 0 4px rgba(6, 80, 132, 0.1); }
+        .form-container { margin-top: 20px; padding: 0 20px; }
+        .input-group { background: white; padding: 15px; border-radius: 20px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .input-group label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input, .input-group select { width: 100%; border: none; outline: none; font-size: 14px; font-weight: 600; color: #1e293b; }
 
-        .nav-bottom { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); 
-            display: flex; justify-content: space-around; padding: 15px 0; 
-            border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
+        .btn-simpan { 
+            background: var(--primary-blue); color: white; width: 100%; padding: 18px; 
+            border-radius: 20px; font-weight: 700; margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3);
         }
+
+        /* Nav Bottom */
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); z-index: 100; }
         .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
         .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
         .nav-bottom a.active { color: var(--primary-blue); }
@@ -56,134 +36,110 @@
 </head>
 <body>
 
-<div class="header-curvy">
-    <h2>MAHIKA TRANS</h2>
-    <p><i class="fas fa-edit mr-1"></i> Form Input Manifest</p>
+<div class="header-input">
+    <h1 class="text-xl font-bold"><i class="fas fa-edit mr-2"></i> Input Booking</h1>
+    <p class="text-[10px] opacity-70">Lengkapi data penumpang dengan benar</p>
 </div>
 
 <div class="form-container">
-    <div class="input-card">
-        <div class="field-group">
-            <label>Nama Penumpang</label>
-            <input type="text" id="nama" class="custom-input" placeholder="Nama lengkap...">
-        </div>
-        
-        <div class="field-group">
-            <label>WhatsApp</label>
-            <input type="text" id="hp" class="custom-input" placeholder="0812... / 812...">
-            <small class="text-[9px] text-gray-400 ml-2">*Otomatis format 62</small>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div class="field-group">
-                <label>Tanggal</label>
-                <input type="date" id="tgl" class="custom-input">
-            </div>
-            <div class="field-group">
-                <label>Jam</label>
-                <input type="text" id="jam" class="custom-input" placeholder="12:00 WIB">
-            </div>
-        </div>
-
-        <div class="field-group">
-            <label>Armada</label>
-            <input type="text" id="armada" class="custom-input" placeholder="Contoh: Hiace Premio">
-        </div>
-
-        <div class="field-group">
-            <label>Tujuan</label>
-            <input type="text" id="tujuan" class="custom-input" placeholder="Rute perjalanan...">
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="field-group">
-                <label>No. Kursi</label>
-                <input type="text" id="kursi" class="custom-input" placeholder="Ex: 1A">
-            </div>
-            <div class="field-group">
-                <label>Harga (Rp)</label>
-                <input type="number" id="harga" class="custom-input" placeholder="0">
-            </div>
-        </div>
-
-        <button id="btnSave" class="w-full bg-[#065084] hover:bg-[#043a60] text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all uppercase tracking-widest text-sm">
-            Simpan & Kirim Tiket
-        </button>
+    <div class="input-group">
+        <label>Nama Penumpang</label>
+        <input type="text" id="p-nama" placeholder="Contoh: Budi Santoso">
     </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div class="input-group">
+            <label>No. WhatsApp</label>
+            <input type="number" id="p-wa" placeholder="0812...">
+        </div>
+        <div class="input-group">
+            <label>Nomor Kursi</label>
+            <input type="text" id="p-kursi" placeholder="Cth: 1A">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label>Tujuan / Rute</label>
+        <input type="text" id="p-tujuan" placeholder="Cth: Jakarta - Bandung">
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div class="input-group">
+            <label>Tanggal</label>
+            <input type="date" id="p-tgl">
+        </div>
+        <div class="input-group">
+            <label>Jam</label>
+            <input type="time" id="p-jam">
+        </div>
+    </div>
+
+    <button id="btnSimpan" class="btn-simpan">
+        <i class="fas fa-paper-plane mr-2"></i> SIMPAN & KIRIM TIKET
+    </button>
 </div>
 
 <div class="nav-bottom">
-    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="index.html"><i class="fas fa-house"></i>Home</a>
     <a href="input.html" class="active"><i class="fas fa-circle-plus"></i>Input</a>
-    <a href="#"><i class="fas fa-wallet"></i>Komisi</a>
-    <a href="#" id="logoutBtn"><i class="fas fa-right-from-bracket"></i>Logout</a>
+    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
-        authDomain: "mahika-trans.firebaseapp.com",
-        projectId: "mahika-trans",
-        storageBucket: "mahika-trans.firebasestorage.app",
-        messagingSenderId: "1087881066133",
-        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        messagingSenderId: "1087881066133", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
     };
-
+    
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
 
-    document.getElementById('btnSave').onclick = async () => {
-        const btn = document.getElementById('btnSave');
-        let rawHp = document.getElementById('hp').value.trim();
-        
-        // --- LOGIKA AUTO-FORMAT 62 ---
-        if (rawHp.startsWith('0')) {
-            rawHp = '62' + rawHp.substring(1);
-        } else if (rawHp.startsWith('8')) {
-            rawHp = '62' + rawHp;
-        }
-        // -----------------------------
+    document.getElementById('btnSimpan').onclick = async () => {
+        const btn = document.getElementById('btnSimpan');
+        const nama = document.getElementById('p-nama').value;
+        const wa = document.getElementById('p-wa').value;
+        const kursi = document.getElementById('p-kursi').value;
+        const tujuan = document.getElementById('p-tujuan').value;
+        const tgl = document.getElementById('p-tgl').value;
+        const jam = document.getElementById('p-jam').value;
 
-        const data = {
-            nama: document.getElementById('nama').value,
-            hp: rawHp,
-            tgl: document.getElementById('tgl').value,
-            jam: document.getElementById('jam').value,
-            armada: document.getElementById('armada').value,
-            tujuan: document.getElementById('tujuan').value,
-            kursi: document.getElementById('kursi').value,
-            harga: document.getElementById('harga').value,
-            createdAt: serverTimestamp()
-        };
-
-        if(!data.nama || !data.hp || !data.tgl) return alert("Lengkapi Nama, HP, dan Tanggal!");
+        if(!nama || !wa || !tgl) return alert("Isi data minimal Nama, WA, dan Tanggal!");
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> MENGIRIM...';
 
         try {
-            const docRef = await addDoc(collection(db, "bookings"), data);
-            const tglIndo = new Date(data.tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            
+            // 1. Simpan ke Firestore
+            const docRef = await addDoc(collection(db, "bookings"), {
+                nama, wa, kursi, tujuan, tgl, jam,
+                createdAt: serverTimestamp()
+            });
+
+            // 2. GENERATE LINK BARU (TANPA .HTML)
+            // Ini akan menghasilkan: mahikatrans.com/t/?id=ABC123XYZ
             const etiketURL = `https://${window.location.hostname}/t/?id=${docRef.id}`;
-            const waText = `*TIKET MAHIKA TRANS*\n\nNama: ${data.nama}\nTanggal: ${tglIndo}\nJam: ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\n\nTiket Digital:\n${etiketURL}`;
+
+            // 3. Siapkan Pesan WA
+            const pesanWA = `Halo ${nama},\nTerima kasih telah memesan di *Mahika Trans*.\n\nBerikut adalah E-Tiket Anda:\n${etiketURL}\n\nHarap simpan link ini dan tunjukkan saat keberangkatan.`;
             
-            window.open(`https://wa.me/${data.hp}?text=${encodeURIComponent(waText)}`, '_blank');
-            location.href = "index.html";
+            // 4. Buka WhatsApp
+            window.location.href = `https://wa.me/62${wa.substring(1)}?text=${encodeURIComponent(pesanWA)}`;
+
         } catch (e) {
-            alert("Error: " + e.message);
+            console.error(e);
+            alert("Gagal menyimpan data.");
             btn.disabled = false;
-            btn.innerText = "Simpan & Kirim Tiket";
+            btn.innerText = "SIMPAN & KIRIM TIKET";
         }
     };
-
-    document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => location.href = "login.html");
 </script>
-
 </body>
 </html>
