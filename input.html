@@ -170,7 +170,7 @@
             const docRef = await addDoc(collection(db, "bookings"), data);
             const tglIndo = new Date(data.tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             
-            const etiketURL = `https://${window.location.hostname}/etiket.html?id=${docRef.id}`;
+            const etiketURL = `https://${window.location.hostname}/t/?id=${docRef.id}`;
             const waText = `*TIKET MAHIKA TRANS*\n\nNama: ${data.nama}\nTanggal: ${tglIndo}\nJam: ${data.jam}\nArmada: ${data.armada}\nKursi: ${data.kursi}\n\nTiket Digital:\n${etiketURL}`;
             
             window.open(`https://wa.me/${data.hp}?text=${encodeURIComponent(waText)}`, '_blank');
