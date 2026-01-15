@@ -119,7 +119,7 @@
         <h3 class="font-bold text-lg">Booking Berhasil!</h3>
         <p class="text-xs text-gray-400 mb-6 mt-2">Data sudah masuk ke Manifes.</p>
         
-        <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl text-xs font-bold uppercase mb-2"><i class="fab fa-whatsapp mr-1"></i> Lapor WhatsApp</a>
+        <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl text-xs font-bold uppercase mb-2"> Kirim WhatsApp</a>
         <a href="manifes.html" class="block w-full py-4 bg-blue-900 text-white rounded-xl text-xs font-bold uppercase mb-4">Buka Manifes</a>
         <button onclick="location.reload()" class="text-[10px] font-bold text-gray-400 uppercase">Input Baru</button>
     </div>
@@ -142,7 +142,6 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Set default tanggal hari ini
     document.getElementById('tgl_only').valueAsDate = new Date();
 
     document.getElementById('btnSimpan').onclick = async function() {
@@ -155,24 +154,42 @@
         const vTgl = document.getElementById('tgl_only').value;
         const vJam = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA || !vTgl || !vJam) return alert("Nama, WA, Tanggal & Jam wajib diisi!");
+        if(!vNama || !vWA || !vTgl || !vJam) return alert("Lengkapi data!");
 
         btn.innerText = "PROSES...";
         btn.disabled = true;
 
         try {
-            await addDoc(collection(db, "bookings"), {
+            const docRef = await addDoc(collection(db, "bookings"), {
                 nama: vNama,
                 wa: vWA,
                 kursi: vKursi,
                 armada: vArmada,
                 tujuan: vTujuan,
-                tgl: vTgl, // Simpan tanggal murni
-                jam: vJam + " WIB", // Simpan jam murni + label
+                tgl: vTgl,
+                jam: vJam + " WIB",
                 createdAt: new Date()
             });
 
-            const textWA = `*BOOKING BARU - MAHIKA TRANS*%0A━━━━━━━━━━━━━━━━━━━━%0A👤 *Nama:* ${vNama}%0A📱 *WA:* ${vWA}%0A💺 *Pax:* ${vKursi}%0A🚌 *Bus:* ${vArmada}%0A📍 *Tujuan:* ${vTujuan}%0A🗓️ *Tgl:* ${vTgl}%0A⏰ *Jam:* ${vJam} WIB%0A━━━━━━━━━━━━━━━━━━━━`;
+            // Membuat Link Etiket
+            const linkEtiket = window.location.origin + "/etiket.html?id=" + docRef.id;
+
+            // Format Pesan WhatsApp Sesuai Request (Tanpa Icon)
+            const textWA = `Halo, ${vNama}..%0A` +
+                           `Berikut adalah data pemesanan tiket Anda.%0A%0A` +
+                           `Tanggal: ${vTgl}%0A` +
+                           `Jam: ${vJam} WIB%0A%0A` +
+                           `Nama: ${vNama}%0A` +
+                           `No Hp: ${vWA}%0A` +
+                           `Armada: ${vArmada}%0A` +
+                           `Jurusan: ${vTujuan}%0A` +
+                           `No Kursi: ${vKursi}%0A%0A` +
+                           `---------------------------%0A` +
+                           `Bukti pemesanan: ${linkEtiket}%0A` +
+                           `---------------------------%0A%0A` +
+                           `Mohon datang paling lambat 30 menit sebelum jadwal keberangkatan.%0A%0A` +
+                           `Terimakasih.`;
+
             document.getElementById('linkWA').href = `https://wa.me/6281211407667?text=${textWA}`;
             document.getElementById('modalSukses').style.display = 'flex';
 
