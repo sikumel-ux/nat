@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Rute | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; padding-bottom: 120px; }
+        
+        .header-curvy { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 50px 25px 80px 25px; border-radius: 0 0 50px 50px; 
+            text-align: center; box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3);
+        }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; }
+
+        .form-container { margin-top: -50px; padding: 0 20px; position: relative; z-index: 10; }
+        .card-input { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid var(--gold); }
+
+        .group-field { margin-bottom: 15px; }
+        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 6px; }
+        .group-field input, .group-field textarea { 
+            width: 100%; border: 1.5px solid #eee; padding: 14px; border-radius: 15px; 
+            font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; 
+        }
+        
+        .btn-save { 
+            width: 100%; background: var(--primary-blue); color: white; border: none; 
+            padding: 16px; border-radius: 15px; font-weight: 700; font-size: 13px; 
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+        }
+
+        /* List Per PO */
+        .po-list-container { padding: 30px 20px; }
+        .po-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary-blue); }
+        .po-card b { color: var(--primary-blue); font-size: 14px; text-transform: uppercase; display: block; }
+        .po-card p { font-size: 11px; color: #666; margin-top: 5px; line-height: 1.6; }
+
+        .nav-bottom { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; background: white; display: flex; 
+            justify-content: space-around; padding: 15px 0; border-radius: 30px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
+        }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-curvy">
+    <h2>DATA RUTE PO</h2>
+    <div class="text-[10px] text-white opacity-60 font-bold uppercase tracking-widest mt-1">Management Database</div>
+</div>
+
+<div class="form-container">
+    <div class="card-input">
+        <div class="group-field">
+            <label>Nama PO / Armada</label>
+            <input type="text" id="poName" placeholder="Contoh: Murni Jaya">
+        </div>
+        <div class="group-field">
+            <label>Input Rute Baru (Bisa banyak pakai koma)</label>
+            <textarea id="ruteInput" rows="2" placeholder="Contoh: Bekasi, Karawang, Klari" class="w-full border: 1.5px solid #eee; padding: 14px; border-radius: 15px; font-family: 'Poppins'; font-size: 13px; font-weight: 600;"></textarea>
+        </div>
+        <button id="btnSimpanRute" class="btn-save">Update Rute PO</button>
+    </div>
+</div>
+
+<div class="po-list-container">
+    <div class="text-[11px] font-bold text-gray-400 uppercase mb-4 tracking-widest px-2">Daftar Rute Terdaftar</div>
+    <div id="displayRute">
+        <p class="text-center text-gray-400 text-xs py-10">Memuat data...</p>
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="input-rute.html" class="active"><i class="fas fa-route"></i>Rute</a>
+    <a href="input.html"><i class="fas fa-circle-plus"></i>Booking</a>
+    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadRuteData() {
+        const div = document.getElementById('displayRute');
+        const snap = await getDocs(collection(db, "direktori_rute"));
+        let html = "";
+        
+        snap.forEach(d => {
+            const data = d.data();
+            html += `
+                <div class="po-card">
+                    <b>${data.armada}</b>
+                    <p>${data.tujuan}</p>
+                </div>
+            `;
+        });
+        div.innerHTML = html || "<p class='text-center text-xs text-gray-400'>Belum ada data rute.</p>";
+    }
+
+    document.getElementById('btnSimpanRute').onclick = async function() {
+        const po = document.getElementById('poName').value.trim().toUpperCase();
+        const ruteRaw = document.getElementById('ruteInput').value.trim();
+
+        if(!po || !ruteRaw) return alert("Isi semua dulu, Bro!");
+
+        const btn = this;
+        btn.innerText = "SINKRONISASI...";
+        btn.disabled = true;
+
+        try {
+            // Pakai ID Dokumen = Nama PO (Biar gak dobel per armada)
+            const docRef = doc(db, "direktori_rute", po);
+            const docSnap = await getDoc(docRef);
+
+            let ruteFinal = "";
+
+            if (docSnap.exists()) {
+                // Jika PO sudah ada, kita gabungkan rutenya
+                const ruteLama = docSnap.data().tujuan.split(',').map(s => s.trim());
+                const ruteBaru = ruteRaw.split(',').map(s => s.trim());
+                
+                // ANTI-DOBEL LOGIC (Set)
+                const gabungan = [...new Set([...ruteLama, ...ruteBaru])];
+                ruteFinal = gabungan.join(', ');
+            } else {
+                // Jika PO baru, bersihkan rute dari duplikat inputan sendiri
+                const ruteBaru = [...new Set(ruteRaw.split(',').map(s => s.trim()))];
+                ruteFinal = ruteBaru.join(', ');
+            }
+
+            await setDoc(docRef, {
+                armada: po,
+                tujuan: ruteFinal,
+                updatedAt: new Date()
+            }, { merge: true });
+
+            alert("Rute " + po + " Berhasil Diupdate!");
+            location.reload();
+
+        } catch (e) {
+            console.error(e);
+            alert("Gagal simpan.");
+        }
+    }
+
+    loadRuteData();
+</script>
+</body>
+</html>
