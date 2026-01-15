@@ -3,85 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Manifest | Mahika Trans</title>
+    <title>Input Reservasi | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; overflow-x: hidden; padding-bottom: 120px; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; }
         
-        .header-dash { padding: 50px 25px 30px 25px; }
-        .header-dash h1 { font-size: 14px; margin: 0; opacity: 0.7; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
-        .header-dash h2 { font-size: 26px; margin: 5px 0 0 0; font-weight: 700; color: var(--gold); }
+        /* Header Melengkung Identik */
+        .header-curvy { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 50px 25px 80px 25px; 
+            border-radius: 0 0 50px 50px; 
+            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3);
+            text-align: center;
+        }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; text-transform: uppercase; }
+        .filter-info { text-align: center; margin-bottom: 15px; font-size: 11px; font-weight: 600; color: white; opacity: 0.8; letter-spacing: 1px; }
 
-        .form-container { padding: 0 20px; }
-        .card-input { background: var(--white); border-radius: 30px; padding: 30px 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); color: #333; }
+        /* Form Container Floating */
+        .form-container { margin-top: -50px; padding: 0 20px 120px; position: relative; z-index: 10; }
         
-        .group-field { margin-bottom: 20px; }
-        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
-        .group-field input { width: 100%; border: 1.5px solid #eee; padding: 15px; border-radius: 15px; font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; transition: 0.3s; }
-        .group-field input:focus { border-color: var(--primary-blue); outline: none; background: #f9f9f9; }
+        .card-input { 
+            background: white; border-radius: 30px; padding: 30px 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-top: 5px solid var(--gold);
+        }
 
-        .btn-save { width: 100%; background: var(--primary-blue); color: var(--white); border: none; padding: 18px; border-radius: 18px; font-family: 'Poppins'; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); transition: 0.3s; cursor: pointer; }
+        .group-field { margin-bottom: 18px; }
+        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 6px; margin-left: 5px; }
+        .group-field input { 
+            width: 100%; border: 1.5px solid #eee; padding: 14px; border-radius: 15px; 
+            font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; transition: 0.3s; 
+        }
+        .group-field input:focus { border-color: var(--primary-blue); outline: none; background: #fcfcfc; }
+
+        .btn-save { 
+            width: 100%; background: var(--primary-blue); color: var(--white); border: none; 
+            padding: 18px; border-radius: 18px; font-family: 'Poppins'; font-weight: 700; 
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px; 
+            box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); transition: 0.3s; cursor: pointer; margin-top: 10px;
+        }
         .btn-save:active { transform: scale(0.96); }
 
-        /* Bottom Nav (Sama dengan Dashboard kamu) */
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
-        .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
-        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        /* Nav Bottom Identik */
+        .nav-bottom { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); 
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
+        }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
         .nav-bottom a.active { color: var(--primary-blue); }
 
-        /* Modal Sukses Mewah */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(4, 58, 96, 0.95); z-index: 200; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
-        .modal-content { background: var(--white); width: 100%; max-width: 320px; border-radius: 35px; padding: 40px 30px; text-align: center; color: #333; }
-        .icon-check { width: 70px; height: 70px; background: #e7f3ff; color: var(--primary-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 20px; }
-        .modal-content h3 { margin: 0; font-size: 20px; font-weight: 700; }
-        .modal-content p { font-size: 12px; color: #999; margin: 10px 0 30px; }
-        .modal-btn-wa { display: block; background: #25D366; color: white; text-decoration: none; padding: 15px; border-radius: 15px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
-        .modal-btn-list { display: block; background: var(--primary-blue); color: white; text-decoration: none; padding: 15px; border-radius: 15px; font-size: 12px; font-weight: 700; }
+        /* Modal Custom */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 100%; max-width: 320px; border-radius: 35px; padding: 35px 25px; text-align: center; }
+        .icon-check { width: 60px; height: 60px; background: #f0fdf4; color: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 15px; }
+        .modal-btn { display: block; padding: 14px; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none; margin-bottom: 10px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="header-dash">
-    <h1>Reservasi Baru</h1>
-    <h2>Input Manifest</h2>
+<div class="header-curvy">
+    <h2>INPUT BOOKING</h2>
+    <div class="filter-info">Reservasi & Manifest Partner</div>
 </div>
 
 <div class="form-container">
     <div class="card-input">
         <div class="group-field">
             <label>Nama Penumpang</label>
-            <input type="text" id="nama" placeholder="Masukkan nama...">
+            <input type="text" id="nama" placeholder="Contoh: Budi Santoso">
         </div>
-        
-        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px;">
+
+        <div class="grid grid-cols-2 gap-4">
             <div class="group-field">
                 <label>No. WhatsApp</label>
-                <input type="tel" id="whatsapp" placeholder="0812...">
+                <input type="tel" id="whatsapp" placeholder="0812xxx">
             </div>
             <div class="group-field">
-                <label>Pax</label>
+                <label>Kursi (Pax)</label>
                 <input type="number" id="kursi" placeholder="1">
             </div>
         </div>
 
         <div class="group-field">
-            <label>Armada / Bus</label>
-            <input type="text" id="armada" placeholder="Murni Jaya / Agra Mas / dll">
+            <label>Armada / PO Bus</label>
+            <input type="text" id="armada" placeholder="Murni Jaya / Agra Mas">
         </div>
 
         <div class="group-field">
             <label>Tujuan</label>
-            <input type="text" id="tujuan" placeholder="Contoh: Klari, Karawang">
+            <input type="text" id="tujuan" placeholder="Contoh: Karawang / Klari">
         </div>
 
         <div class="group-field">
-            <label>Tanggal & Jam (YYYY-MM-DD)</label>
+            <label>Tanggal & Jam Berangkat</label>
             <input type="text" id="tgl_jam" placeholder="2026-01-15 18:30">
         </div>
 
-        <button id="btnSimpan" class="btn-save">Simpan Data</button>
+        <button id="btnSimpan" class="btn-save">SIMPAN SEKARANG</button>
     </div>
 </div>
 
@@ -90,25 +114,25 @@
     <a href="input.html" class="active"><i class="fas fa-circle-plus"></i>Input</a>
     <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
     <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
-    <a href="logout.html"><i class="fas fa-power-off"></i>Logout</a>
+    <a href="logout.html" id="logoutBtn"><i class="fas fa-power-off"></i>Logout</a>
 </div>
 
 <div id="modalSukses" class="modal">
     <div class="modal-content">
         <div class="icon-check"><i class="fas fa-check"></i></div>
-        <h3>Berhasil Simpan!</h3>
-        <p>Data manifest sudah sinkron dengan database server.</p>
+        <h3 class="font-bold text-lg">Data Tersimpan!</h3>
+        <p class="text-xs text-gray-400 mb-6 mt-2">Data manifest sudah sinkron ke Firebase.</p>
         
-        <a id="linkWA" href="#" target="_blank" class="modal-btn-wa"><i class="fab fa-whatsapp"></i> LAPOR WHATSAPP</a>
-        <a href="manifes.html" class="modal-btn-list">BUKA MANIFEST</a>
-        
-        <button onclick="location.reload()" style="border:none; background:none; color:#ccc; font-size:10px; font-weight:700; margin-top:20px; cursor:pointer; text-transform:uppercase;">Input Baru</button>
+        <a id="linkWA" href="#" target="_blank" class="modal-btn bg-green-500 text-white"><i class="fab fa-whatsapp mr-1"></i> Lapor WhatsApp</a>
+        <a href="manifes.html" class="modal-btn bg-blue-800 text-white">Buka Manifes</a>
+        <button onclick="location.reload()" class="mt-4 text-[10px] font-bold text-gray-300 uppercase">Input Baru</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
@@ -121,6 +145,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     document.getElementById('btnSimpan').onclick = async function() {
         const btn = this;
@@ -131,38 +156,37 @@
         const valTujuan = document.getElementById('tujuan').value;
         const valWaktu = document.getElementById('tgl_jam').value;
 
-        if(!valNama || !valWA) return alert("Nama dan WA harus diisi!");
+        if(!valNama || !valWA) return alert("Wajib isi Nama & WA!");
 
-        btn.innerText = "MENYIMPAN...";
+        btn.innerText = "PROSES SIMPAN...";
         btn.disabled = true;
 
         try {
-            // Kita simpan ke collection 'bookings' agar muncul di dashboard dashboard tadi
             await addDoc(collection(db, "bookings"), {
                 nama: valNama,
                 wa: valWA,
-                pax: valKursi,
+                kursi: valKursi, // Sesuai field di Manifes yang kamu kirim
                 armada: valArmada,
                 tujuan: valTujuan,
                 jam: valWaktu,
-                tgl: valWaktu.split(' ')[0], // Ambil YYYY-MM-DD nya saja
+                tgl: valWaktu.split(' ')[0], // Format YYYY-MM-DD
                 createdAt: new Date()
             });
 
-            // Teks untuk WA
-            const textWA = `*MANIFEST BARU - MAHIKA TRANS*%0A━━━━━━━━━━━━━━━━━━━━%0A👤 Nama: ${valNama}%0A📱 WA: ${valWA}%0A💺 Pax: ${valKursi}%0A🚌 Bus: ${valArmada}%0A📍 Rute: ${valTujuan}%0A⏰ Waktu: ${valWaktu}%0A━━━━━━━━━━━━━━━━━━━━`;
+            const textWA = `*BOOKING BARU - MAHIKA TRANS*%0A━━━━━━━━━━━━━━━━━━━━%0A👤 *Nama:* ${valNama}%0A📱 *WA:* ${valWA}%0A💺 *Pax:* ${valKursi}%0A🚌 *Bus:* ${valArmada}%0A📍 *Rute:* ${valTujuan}%0A⏰ *Waktu:* ${valWaktu}%0A━━━━━━━━━━━━━━━━━━━━`;
             document.getElementById('linkWA').href = `https://wa.me/6281211407667?text=${textWA}`;
 
-            // Munculkan Modal
             document.getElementById('modalSukses').style.display = 'flex';
 
         } catch (e) {
-            alert("Gagal simpan: " + e.message);
+            alert("Error: " + e.message);
         } finally {
-            btn.innerText = "SIMPAN DATA";
+            btn.innerText = "SIMPAN SEKARANG";
             btn.disabled = false;
         }
     }
+
+    document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => location.href = "login.html");
 </script>
 
 </body>
