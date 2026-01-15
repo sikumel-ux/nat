@@ -3,79 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Tiket | Mahika Trans</title>
+    <title>Input Reservasi | Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; }
-        .ticket-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .dotted-line { border-top: 2px dotted #e2e8f0; position: relative; margin: 20px 0; }
-        .dotted-line::before, .dotted-line::after { content: ''; position: absolute; top: -11px; width: 22px; height: 22px; background: #f0f4f8; border-radius: 50%; }
-        .dotted-line::before { left: -31px; }
-        .dotted-line::after { right: -31px; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; }
+        
+        .header-curvy { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 50px 25px 80px 25px; border-radius: 0 0 50px 50px; 
+            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3); text-align: center;
+        }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; text-transform: uppercase; }
+        .filter-info { text-align: center; margin-bottom: 15px; font-size: 11px; font-weight: 600; color: white; opacity: 0.8; letter-spacing: 1px; }
+
+        .form-container { margin-top: -50px; padding: 0 20px 120px; position: relative; z-index: 10; }
+        .card-input { 
+            background: white; border-radius: 30px; padding: 30px 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid var(--gold);
+        }
+
+        .group-field { margin-bottom: 18px; }
+        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 6px; margin-left: 5px; }
+        .group-field input { 
+            width: 100%; border: 1.5px solid #eee; padding: 14px; border-radius: 15px; 
+            font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; transition: 0.3s; 
+        }
+        .group-field input:focus { border-color: var(--primary-blue); outline: none; background: #fcfcfc; }
+
+        .btn-save { 
+            width: 100%; background: var(--primary-blue); color: var(--white); border: none; 
+            padding: 18px; border-radius: 18px; font-weight: 700; 
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px; 
+            box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); cursor: pointer;
+        }
+
+        .nav-bottom { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); 
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
+        }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 100%; max-width: 320px; border-radius: 35px; padding: 35px 25px; text-align: center; }
     </style>
 </head>
-<body class="p-6">
+<body>
 
-<div id="loader" class="text-center mt-20 text-gray-400">Memuat Tiket...</div>
+<div class="header-curvy">
+    <h2>INPUT BOOKING</h2>
+    <div class="filter-info">Reservasi & Manifest Partner</div>
+</div>
 
-<div id="ticket-container" class="hidden max-w-sm mx-auto">
-    <div class="ticket-card">
-        <div class="bg-blue-900 p-6 text-center text-white">
-            <h2 class="font-bold tracking-tighter text-xl">MAHIKA TRANS</h2>
-            <p class="text-[10px] opacity-60 uppercase tracking-widest">Official E-Ticket</p>
+<div class="form-container">
+    <div class="card-input">
+        <div class="group-field">
+            <label>Nama Penumpang</label>
+            <input type="text" id="nama" placeholder="Contoh: Budi Santoso">
         </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="group-field">
+                <label>No. WhatsApp</label>
+                <input type="tel" id="whatsapp" placeholder="0812xxx">
+            </div>
+            <div class="group-field">
+                <label>Kursi (Pax)</label>
+                <input type="number" id="kursi" value="1">
+            </div>
+        </div>
+
+        <div class="group-field">
+            <label>Armada / PO Bus</label>
+            <input type="text" id="armada" placeholder="Murni Jaya / Agra Mas">
+        </div>
+
+        <div class="group-field">
+            <label>Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Contoh: Karawang / Klari">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="group-field">
+                <label>Tanggal Berangkat</label>
+                <input type="date" id="tgl_only">
+            </div>
+            <div class="group-field">
+                <label>Jam (WIB)</label>
+                <input type="text" id="jam_only" placeholder="18:30">
+            </div>
+        </div>
+
+        <button id="btnSimpan" class="btn-save">SIMPAN SEKARANG</button>
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="inputnya.html" class="active"><i class="fas fa-circle-plus"></i>Booking</a>
+    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="logout.html" id="logoutBtn"><i class="fas fa-power-off"></i>Logout</a>
+</div>
+
+<div id="modalSukses" class="modal">
+    <div class="modal-content">
+        <div class="bg-green-50 text-green-500 w-16 h-16 rounded-full flex items-center justify-center text-2xl mx-auto mb-4"><i class="fas fa-check"></i></div>
+        <h3 class="font-bold text-lg">Booking Berhasil!</h3>
+        <p class="text-xs text-gray-400 mb-6 mt-2">Data sudah masuk ke Manifes.</p>
         
-        <div class="p-6">
-            <div class="flex justify-between mb-4">
-                <div>
-                    <p class="text-[9px] uppercase font-bold text-gray-400">Penumpang</p>
-                    <p id="t-nama" class="font-bold text-blue-900 uppercase"></p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[9px] uppercase font-bold text-gray-400">Kursi</p>
-                    <p id="t-kursi" class="font-bold text-blue-900"></p>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <p class="text-[9px] uppercase font-bold text-gray-400">Armada</p>
-                <p id="t-armada" class="font-bold text-gray-800"></p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <p class="text-[9px] uppercase font-bold text-gray-400">Tanggal</p>
-                    <p id="t-tgl" class="font-bold text-gray-800 text-sm"></p>
-                </div>
-                <div>
-                    <p class="text-[9px] uppercase font-bold text-gray-400">Jam</p>
-                    <p id="t-jam" class="font-bold text-gray-800 text-sm"></p>
-                </div>
-            </div>
-
-            <div class="dotted-line"></div>
-
-            <div class="mb-4">
-                <p class="text-[9px] uppercase font-bold text-gray-400">Tujuan</p>
-                <p id="t-tujuan" class="font-bold text-blue-700"></p>
-            </div>
-
-            <div class="bg-gray-50 p-4 rounded-xl flex justify-between items-center">
-                <span class="text-[10px] font-bold text-gray-400 uppercase">Total</span>
-                <span id="t-harga" class="font-black text-lg text-blue-900"></span>
-            </div>
-        </div>
-        
-        <div class="bg-gray-100 p-4 text-center">
-            <p class="text-[8px] text-gray-400">Tunjukkan tiket ini saat keberangkatan</p>
-        </div>
+        <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl text-xs font-bold uppercase mb-2"> Kirim WhatsApp</a>
+        <a href="manifes.html" class="block w-full py-4 bg-blue-900 text-white rounded-xl text-xs font-bold uppercase mb-4">Buka Manifes</a>
+        <button onclick="location.reload()" class="text-[10px] font-bold text-gray-400 uppercase">Input Baru</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
@@ -87,40 +140,68 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const bookingId = urlParams.get('id');
+    document.getElementById('tgl_only').valueAsDate = new Date();
 
-    async function getTicket() {
-        if(!bookingId) return alert("ID Tidak Valid");
-        
-        const docRef = doc(db, "bookings", bookingId);
-        const snap = await getDoc(docRef);
+    document.getElementById('btnSimpan').onclick = async function() {
+        const btn = this;
+        const vNama = document.getElementById('nama').value;
+        const vWA = document.getElementById('whatsapp').value;
+        const vKursi = document.getElementById('kursi').value;
+        const vArmada = document.getElementById('armada').value;
+        const vTujuan = document.getElementById('tujuan').value;
+        const vTgl = document.getElementById('tgl_only').value;
+        const vJam = document.getElementById('jam_only').value;
 
-        if (snap.exists()) {
-            const d = snap.data();
-            document.getElementById('t-nama').innerText = d.nama;
-            document.getElementById('t-kursi').innerText = d.kursi + " Pax";
-            document.getElementById('t-armada').innerText = d.armada;
-            document.getElementById('t-tgl').innerText = d.tgl;
-            
-            // Bersihkan jam dari double WIB
-            let jamBersih = d.jam ? d.jam.replace(/WIB/g, '').trim() : '--:--';
-            document.getElementById('t-jam').innerText = jamBersih + " WIB";
-            
-            document.getElementById('t-tujuan').innerText = d.tujuan;
-            
-            // Format Harga Rupiah
-            const nominal = d.harga ? parseInt(d.harga).toLocaleString('id-ID') : '0';
-            document.getElementById('t-harga').innerText = "Rp " + nominal;
+        if(!vNama || !vWA || !vTgl || !vJam) return alert("Lengkapi data!");
 
-            document.getElementById('loader').classList.add('hidden');
-            document.getElementById('ticket-container').classList.remove('hidden');
-        } else {
-            document.getElementById('loader').innerText = "Tiket tidak ditemukan.";
+        btn.innerText = "PROSES...";
+        btn.disabled = true;
+
+        try {
+            const docRef = await addDoc(collection(db, "bookings"), {
+                nama: vNama,
+                wa: vWA,
+                kursi: vKursi,
+                armada: vArmada,
+                tujuan: vTujuan,
+                tgl: vTgl,
+                jam: vJam + " WIB",
+                createdAt: new Date()
+            });
+
+            // Membuat Link Etiket
+            const linkEtiket = window.location.origin + "/etiket.html?id=" + docRef.id;
+
+            // Format Pesan WhatsApp Sesuai Request (Tanpa Icon)
+            const textWA = `Halo, ${vNama}..%0A` +
+                           `Berikut adalah data pemesanan tiket Anda.%0A%0A` +
+                           `Tanggal: ${vTgl}%0A` +
+                           `Jam: ${vJam} WIB%0A%0A` +
+                           `Nama: ${vNama}%0A` +
+                           `No Hp: ${vWA}%0A` +
+                           `Armada: ${vArmada}%0A` +
+                           `Jurusan: ${vTujuan}%0A` +
+                           `No Kursi: ${vKursi}%0A%0A` +
+                           `---------------------------%0A` +
+                           `Bukti pemesanan: ${linkEtiket}%0A` +
+                           `---------------------------%0A%0A` +
+                           `Mohon datang paling lambat 30 menit sebelum jadwal keberangkatan.%0A%0A` +
+                           `Terimakasih.`;
+
+            document.getElementById('linkWA').href = `https://wa.me/6281211407667?text=${textWA}`;
+            document.getElementById('modalSukses').style.display = 'flex';
+
+        } catch (e) {
+            alert("Gagal simpan: " + e.message);
+        } finally {
+            btn.innerText = "SIMPAN SEKARANG";
+            btn.disabled = false;
         }
     }
-    getTicket();
+
+    document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => location.href = "login.html");
 </script>
 </body>
 </html>
