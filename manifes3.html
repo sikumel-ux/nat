@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifes Penumpang | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; min-height: 100vh; padding-bottom: 100px; }
+        
+        .header-manifes { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 40px 20px 60px; border-radius: 0 0 40px 40px; color: white; text-align: center;
+        }
+        .filter-box { 
+            margin: -30px 20px 20px; background: white; padding: 15px; 
+            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .card-penumpang {
+            background: white; border-radius: 20px; padding: 15px;
+            margin-bottom: 12px; border-left: 5px solid var(--primary-blue);
+            transition: 0.3s;
+        }
+        .btn-delete { color: #ef4444; padding: 10px; cursor: pointer; }
+        
+        .nav-bottom { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; background: white; 
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
+        }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-manifes">
+    <h2 class="text-xl font-bold tracking-tight uppercase">Manifes Penumpang</h2>
+    <p class="text-[10px] opacity-70 tracking-widest uppercase mt-1">Mahika Trans Official</p>
+</div>
+
+<div class="filter-box">
+    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 ml-1">Pilih Tanggal Keberangkatan</label>
+    <input type="date" id="filterTgl" class="w-full border-none bg-gray-50 p-3 rounded-xl font-bold text-blue-900 focus:ring-0">
+</div>
+
+<div id="manifes-container" class="px-5">
+    </div>
+
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="inputnya.html"><i class="fas fa-circle-plus"></i>Booking</a>
+    <a href="manifes.html" class="active"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="logout.html"><i class="fas fa-power-off"></i>Logout</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Set Default Tanggal ke Hari Ini
+    const inputTgl = document.getElementById('filterTgl');
+    inputTgl.valueAsDate = new Date();
+
+    async function loadManifes() {
+        const container = document.getElementById('manifes-container');
+        const selectedDate = inputTgl.value;
+        
+        container.innerHTML = '<p class="text-center p-10 text-gray-400 text-xs">Mencari data...</p>';
+
+        try {
+            const q = query(collection(db, "bookings"), where("tgl", "==", selectedDate));
+            const querySnapshot = await getDocs(q);
+            let dataList = [];
+
+            querySnapshot.forEach((doc) => {
+                dataList.push({ id: doc.id, ...doc.data() });
+            });
+
+            // LOGIKA SORTING BERDASARKAN JAM (08:00 -> 12:00 -> 19:00)
+            dataList.sort((a, b) => {
+                const jamA = (a.jam || "00:00").replace(/[^0-9:]/g, '');
+                const jamB = (b.jam || "00:00").replace(/[^0-9:]/g, '');
+                return jamA.localeCompare(jamB);
+            });
+
+            if (dataList.length === 0) {
+                container.innerHTML = '<div class="text-center p-10"><i class="fas fa-folder-open fa-3x text-gray-200 mb-3"></i><p class="text-gray-400 text-xs">Belum ada keberangkatan pada tanggal ini.</p></div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            dataList.forEach((item) => {
+                const card = `
+                    <div class="card-penumpang shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-black px-2 py-0.5 rounded uppercase">${item.jam}</span>
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase">${item.armada || 'Mahika Trans'}</span>
+                                </div>
+                                <h3 class="font-bold text-gray-800 uppercase text-sm">${item.nama}</h3>
+                                <p class="text-[11px] text-gray-500 font-medium"><i class="fas fa-location-dot mr-1"></i> ${item.tujuan}</p>
+                                <div class="mt-3 flex gap-3">
+                                    <a href="etiket.html?id=${item.id}" class="text-[10px] bg-gray-800 text-white px-3 py-1.5 rounded-lg font-bold uppercase"><i class="fas fa-ticket mr-1"></i> E-Tiket</a>
+                                    <a href="https://wa.me/${item.wa}" class="text-[10px] bg-green-500 text-white px-3 py-1.5 rounded-lg font-bold uppercase"><i class="fab fa-whatsapp mr-1"></i> Hubungi</a>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[9px] font-bold text-gray-400 uppercase">Kursi</p>
+                                <p class="text-lg font-black text-blue-900">${item.kursi}</p>
+                                <button onclick="hapusData('${item.id}')" class="btn-delete mt-4"><i class="fas fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+
+        } catch (e) {
+            console.error(e);
+            container.innerHTML = '<p class="text-center text-red-500 p-10 text-xs font-bold">Gagal memuat manifes!</p>';
+        }
+    }
+
+    // Fungsi Hapus Data
+    window.hapusData = async (id) => {
+        if (confirm("Hapus data penumpang ini dari manifes?")) {
+            await deleteDoc(doc(db, "bookings", id));
+            loadManifes(); // Refresh data
+        }
+    }
+
+    // Event Listener Tanggal
+    inputTgl.onchange = loadManifes;
+
+    // Load Pertama Kali
+    loadManifes();
+</script>
+
+</body>
+</html>
