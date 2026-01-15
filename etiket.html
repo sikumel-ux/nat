@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etiket Mahika Trans</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#065084">
+<link rel="icon" href="m.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="stylez.css">
+<style>
+    body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
+    
+    .etiket-header {
+        background-color: #065084 !important;
+        padding: 30px 20px;
+        text-align: center;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .kode-booking {
+        background: #FFD700;
+        color: #065084;
+        font-weight: 700;
+        margin-top: 10px;
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 5px;
+        letter-spacing: 2px;
+    }
+
+    /* CSS PENYUSUP */
+    .penyusup-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .penyusup-emoji { font-size: 80px; margin-bottom: 20px; animation: bounce 2s infinite; }
+    .penyusup-title { font-weight: 900; color: #e11d48; font-size: 26px; }
+    .penyusup-text { color: #64748b; margin-top: 10px; font-size: 15px; }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-20px);}
+        60% {transform: translateY(-10px);}
+    }
+
+    /* Loader Sederhana */
+    #loading-screen { text-align: center; padding-top: 100px; color: #065084; }
+
+    @media print { .nav-bottom { display: none; } }
+</style>
+</head>
+
+<body>
+
+<audio id="audioError" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
+
+<div id="loading-screen">
+    <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+    <p style="margin-top:10px">Mengecek tiket...</p>
+</div>
+
+<div id="main-content" class="etiket-container" style="display:none;">
+    <div class="etiket-header">
+        <div class="header">
+            <img src="logo.png" alt="Mahika Trans" class="logo" style="max-width: 150px; margin: 0 auto;">
+        </div>
+        <p class="kode-booking" id="kodeBooking">-</p>
+    </div>
+
+    <div class="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; background: white; margin: -20px 15px 0; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <div class="kolom">
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-user" style="width:20px"></i> <span id="nama"></span></p>
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-phone" style="width:20px"></i> <span id="no_hp"></span></p>
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-bus" style="width:20px"></i> <span id="armada">Mahika Trans</span></p>
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-map-marker-alt" style="width:20px"></i> <span id="tujuan"></span></p>
+        </div>
+
+        <div class="kolom">
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-chair" style="width:20px"></i> <span id="no_kursi"></span></p>
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-calendar-alt" style="width:20px"></i> <span id="tgl"></span></p>
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-clock" style="width:20px"></i> <span id="jam"></span></p>
+            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fa-solid fa-rupiah-sign" style="width:20px"></i> <span id="harga">200.000</span></p>
+        </div>
+    </div>
+
+    <div class="tear-line" style="border-top: 2px dashed #ccc; margin: 20px 0;"></div>
+
+    <div class="barcode" style="text-align:center; padding: 0 20px;">
+        <img id="barcodeImg" style="max-width: 100%;" alt="Barcode">
+        <p class="thanks" style="font-size: 10px; color: #666; margin-top: 10px;">Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.</p>
+    </div>
+
+    <div class="keterangan" style="padding: 20px; font-size: 11px; color: #444; line-height: 1.6;">
+        <p><strong>Perhatian:</strong></p>
+        <p>1. Tiket yang sudah dipesan tidak dapat dibatalkan</p>
+        <p>2. Harap datang maksimal 30 menit sebelum jadwal pemberangkatan</p>
+        <p>3. Anak usia 3 tahun atau tinggi badan 90cm wajib membeli tiket</p>
+    </div>
+</div>
+
+<div id="penyusup-screen" style="display:none;">
+    <div class="penyusup-container">
+        <div class="penyusup-emoji">🚫</div>
+        <h1 class="penyusup-title">BELI TIKET DULU, BRO!</h1>
+        <p class="penyusup-text">Tiket tidak valid atau kode booking salah.<br>Silahkan hubungi admin Mahika Trans.</p>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = { 
+    apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+    authDomain: "mahika-trans.firebaseapp.com", 
+    projectId: "mahika-trans", 
+    storageBucket: "mahika-trans.firebasestorage.app", 
+    messagingSenderId: "1087881066133", 
+    appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const params = new URLSearchParams(window.location.search);
+const kode = params.get("id"); // Link kamu pakai ?id=... kan?
+
+function mainkanTetot() {
+    const sound = document.getElementById("audioError");
+    sound.play().catch(e => console.log("Audio play blocked"));
+}
+
+function tampilkanPenyusup() {
+    document.getElementById("loading-screen").style.display = "none";
+    document.getElementById("penyusup-screen").style.display = "block";
+    document.getElementById("main-content").style.display = "none";
+    setTimeout(mainkanTetot, 500);
+}
+
+if(!kode){
+    tampilkanPenyusup();
+} else {
+    // AMBIL DATA DARI FIREBASE
+    try {
+        const docRef = doc(db, "bookings", kode);
+        const docSnap = await getDoc(docRef);
+
+        if(docSnap.exists()){
+            const data = docSnap.data();
+            
+            document.getElementById("loading-screen").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+            
+            // Set Data
+            document.getElementById("kodeBooking").innerText = kode.substring(0,8).toUpperCase();
+            document.getElementById("nama").innerText = data.nama;
+            document.getElementById("no_hp").innerText = data.wa || "-";
+            document.getElementById("tujuan").innerText = data.tujuan;
+            document.getElementById("no_kursi").innerText = "Kursi: " + data.kursi;
+            document.getElementById("jam").innerText = data.jam + " WIB";
+            
+            const tglKeberangkatan = new Date(data.tgl);
+            document.getElementById("tgl").innerText = tglKeberangkatan.toLocaleDateString("id-ID", {
+                day: "2-digit", month: "short", year: "numeric"
+            });
+            
+            // Barcode pakai ID Firestore
+            const barcodeUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(kode) + "&code=Code128&translate-esc=true";
+            document.getElementById("barcodeImg").src = barcodeUrl;
+
+        } else {
+            tampilkanPenyusup();
+        }
+    } catch (e) {
+        console.error(e);
+        tampilkanPenyusup();
+    }
+}
+</script>
+</body>
+</html>
