@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Trans | Official Reservation Partner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --mahika-blue: #00d2ff; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: radial-gradient(circle at 50% -20%, #065084 0%, #010b13 100%); color: white; min-height: 100vh; overflow-x: hidden; }
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .content-wrapper { position: relative; z-index: 10; padding-bottom: 50px; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .glass-heavy { background: rgba(1, 11, 19, 0.98); backdrop-filter: blur(25px); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+
+        /* Animation Info Top */
+        .info-fade { display: none; animation: fadeInOut 4s ease-in-out infinite; }
+        .info-fade.active { display: block; }
+        @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(5px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-5px); } }
+
+        /* Profile Sheet */
+        #company-profile { z-index: 1000; height: 92vh; border-radius: 40px 40px 0 0; }
+        .testi-item { display: none; animation: fadeIn 0.8s ease forwards; }
+        .testi-item.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dark Map Frame */
+        .map-container { border-radius: 30px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); height: 200px; filter: grayscale(1) invert(90%) contrast(1.2); }
+    </style>
+</head>
+<body class="flex flex-col items-center pt-12 px-6">
+
+    <div id="particles-js"></div>
+
+    <div class="content-wrapper w-full max-w-lg">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold tracking-tighter" style="color: var(--mahika-blue);">MAHIKA <span class="font-light text-white/80">Trans</span></h1>
+            <p class="text-[9px] font-bold tracking-[0.4em] uppercase text-sky-400 mt-2">Official Reservation Partner</p>
+        </div>
+
+        <div class="h-8 flex justify-center items-center mb-6">
+            <div class="info-fade active text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">🔥 Promo: Jakarta - Semarang Diskon 10%</div>
+            <div class="info-fade text-[10px] font-bold uppercase tracking-[0.2em] text-sky-400">🚍 Armada Hiace Premio & Elf Executive Ready</div>
+            <div class="info-fade text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">📍 Melayani Door to Door Service</div>
+        </div>
+
+        <div class="glass rounded-[30px] p-2 flex items-center mb-8 border-white/20 shadow-2xl">
+            <div class="pl-4 text-sky-400 opacity-40"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <input type="text" id="search-input" placeholder="Cari rute (Cth: Bekasi)" class="bg-transparent w-full p-4 outline-none text-white text-sm font-semibold tracking-wide placeholder:text-white/10">
+            <button id="btnSearch" class="bg-sky-400 text-black font-black py-4 px-8 rounded-[24px] text-[10px] uppercase transition-all active:scale-95 shadow-lg">CARI</button>
+        </div>
+
+        <div id="welcome-section" class="glass p-8 rounded-[40px] mb-12 border-white/5 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-5 text-4xl"><i class="fa-solid fa-bus"></i></div>
+            <h2 class="text-lg font-bold text-white mb-2">Selamat Datang, Bro!</h2>
+            <p class="text-[11px] leading-relaxed text-white/50 mb-4">Pusat reservasi tiket terpadu. Nikmati kenyamanan **Executive Class** dengan layanan door-to-door yang terpercaya.</p>
+            <div class="flex gap-2">
+                <span class="text-[8px] bg-sky-400/10 text-sky-400 px-3 py-1 rounded-full font-bold uppercase">Executive Class</span>
+                <span class="text-[8px] bg-white/5 text-white/40 px-3 py-1 rounded-full font-bold uppercase">Safe Travel</span>
+            </div>
+        </div>
+
+        <div id="result-container" class="hidden mb-12">
+            <div id="bus-list" class="space-y-4"></div>
+        </div>
+
+        <div class="flex flex-col items-center gap-4 mt-10">
+            <button onclick="toggleProfile()" class="w-16 h-16 glass rounded-full flex flex-col items-center justify-center animate-bounce shadow-2xl">
+                <i class="fa-solid fa-chevron-up text-sky-400 mb-1"></i>
+                <span class="text-[7px] font-bold uppercase text-white/40 tracking-[0.2em]">Profile</span>
+            </button>
+        </div>
+
+        <div class="text-center mt-20 opacity-20">
+            <p class="text-[8px] uppercase tracking-[0.5em]">© 2026 Mahika Trans</p>
+        </div>
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.23, 1, 0.32, 1)] glass-heavy overflow-y-auto">
+        <div class="sticky top-0 bg-transparent py-6 flex justify-center cursor-pointer z-50" onclick="toggleProfile()">
+            <div class="w-16 h-1.5 bg-white/20 rounded-full"></div>
+        </div>
+        
+        <div class="px-8 pb-10">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-black italic tracking-tighter text-white uppercase">Mahika Agency</h2>
+                <p class="text-[9px] font-bold tracking-[0.3em] text-sky-400">Official Reservation Partner</p>
+            </div>
+
+            <div class="mb-10 glass p-6 rounded-3xl">
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-sky-400 mb-3">Tentang Kami</h3>
+                <p class="text-xs leading-relaxed text-white/60 text-justify">Kami adalah agen tiket resmi yang siap melayani perjalanan Anda via darat, laut, dan udara dengan layanan prioritas.</p>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3 mb-10">
+                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-bus text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Bus</p></div>
+                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-van-shuttle text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Travel</p></div>
+                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-ship text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Kapal</p></div>
+                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-plane text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Pesawat</p></div>
+            </div>
+
+            <div class="mb-10 glass p-6 rounded-[35px] text-center min-h-[140px] flex items-center justify-center border-dashed border-white/10">
+                <div class="testi-item active"><p class="text-xs italic text-white/80">"Adminnya gercep banget!"</p><p class="text-[9px] font-black uppercase text-sky-400 mt-3">- Ridho</p></div>
+                <div class="testi-item"><p class="text-xs italic text-white/80">"Mobilnya bersih, nyaman poll!"</p><p class="text-[9px] font-black uppercase text-sky-400 mt-3">- Siska</p></div>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-sky-400 mb-4">Lokasi Kantor</h3>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.543598539234!2d110.3552097!3d-7.838031!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a573f34a525c7%3A0xf72713f86dd5fdbb!2sMAHIKA%20Trans!5e0!3m2!1sid!2sid!4v1705300000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <a href="https://wa.me/6281211407667" class="w-full py-5 glass border-sky-400/30 text-white flex items-center justify-center gap-3 rounded-2xl font-black text-[11px] uppercase tracking-widest mb-10 hover:bg-sky-400 hover:text-black transition-all shadow-lg">
+                <i class="fa-brands fa-whatsapp text-lg text-sky-400"></i> Priority Reservation
+            </a>
+            
+            <p class="text-center opacity-10 text-[7px] uppercase tracking-[1em] pt-6 border-t border-white/5">© 2026 Mahika Trans</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+            authDomain: "mahika-trans.firebaseapp.com", 
+            projectId: "mahika-trans", 
+            storageBucket: "mahika-trans.firebasestorage.app", 
+            messagingSenderId: "1087881066133", 
+            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        particlesJS("particles-js", { "particles": { "number": { "value": 25 }, "opacity": { "value": 0.1 }, "size": { "value": 1.5 }, "move": { "speed": 0.4 } } });
+
+        window.toggleProfile = function() {
+            const panel = document.getElementById('company-profile');
+            const isOpen = panel.style.transform === 'translateY(0px)';
+            panel.style.transform = isOpen ? 'translateY(100%)' : 'translateY(0px)';
+        }
+
+        // Search Logic with SMART FILTERING
+        document.getElementById('btnSearch').onclick = async function() {
+            const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+            if(!keyword) return;
+
+            document.getElementById('welcome-section').classList.add('hidden');
+            const busList = document.getElementById('bus-list');
+            document.getElementById('result-container').classList.remove('hidden');
+            busList.innerHTML = '<p class="text-center py-10 uppercase text-[9px] tracking-widest animate-pulse">Searching...</p>';
+
+            try {
+                const q = collection(db, "direktori_rute");
+                const snap = await getDocs(q);
+                let html = "";
+                let count = 0;
+
+                snap.forEach(doc => {
+                    const b = doc.data();
+                    const ruteLengkap = b.tujuan.toLowerCase();
+                    const namaArmada = b.armada.toLowerCase();
+
+                    // Cek apakah keyword ada di rute panjang atau nama armada
+                    if(ruteLengkap.includes(keyword) || namaArmada.includes(keyword)) {
+                        
+                        let ruteTampil = b.tujuan;
+
+                        // LOGIKA SMART: Jika user cari kota spesifik (bekasi), tampilkan bekasi aja.
+                        // Jika cari armada (murni jaya), tampilkan rute utama (sebelum koma).
+                        if (ruteLengkap.includes(keyword) && keyword.length > 2) {
+                            // Ambil rute yang pas dengan keyword saja
+                            ruteTampil = keyword.toUpperCase();
+                        } else {
+                            // Ambil kata pertama sebelum koma sebagai rute utama
+                            ruteTampil = b.tujuan.split(',')[0].trim();
+                        }
+
+                        html += `
+                        <div class="glass p-6 rounded-[30px] flex justify-between items-center transition-all active:scale-95">
+                            <div class="flex-1">
+                                <p class="text-[8px] font-black text-sky-400 uppercase mb-1">${b.armada}</p>
+                                <h3 class="text-sm font-bold text-white uppercase tracking-tight">${ruteTampil}</h3>
+                            </div>
+                            <div class="text-right border-l border-white/10 pl-5 ml-2">
+                                <p class="text-2xl font-black text-white">${b.jam.replace('WIB','')}</p>
+                                <p class="text-[8px] opacity-30">WIB</p>
+                            </div>
+                        </div>`;
+                        count++;
+                    }
+                });
+                busList.innerHTML = count > 0 ? html : '<p class="text-center py-10 text-white/20 text-xs italic">Rute tidak ditemukan.</p>';
+            } catch (e) {
+                busList.innerHTML = '<p class="text-center text-red-400 text-xs">Error Connection.</p>';
+            }
+        }
+
+        // Info & Testi Logic
+        let curI = 0, curT = 0;
+        const iI = document.querySelectorAll('.info-fade'), tI = document.querySelectorAll('.testi-item');
+        setInterval(() => { iI[curI].classList.remove('active'); curI = (curI + 1) % iI.length; iI[curI].classList.add('active'); }, 4000);
+        setInterval(() => { tI[curT].classList.remove('active'); curT = (curT + 1) % tI.length; tI[curT].classList.add('active'); }, 4000);
+    </script>
+</body>
+</html>
