@@ -89,6 +89,11 @@
             <input type="text" id="tujuan" placeholder="Contoh: Karawang / Klari">
         </div>
 
+        <div class="group-field">
+            <label>Harga Tiket (Rp)</label>
+            <input type="number" id="harga" placeholder="Contoh: 250000">
+        </div>
+
         <div class="grid grid-cols-2 gap-4">
             <div class="group-field">
                 <label>Tanggal Berangkat</label>
@@ -151,10 +156,14 @@
         const vKursi = document.getElementById('kursi').value;
         const vArmada = document.getElementById('armada').value;
         const vTujuan = document.getElementById('tujuan').value;
+        const vHarga = document.getElementById('harga').value;
         const vTgl = document.getElementById('tgl_only').value;
-        const vJam = document.getElementById('jam_only').value;
+        const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA || !vTgl || !vJam) return alert("Lengkapi data!");
+        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Lengkapi data!");
+
+        // Proteksi agar tidak double WIB
+        const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
 
         btn.innerText = "PROSES...";
         btn.disabled = true;
@@ -166,15 +175,15 @@
                 kursi: vKursi,
                 armada: vArmada,
                 tujuan: vTujuan,
+                harga: vHarga,
                 tgl: vTgl,
                 jam: vJam + " WIB",
                 createdAt: new Date()
             });
 
-            // Membuat Link Etiket
             const linkEtiket = window.location.origin + "/etiket.html?id=" + docRef.id;
 
-            // Format Pesan WhatsApp Sesuai Request (Tanpa Icon)
+            // Format WhatsApp tanpa icon, harga tampil rapi
             const textWA = `Halo, ${vNama}..%0A` +
                            `Berikut adalah data pemesanan tiket Anda.%0A%0A` +
                            `Tanggal: ${vTgl}%0A` +
@@ -183,7 +192,8 @@
                            `No Hp: ${vWA}%0A` +
                            `Armada: ${vArmada}%0A` +
                            `Jurusan: ${vTujuan}%0A` +
-                           `No Kursi: ${vKursi}%0A%0A` +
+                           `No Kursi: ${vKursi}%0A` +
+                           `Harga: Rp ${parseInt(vHarga).toLocaleString('id-ID')}%0A%0A` +
                            `---------------------------%0A` +
                            `Bukti pemesanan: ${linkEtiket}%0A` +
                            `---------------------------%0A%0A` +
