@@ -11,19 +11,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="stylez.css">
 <style>
+    /* CSS Tambahan khusus untuk Fitur Penyusup & Loader */
+    body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
     
-
-    /* CSS PENYUSUP */
-    .penyusup-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        text-align: center;
-        padding: 20px;
+    #loading-screen { 
+        display: flex; flex-direction: column; align-items: center; 
+        justify-content: center; height: 100vh; color: #065084; 
     }
 
+    .penyusup-container {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; height: 100vh; text-align: center; padding: 20px;
+    }
     .penyusup-emoji { font-size: 80px; margin-bottom: 20px; animation: bounce 2s infinite; }
     .penyusup-title { font-weight: 900; color: #e11d48; font-size: 26px; }
     .penyusup-text { color: #64748b; margin-top: 10px; font-size: 15px; }
@@ -34,10 +33,14 @@
         60% {transform: translateY(-10px);}
     }
 
-    /* Loader Sederhana */
-    #loading-screen { text-align: center; padding-top: 100px; color: #065084; }
+    .qr-container { text-align: center; padding: 20px; }
+    .qr-container img { 
+        width: 180px; height: 180px; margin: 0 auto; 
+        border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-radius: 15px;
+    }
 
-    @media print { .nav-bottom { display: none; } }
+    .hidden { display: none !important; }
 </style>
 </head>
 
@@ -47,41 +50,41 @@
 
 <div id="loading-screen">
     <i class="fas fa-circle-notch fa-spin fa-3x"></i>
-    <p style="margin-top:10px">Mengecek tiket...</p>
+    <p style="margin-top:15px; font-weight: 600;">Memvalidasi Tiket...</p>
 </div>
 
-<div id="main-content" class="etiket-container" style="display:none;">
+<div id="main-content" class="etiket-container hidden">
     <div class="etiket-header">
         <div class="header">
-            <img src="logo.png" alt="Mahika Trans" class="logo" style="max-width: 150px; margin: 0 auto;">
+            <img src="logo.png" alt="Mahika Trans" class="logo">
         </div>
         <p class="kode-booking" id="kodeBooking">-</p>
     </div>
 
-    <div class="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; background: white; margin: -20px 15px 0; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+    <div class="info-grid">
         <div class="kolom">
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-user" style="width:20px"></i> <span id="nama"></span></p>
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-phone" style="width:20px"></i> <span id="no_hp"></span></p>
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-bus" style="width:20px"></i> <span id="armada">Mahika Trans</span></p>
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-map-marker-alt" style="width:20px"></i> <span id="tujuan"></span></p>
+            <p><i class="fas fa-user"></i> <span id="nama"></span></p>
+            <p><i class="fas fa-phone"></i> <span id="no_hp"></span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada">Mahika Trans</span></p>
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
         </div>
 
         <div class="kolom">
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-chair" style="width:20px"></i> <span id="no_kursi"></span></p>
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-calendar-alt" style="width:20px"></i> <span id="tgl"></span></p>
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fas fa-clock" style="width:20px"></i> <span id="jam"></span></p>
-            <p style="font-size: 12px; margin-bottom: 15px;"><i class="fa-solid fa-rupiah-sign" style="width:20px"></i> <span id="harga">200.000</span></p>
+            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
+            <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
+            <p><i class="fas fa-clock"></i> <span id="jam"></span></p>
+            <p><i class="fa-solid fa-rupiah-sign"></i> <span id="harga"></span></p>
         </div>
     </div>
 
-    <div class="tear-line" style="border-top: 2px dashed #ccc; margin: 20px 0;"></div>
+    <div class="tear-line"></div>
 
-    <div class="barcode" style="text-align:center; padding: 0 20px;">
-        <img id="barcodeImg" style="max-width: 100%;" alt="Barcode">
-        <p class="thanks" style="font-size: 10px; color: #666; margin-top: 10px;">Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.</p>
+    <div class="qr-container">
+        <img id="qrImg" alt="QR Code Booking">
+        <p class="thanks" style="font-size: 11px; margin-top: 15px; color: #666;">Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.</p>
     </div>
 
-    <div class="keterangan" style="padding: 20px; font-size: 11px; color: #444; line-height: 1.6;">
+    <div class="keterangan">
         <p><strong>Perhatian:</strong></p>
         <p>1. Tiket yang sudah dipesan tidak dapat dibatalkan</p>
         <p>2. Harap datang maksimal 30 menit sebelum jadwal pemberangkatan</p>
@@ -89,7 +92,7 @@
     </div>
 </div>
 
-<div id="penyusup-screen" style="display:none;">
+<div id="penyusup-screen" class="hidden">
     <div class="penyusup-container">
         <div class="penyusup-emoji">🚫</div>
         <h1 class="penyusup-title">BELI TIKET DULU, BRO!</h1>
@@ -114,7 +117,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const params = new URLSearchParams(window.location.search);
-const kode = params.get("id"); // Link kamu pakai ?id=... kan?
+const ticketID = params.get("id");
 
 function mainkanTetot() {
     const sound = document.getElementById("audioError");
@@ -122,42 +125,45 @@ function mainkanTetot() {
 }
 
 function tampilkanPenyusup() {
-    document.getElementById("loading-screen").style.display = "none";
-    document.getElementById("penyusup-screen").style.display = "block";
-    document.getElementById("main-content").style.display = "none";
+    document.getElementById("loading-screen").classList.add("hidden");
+    document.getElementById("penyusup-screen").classList.remove("hidden");
     setTimeout(mainkanTetot, 500);
 }
 
-if(!kode){
+if(!ticketID) {
     tampilkanPenyusup();
 } else {
-    // AMBIL DATA DARI FIREBASE
     try {
-        const docRef = doc(db, "bookings", kode);
+        const docRef = doc(db, "bookings", ticketID);
         const docSnap = await getDoc(docRef);
 
         if(docSnap.exists()){
             const data = docSnap.data();
             
-            document.getElementById("loading-screen").style.display = "none";
-            document.getElementById("main-content").style.display = "block";
+            // Sembunyikan loader, tampilkan konten
+            document.getElementById("loading-screen").classList.add("hidden");
+            document.getElementById("main-content").classList.remove("hidden");
             
-            // Set Data
-            document.getElementById("kodeBooking").innerText = kode.substring(0,8).toUpperCase();
+            // Masukkan data ke elemen
+            document.getElementById("kodeBooking").innerText = ticketID.substring(0, 8).toUpperCase();
             document.getElementById("nama").innerText = data.nama;
             document.getElementById("no_hp").innerText = data.wa || "-";
             document.getElementById("tujuan").innerText = data.tujuan;
-            document.getElementById("no_kursi").innerText = "Kursi: " + data.kursi;
+            document.getElementById("no_kursi").innerText = data.kursi;
             document.getElementById("jam").innerText = data.jam + " WIB";
             
+            // Format Harga (Jika ada data harga di Firebase)
+            const hargaNominal = data.harga ? Number(data.harga).toLocaleString("id-ID") : "200.000";
+            document.getElementById("harga").innerText = hargaNominal;
+            
+            // Format Tanggal
             const tglKeberangkatan = new Date(data.tgl);
             document.getElementById("tgl").innerText = tglKeberangkatan.toLocaleDateString("id-ID", {
                 day: "2-digit", month: "short", year: "numeric"
             });
             
-            // Barcode pakai ID Firestore
-            const barcodeUrl = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(kode) + "&code=Code128&translate-esc=true";
-            document.getElementById("barcodeImg").src = barcodeUrl;
+            // QR CODE GENERATOR
+            document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${ticketID}`;
 
         } else {
             tampilkanPenyusup();
