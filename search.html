@@ -144,7 +144,7 @@
 
             try {
                 // Ambil semua data booking (atau data rute jika ada koleksi khusus)
-                const q = collection(db, "bookings");
+                const q = collection(db, "direktori_rute");
                 const querySnapshot = await getDocs(q);
                 let html = "";
                 let count = 0;
