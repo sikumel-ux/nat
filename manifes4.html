@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifes Penumpang | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; min-height: 100vh; padding-bottom: 100px; }
+        
+        .header-manifes { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 40px 20px 60px; border-radius: 0 0 40px 40px; color: white; text-align: center;
+        }
+        .filter-box { 
+            margin: -30px 20px 20px; background: white; padding: 15px; 
+            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .card-penumpang {
+            background: white; border-radius: 22px; padding: 18px;
+            margin-bottom: 15px; border-left: 6px solid var(--primary-blue);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .btn-action {
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-action i { color: var(--gold); }
+
+        .nav-bottom { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; background: white; 
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; 
+        }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-manifes">
+    <h2 class="text-xl font-bold tracking-tight uppercase text-[#FFD700] drop-shadow-md">Manifes Penumpang</h2>
+    <p class="text-[10px] opacity-70 tracking-widest uppercase mt-1">Mahika Trans Official</p>
+</div>
+
+<div class="filter-box text-center">
+    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Pilih Jadwal Keberangkatan</label>
+    
+    <div id="boxTgl" class="w-full bg-gray-50 p-3 rounded-xl border border-gray-100 flex justify-center items-center cursor-pointer">
+        <span id="teksTglIndo" class="font-bold text-blue-900 text-sm italic">Memuat Tanggal...</span>
+    </div>
+    
+    <input type="date" id="filterTgl" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+</div>
+
+<div id="manifes-container" class="px-5">
+    </div>
+
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="inputnya.html"><i class="fas fa-circle-plus"></i>Booking</a>
+    <a href="manifes.html" class="active"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="logout.html"><i class="fas fa-power-off"></i>Logout</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const inputTgl = document.getElementById('filterTgl');
+    const teksTglIndo = document.getElementById('teksTglIndo');
+
+    // Set Default Hari Ini
+    const today = new Date();
+    inputTgl.value = today.toISOString().split('T')[0];
+
+    // Fungsi Format Tanggal Indonesia Formal (Contoh: Kamis, 15 Januari 2026)
+    function updateTampilanTgl(dateStr) {
+        if(!dateStr) return;
+        const dateObj = new Date(dateStr);
+        const opsi = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        teksTglIndo.innerText = dateObj.toLocaleDateString('id-ID', opsi);
+    }
+
+    async function loadManifes() {
+        const container = document.getElementById('manifes-container');
+        const selectedDate = inputTgl.value;
+        
+        // Update teks visual filter ke format formal
+        updateTampilanTgl(selectedDate);
+        
+        container.innerHTML = '<div class="text-center p-10 text-gray-400 text-[10px] font-bold uppercase tracking-widest animate-pulse">Menghubungkan Database...</div>';
+
+        try {
+            const q = query(collection(db, "bookings"), where("tgl", "==", selectedDate));
+            const querySnapshot = await getDocs(q);
+            let dataList = [];
+
+            querySnapshot.forEach((doc) => {
+                dataList.push({ id: doc.id, ...doc.data() });
+            });
+
+            // SORTING BERDASARKAN JAM
+            dataList.sort((a, b) => {
+                const jamA = (a.jam || "00:00").replace(/[^0-9:]/g, '');
+                const jamB = (b.jam || "00:00").replace(/[^0-9:]/g, '');
+                return jamA.localeCompare(jamB);
+            });
+
+            if (dataList.length === 0) {
+                container.innerHTML = '<div class="text-center p-20 opacity-20"><p class="text-[10px] font-bold uppercase">Jadwal Kosong</p></div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            dataList.forEach((item) => {
+                container.innerHTML += `
+                    <div class="card-penumpang">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-blue-900 text-[11px] font-black uppercase">${item.jam}</span>
+                                    <span class="text-[9px] font-bold text-blue-900 opacity-20">|</span>
+                                    <span class="text-[11px] font-bold text-blue-900 uppercase">${item.armada || 'Mahika Trans'}</span>
+                                </div>
+                                <h3 class="font-bold text-gray-800 uppercase text-[15px] leading-tight">${item.nama}</h3>
+                                <p class="text-[11px] text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> ${item.tujuan}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[8px] font-bold text-blue-900 uppercase opacity-50">Kursi</p>
+                                <p class="text-xl font-black text-blue-900 leading-none">${item.kursi}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 pt-3 border-t border-gray-50">
+                            <a href="etiket.html?id=${item.id}" class="btn-action">
+                                <i class="fas fa-ticket"></i> Tiket
+                            </a>
+                            <a href="https://wa.me/${item.wa}" class="btn-action">
+                                <i class="fab fa-whatsapp"></i> Chat
+                            </a>
+                            <button onclick="hapusData('${item.id}')" class="btn-action">
+                                <i class="fas fa-trash-alt"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+        } catch (e) {
+            container.innerHTML = '<p class="text-center text-red-400 p-10 text-[10px]">Gagal memuat data.</p>';
+        }
+    }
+
+    window.hapusData = async (id) => {
+        if (confirm("Hapus data ini?")) {
+            await deleteDoc(doc(db, "bookings", id));
+            loadManifes();
+        }
+    }
+
+    inputTgl.onchange = loadManifes;
+    loadManifes();
+</script>
+
+</body>
+</html>
