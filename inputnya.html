@@ -3,65 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Input | Mahika Trans</title>
+    <title>Input Data | Mahika Trans Official</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #010b13; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        input { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; }
-        input:focus { border-color: #00d2ff !important; outline: none; }
+        :root { --mahika-blue: #00d2ff; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: radial-gradient(circle at 50% -20%, #065084 0%, #010b13 100%); color: white; min-height: 100vh; overflow-x: hidden; }
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .content-wrapper { position: relative; z-index: 10; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .glass-heavy { background: rgba(1, 11, 19, 0.95); backdrop-filter: blur(25px); }
+        
+        input { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; transition: all 0.3s; }
+        input:focus { border-color: var(--mahika-blue) !important; box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); outline: none; }
+        
+        .btn-glow { box-shadow: 0 0 20px rgba(0, 210, 255, 0.2); }
+        .btn-glow:active { transform: scale(0.95); }
     </style>
 </head>
-<body class="p-6 flex flex-col items-center min-h-screen">
+<body class="flex flex-col items-center pt-12 px-6">
 
-    <div class="w-full max-w-md">
-        <div class="mb-10 text-center">
-            <h1 class="text-2xl font-black text-sky-400">INPUT DATA RUTE</h1>
-            <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">Mahika Trans Management</p>
+    <div id="particles-js"></div>
+
+    <div class="content-wrapper w-full max-w-lg">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-extrabold tracking-tighter" style="color: var(--mahika-blue);">ADMIN <span class="font-light text-white/80">Input</span></h1>
+            <p class="text-[9px] font-bold tracking-[0.4em] uppercase text-white/30 mt-2">Management System v2.0</p>
         </div>
 
-        <div class="glass p-8 rounded-[40px] space-y-6">
-            <div>
-                <label class="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-2">Nama Armada</label>
-                <input type="text" id="armada" placeholder="Contoh: Murni Jaya" class="w-full p-4 rounded-2xl mt-2 text-sm">
-            </div>
-            <div>
-                <label class="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-2">Rute (Pisahkan Koma)</label>
-                <input type="text" id="tujuan" placeholder="Klari, Karawang, Bekasi" class="w-full p-4 rounded-2xl mt-2 text-sm">
-            </div>
-            <div>
-                <label class="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-2">Jam Keberangkatan</label>
-                <input type="text" id="jam" placeholder="18:30 WIB" class="w-full p-4 rounded-2xl mt-2 text-sm">
-            </div>
+        <div class="glass p-8 rounded-[40px] border-white/10 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-sky-400/10 rounded-full blur-3xl"></div>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-sky-400 ml-1">Nama Armada</label>
+                    <input type="text" id="armada" placeholder="Contoh: Murni Jaya" class="w-full p-4 rounded-2xl mt-2 text-sm font-semibold">
+                </div>
 
-            <button id="btnSimpan" class="w-full bg-sky-400 text-black font-black py-4 rounded-2xl text-xs uppercase tracking-widest transition-all active:scale-95 shadow-[0_0_20px_rgba(0,210,255,0.3)]">
-                SIMPAN DATA
-            </button>
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-sky-400 ml-1">Rute Destinasi</label>
+                    <input type="text" id="tujuan" placeholder="Klari, Karawang, Bekasi" class="w-full p-4 rounded-2xl mt-2 text-sm font-semibold">
+                    <p class="text-[8px] text-white/20 mt-2 italic">*Pisahkan dengan koma untuk banyak rute</p>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-sky-400 ml-1">Jam Keberangkatan</label>
+                    <input type="text" id="jam" placeholder="18:30 WIB" class="w-full p-4 rounded-2xl mt-2 text-sm font-semibold">
+                </div>
+
+                <button id="btnSimpan" class="w-full bg-sky-400 text-black font-black py-5 rounded-[24px] text-[11px] uppercase tracking-widest btn-glow transition-all mt-4">
+                    Simpan ke Database
+                </button>
+            </div>
         </div>
 
-        <div id="modalSukses" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-6">
-            <div class="glass p-8 rounded-[40px] w-full max-w-xs text-center">
-                <div class="w-20 h-20 bg-sky-400/20 text-sky-400 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
-                    <i class="fa-solid fa-check-double"></i>
-                </div>
-                <h2 class="text-xl font-bold mb-2">Sukses, Bro!</h2>
-                <p class="text-xs text-white/50 mb-8">Data sudah masuk database Mahika Trans.</p>
-                
-                <div class="space-y-3">
-                    <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-sky-400 hover:text-black transition-all">
-                        <i class="fa-brands fa-whatsapp mr-2"></i> Lapor WhatsApp
-                    </a>
-                    <a href="manifes.html" class="block w-full py-4 bg-sky-400 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg">
-                        <i class="fa-solid fa-table-list mr-2"></i> Ke Manifes
-                    </a>
-                    <button onclick="closeModal()" class="block w-full py-2 text-[9px] font-bold text-white/20 uppercase mt-4">Tutup</button>
-                </div>
+        <div class="text-center mt-12 opacity-20">
+            <p class="text-[8px] uppercase tracking-[0.5em]">© 2026 Mahika Trans Portal</p>
+        </div>
+    </div>
+
+    <div id="modalSukses" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-xl"></div>
+        <div class="glass-heavy p-10 rounded-[50px] w-full max-w-xs relative border border-white/10 text-center shadow-2xl">
+            <div class="w-20 h-20 bg-sky-400 text-black rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-[0_0_30px_rgba(0,210,255,0.5)]">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-xl font-black uppercase tracking-tighter mb-2">Berhasil!</h2>
+            <p class="text-[10px] text-white/40 uppercase tracking-widest mb-10">Data rute telah sinkron</p>
+            
+            <div class="space-y-4">
+                <a id="linkWA" href="#" target="_blank" class="block w-full py-4 glass border-sky-400/30 text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-sky-400 hover:text-black transition-all">
+                    <i class="fa-brands fa-whatsapp mr-2"></i> Lapor WhatsApp
+                </a>
+                <a href="manifes.html" class="block w-full py-4 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg">
+                    <i class="fa-solid fa-clipboard-list mr-2"></i> Lihat Manifes
+                </a>
+                <button onclick="closeModal()" class="block w-full py-2 text-[9px] font-bold text-white/20 uppercase mt-4 tracking-[0.3em]">Input Lagi</button>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -78,15 +102,17 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        particlesJS("particles-js", { "particles": { "number": { "value": 30 }, "opacity": { "value": 0.1 }, "size": { "value": 1.5 }, "move": { "speed": 0.6 } } });
+
         document.getElementById('btnSimpan').onclick = async function() {
             const armada = document.getElementById('armada').value;
             const tujuan = document.getElementById('tujuan').value;
             const jam = document.getElementById('jam').value;
 
-            if(!armada || !tujuan || !jam) return alert("Isi semua, Bro!");
+            if(!armada || !tujuan || !jam) return alert("Lengkapi datanya dulu, Bro!");
 
-            this.innerText = "PROSES...";
-            this.disabled = true;
+            this.innerText = "SINKRONISASI...";
+            this.classList.add('opacity-50', 'animate-pulse');
 
             try {
                 await addDoc(collection(db, "direktori_rute"), {
@@ -96,23 +122,23 @@
                     createdAt: new Date()
                 });
 
-                // 1. SET LINK WHATSAPP (Laporan ke owner/grup)
-                const textWA = `*LAPORAN DATA BARU - MAHIKA TRANS*%0A---------------------------%0AArmada: ${armada}%0ARute: ${tujuan}%0AJam: ${jam}%0A---------------------------%0ASudah tayang di website!`;
+                // Set link WA
+                const textWA = `*MAHIKA TRANS - DATA UPDATE*%0A━━━━━━━━━━━━━━━━━━━━%0A🚌 *Armada:* ${armada}%0A📍 *Rute:* ${tujuan}%0A⏰ *Jam:* ${jam}%0A━━━━━━━━━━━━━━━━━━━━%0A_Data sukses diinput ke database._`;
                 document.getElementById('linkWA').href = `https://wa.me/6281211407667?text=${textWA}`;
 
-                // 2. CLEAR FORM
+                // Clear Form
                 document.getElementById('armada').value = "";
                 document.getElementById('tujuan').value = "";
                 document.getElementById('jam').value = "";
 
-                // 3. TAMPILKAN MODAL PILIHAN
+                // Show Modal
                 document.getElementById('modalSukses').classList.remove('hidden');
                 
             } catch (e) {
-                alert("Gagal simpan: " + e);
+                alert("Waduh, gagal: " + e);
             } finally {
-                this.innerText = "SIMPAN DATA";
-                this.disabled = false;
+                this.innerText = "Simpan ke Database";
+                this.classList.remove('opacity-50', 'animate-pulse');
             }
         }
 
@@ -121,5 +147,4 @@
         }
     </script>
 </body>
-  </html>
-  
+</html>
