@@ -1,0 +1,234 @@
+/* =========================
+   GLOBAL
+========================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: 
+        url('https://www.transparenttextures.com/patterns/inspiration-geometry.png'),
+        #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* =========================
+   CONTAINER UTAMA
+========================= */
+.etiket-container {
+    width: 100%;
+    max-width: 400px;
+    height: 100vh;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================
+   HEADER
+========================= */
+.etiket-header {
+    background: linear-gradient(135deg, #0066AE, #005b99);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+.header img,
+.logo {
+    width: 80%;
+    height: auto;
+}
+
+/* =========================
+   KODE BOOKING
+========================= */
+.kode-booking {
+    position: relative;
+    top: 40px;
+    margin: auto;
+    width: 80%;
+    padding: 12px 20px;
+    background: #fff;
+    color: #004a80;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 10;
+}
+
+/* =========================
+   NAV TOP
+========================= */
+.nav-top {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.nav-top i {
+    color: #fff;
+    font-size: 18px;
+}
+
+/* =========================
+   INFO GRID
+========================= */
+.info-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    flex-grow: 1;
+}
+
+.kolom {
+    width: 48%;
+}
+
+.kolom p {
+    font-size: 14px;
+    padding: 8px;
+    background: #fff;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.kolom i {
+    margin-right: 8px;
+}
+
+/* =========================
+   KETERANGAN
+========================= */
+.keterangan {
+    font-size: 12px;
+    background: #eee;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* =========================
+   TEAR LINE
+========================= */
+.tear-line {
+    width: 100%;
+    height: 10px;
+    margin: 5px 0;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 8px,
+        #ccc 8px,
+        #ccc 10px
+    );
+}
+
+/* =========================
+   BARCODE
+========================= */
+.barcode-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.barcode {
+    width: 95%;
+    text-align: center;
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.barcode img {
+    width: 50%;
+    max-width: 60%;
+    height: auto;
+}
+
+.thanks {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #000;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.etiket-footer {
+    position: relative;
+    padding: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0066AE, #004a80);
+}
+
+.etiket-footer::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    bottom: 100%;
+    left: 0;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/6/6a/Sine_wave.svg');
+    background-size: cover;
+}
+
+/* =========================
+   NAV BOTTOM
+========================= */
+.nav-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+}
+
+.nav-bottom a {
+    width: 22%;
+    background: linear-gradient(135deg, #0066AE, #004a80);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.nav-bottom a:hover {
+    background: #005b99;
+    transform: scale(1.1);
+}
+
+/* =========================
+   KONTEN
+========================= */
+.konten {
+    padding-top: 20px;
+    padding-bottom: 80px;
+  }
