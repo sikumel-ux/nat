@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Input | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #010b13; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        input { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; }
+        input:focus { border-color: #00d2ff !important; outline: none; }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center min-h-screen">
+
+    <div class="w-full max-w-md">
+        <div class="mb-10 text-center">
+            <h1 class="text-2xl font-black text-sky-400">INPUT DATA RUTE</h1>
+            <p class="text-[10px] tracking-[0.3em] opacity-40 uppercase">Mahika Trans Management</p>
+        </div>
+
+        <div class="glass p-8 rounded-[40px] space-y-6">
+            <div>
+                <label class="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-2">Nama Armada</label>
+                <input type="text" id="armada" placeholder="Contoh: Murni Jaya" class="w-full p-4 rounded-2xl mt-2 text-sm">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-2">Rute (Pisahkan Koma)</label>
+                <input type="text" id="tujuan" placeholder="Klari, Karawang, Bekasi" class="w-full p-4 rounded-2xl mt-2 text-sm">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-2">Jam Keberangkatan</label>
+                <input type="text" id="jam" placeholder="18:30 WIB" class="w-full p-4 rounded-2xl mt-2 text-sm">
+            </div>
+
+            <button id="btnSimpan" class="w-full bg-sky-400 text-black font-black py-4 rounded-2xl text-xs uppercase tracking-widest transition-all active:scale-95 shadow-[0_0_20px_rgba(0,210,255,0.3)]">
+                SIMPAN DATA
+            </button>
+        </div>
+
+        <div id="modalSukses" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-6">
+            <div class="glass p-8 rounded-[40px] w-full max-w-xs text-center">
+                <div class="w-20 h-20 bg-sky-400/20 text-sky-400 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                    <i class="fa-solid fa-check-double"></i>
+                </div>
+                <h2 class="text-xl font-bold mb-2">Sukses, Bro!</h2>
+                <p class="text-xs text-white/50 mb-8">Data sudah masuk database Mahika Trans.</p>
+                
+                <div class="space-y-3">
+                    <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-sky-400 hover:text-black transition-all">
+                        <i class="fa-brands fa-whatsapp mr-2"></i> Lapor WhatsApp
+                    </a>
+                    <a href="manifes.html" class="block w-full py-4 bg-sky-400 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg">
+                        <i class="fa-solid fa-table-list mr-2"></i> Ke Manifes
+                    </a>
+                    <button onclick="closeModal()" class="block w-full py-2 text-[9px] font-bold text-white/20 uppercase mt-4">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+            authDomain: "mahika-trans.firebaseapp.com", 
+            projectId: "mahika-trans", 
+            storageBucket: "mahika-trans.firebasestorage.app", 
+            messagingSenderId: "1087881066133", 
+            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById('btnSimpan').onclick = async function() {
+            const armada = document.getElementById('armada').value;
+            const tujuan = document.getElementById('tujuan').value;
+            const jam = document.getElementById('jam').value;
+
+            if(!armada || !tujuan || !jam) return alert("Isi semua, Bro!");
+
+            this.innerText = "PROSES...";
+            this.disabled = true;
+
+            try {
+                await addDoc(collection(db, "direktori_rute"), {
+                    armada: armada,
+                    tujuan: tujuan,
+                    jam: jam,
+                    createdAt: new Date()
+                });
+
+                // 1. SET LINK WHATSAPP (Laporan ke owner/grup)
+                const textWA = `*LAPORAN DATA BARU - MAHIKA TRANS*%0A---------------------------%0AArmada: ${armada}%0ARute: ${tujuan}%0AJam: ${jam}%0A---------------------------%0ASudah tayang di website!`;
+                document.getElementById('linkWA').href = `https://wa.me/6281211407667?text=${textWA}`;
+
+                // 2. CLEAR FORM
+                document.getElementById('armada').value = "";
+                document.getElementById('tujuan').value = "";
+                document.getElementById('jam').value = "";
+
+                // 3. TAMPILKAN MODAL PILIHAN
+                document.getElementById('modalSukses').classList.remove('hidden');
+                
+            } catch (e) {
+                alert("Gagal simpan: " + e);
+            } finally {
+                this.innerText = "SIMPAN DATA";
+                this.disabled = false;
+            }
+        }
+
+        window.closeModal = function() {
+            document.getElementById('modalSukses').classList.add('hidden');
+        }
+    </script>
+</body>
+  </html>
+  
