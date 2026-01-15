@@ -3,186 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Reservasi | Mahika Trans Official</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
+    <title>Input Manifest | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --mahika-blue: #00d2ff; --bg-dark: #010b13; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: radial-gradient(circle at 50% -20%, #065084 0%, #010b13 100%); color: white; min-height: 100vh; overflow-x: hidden; padding-top: 100px; padding-bottom: 120px; }
-        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-        .content-wrapper { position: relative; z-index: 10; width: 100%; max-width: 450px; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); margin: 0; color: var(--white); min-height: 100vh; overflow-x: hidden; padding-bottom: 120px; }
         
-        /* Glassmorphism */
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glass-heavy { background: rgba(1, 11, 19, 0.85); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .header-dash { padding: 50px 25px 30px 25px; }
+        .header-dash h1 { font-size: 14px; margin: 0; opacity: 0.7; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
+        .header-dash h2 { font-size: 26px; margin: 5px 0 0 0; font-weight: 700; color: var(--gold); }
 
-        /* Floating Header */
-        .header-floating { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 450px; z-index: 100; border-radius: 25px; padding: 15px 25px; }
+        .form-container { padding: 0 20px; }
+        .card-input { background: var(--white); border-radius: 30px; padding: 30px 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); color: #333; }
+        
+        .group-field { margin-bottom: 20px; }
+        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
+        .group-field input { width: 100%; border: 1.5px solid #eee; padding: 15px; border-radius: 15px; font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; transition: 0.3s; }
+        .group-field input:focus { border-color: var(--primary-blue); outline: none; background: #f9f9f9; }
 
-        /* Inputs */
-        input { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; padding: 14px 20px; border-radius: 18px; width: 100%; font-size: 13px; font-weight: 600; transition: 0.3s; }
-        input:focus { border-color: var(--mahika-blue) !important; background: rgba(255, 255, 255, 0.08) !important; outline: none; box-shadow: 0 0 20px rgba(0, 210, 255, 0.15); }
-        label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--mahika-blue); margin-left: 5px; margin-bottom: 8px; display: block; opacity: 0.8; }
+        .btn-save { width: 100%; background: var(--primary-blue); color: var(--white); border: none; padding: 18px; border-radius: 18px; font-family: 'Poppins'; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); transition: 0.3s; cursor: pointer; }
+        .btn-save:active { transform: scale(0.96); }
 
-        /* Bottom Nav */
-        .nav-floating { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: calc(100% - 60px); max-width: 400px; z-index: 100; border-radius: 30px; display: flex; justify-content: space-around; padding: 15px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: white; opacity: 0.3; transition: 0.3s; }
-        .nav-item.active { opacity: 1; color: var(--mahika-blue); }
+        /* Bottom Nav (Sama dengan Dashboard kamu) */
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #999; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
 
-        .btn-main { background: var(--mahika-blue); color: black; font-weight: 900; letter-spacing: 0.1em; border-radius: 20px; transition: 0.3s; box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2); }
-        .btn-main:active { transform: scale(0.96); }
+        /* Modal Sukses Mewah */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(4, 58, 96, 0.95); z-index: 200; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
+        .modal-content { background: var(--white); width: 100%; max-width: 320px; border-radius: 35px; padding: 40px 30px; text-align: center; color: #333; }
+        .icon-check { width: 70px; height: 70px; background: #e7f3ff; color: var(--primary-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 20px; }
+        .modal-content h3 { margin: 0; font-size: 20px; font-weight: 700; }
+        .modal-content p { font-size: 12px; color: #999; margin: 10px 0 30px; }
+        .modal-btn-wa { display: block; background: #25D366; color: white; text-decoration: none; padding: 15px; border-radius: 15px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+        .modal-btn-list { display: block; background: var(--primary-blue); color: white; text-decoration: none; padding: 15px; border-radius: 15px; font-size: 12px; font-weight: 700; }
     </style>
 </head>
-<body class="flex flex-col items-center px-6">
+<body>
 
-    <div id="particles-js"></div>
+<div class="header-dash">
+    <h1>Reservasi Baru</h1>
+    <h2>Input Manifest</h2>
+</div>
 
-    <header class="header-floating glass-heavy flex justify-between items-center shadow-2xl">
-        <div>
-            <h1 class="text-xl font-black tracking-tighter leading-none" style="color: var(--mahika-blue);">MAHIKA <span class="font-light text-white">Trans</span></h1>
-            <p class="text-[7px] font-bold tracking-[0.3em] uppercase opacity-40">Reservation Portal</p>
+<div class="form-container">
+    <div class="card-input">
+        <div class="group-field">
+            <label>Nama Penumpang</label>
+            <input type="text" id="nama" placeholder="Masukkan nama...">
         </div>
-        <div class="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center border border-sky-400/30">
-            <i class="fa-solid fa-user-plus text-[10px] text-sky-400"></i>
-        </div>
-    </header>
-
-    <div class="content-wrapper">
-        <div class="glass p-8 rounded-[40px] shadow-2xl space-y-6">
-            <div class="text-center mb-4">
-                <h2 class="text-lg font-bold">Input Manifest</h2>
-                <div class="w-10 h-1 bg-sky-400 mx-auto mt-2 rounded-full opacity-50"></div>
+        
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px;">
+            <div class="group-field">
+                <label>No. WhatsApp</label>
+                <input type="tel" id="whatsapp" placeholder="0812...">
             </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label>Nama Penumpang</label>
-                    <input type="text" id="nama" placeholder="Ketik nama lengkap...">
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label>WhatsApp</label>
-                        <input type="tel" id="whatsapp" placeholder="0812...">
-                    </div>
-                    <div>
-                        <label>Jumlah Kursi</label>
-                        <input type="number" id="kursi" placeholder="1">
-                    </div>
-                </div>
-
-                <div>
-                    <label>Armada Bus</label>
-                    <input type="text" id="armada" placeholder="Contoh: Murni Jaya / Agra Mas">
-                </div>
-
-                <div>
-                    <label>Rute Tujuan</label>
-                    <input type="text" id="tujuan" placeholder="Contoh: Klari, Karawang">
-                </div>
-
-                <div>
-                    <label>Jam & Tanggal Berangkat</label>
-                    <input type="text" id="jam" placeholder="18:30 WIB - 15 Jan">
-                </div>
-
-                <button id="btnSimpan" class="btn-main w-full py-5 text-[11px] uppercase mt-4">
-                    SIMPAN MANIFEST
-                </button>
+            <div class="group-field">
+                <label>Pax</label>
+                <input type="number" id="kursi" placeholder="1">
             </div>
         </div>
 
-        <p class="text-center mt-10 opacity-20 text-[8px] uppercase tracking-[0.5em]">© 2026 Mahika Trans Portal</p>
+        <div class="group-field">
+            <label>Armada / Bus</label>
+            <input type="text" id="armada" placeholder="Murni Jaya / Agra Mas / dll">
+        </div>
+
+        <div class="group-field">
+            <label>Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Contoh: Klari, Karawang">
+        </div>
+
+        <div class="group-field">
+            <label>Tanggal & Jam (YYYY-MM-DD)</label>
+            <input type="text" id="tgl_jam" placeholder="2026-01-15 18:30">
+        </div>
+
+        <button id="btnSimpan" class="btn-save">Simpan Data</button>
     </div>
+</div>
 
-    <nav class="nav-floating glass-heavy shadow-2xl">
-        <a href="index.html" class="nav-item">
-            <i class="fa-solid fa-house-user text-lg"></i>
-            <span class="text-[7px] font-bold uppercase tracking-widest">Home</span>
-        </a>
-        <a href="input.html" class="nav-item active">
-            <i class="fa-solid fa-square-plus text-lg"></i>
-            <span class="text-[7px] font-bold uppercase tracking-widest">Input</span>
-        </a>
-        <a href="manifes.html" class="nav-item">
-            <i class="fa-solid fa-rectangle-list text-lg"></i>
-            <span class="text-[7px] font-bold uppercase tracking-widest">Manifest</span>
-        </a>
-    </nav>
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="input.html" class="active"><i class="fas fa-circle-plus"></i>Input</a>
+    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="logout.html"><i class="fas fa-power-off"></i>Logout</a>
+</div>
 
-    <div id="modalSukses" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-6">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
-        <div class="glass-heavy p-10 rounded-[50px] w-full max-w-xs relative border border-white/10 text-center shadow-2xl">
-            <div class="w-16 h-16 bg-sky-400 text-black rounded-full flex items-center justify-center mx-auto mb-6 text-2xl shadow-[0_0_30px_rgba(0,210,255,0.4)]">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h2 class="text-lg font-black uppercase tracking-tighter mb-1">Berhasil!</h2>
-            <p class="text-[9px] text-white/30 uppercase tracking-[0.2em] mb-10">Data manifest tersimpan</p>
-            
-            <div class="space-y-4">
-                <a id="linkWA" href="#" target="_blank" class="block w-full py-4 glass border-sky-400/30 text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest">
-                    <i class="fa-brands fa-whatsapp mr-2 text-sky-400"></i> Kirim WhatsApp
-                </a>
-                <a href="manifes.html" class="block w-full py-4 bg-white text-black rounded-2xl text-[10px] font-bold uppercase tracking-widest">
-                    <i class="fa-solid fa-table-list mr-2"></i> Buka Manifes
-                </a>
-                <button onclick="location.reload()" class="block w-full py-2 text-[8px] font-bold text-white/20 uppercase mt-4">Input Data Baru</button>
-            </div>
-        </div>
+<div id="modalSukses" class="modal">
+    <div class="modal-content">
+        <div class="icon-check"><i class="fas fa-check"></i></div>
+        <h3>Berhasil Simpan!</h3>
+        <p>Data manifest sudah sinkron dengan database server.</p>
+        
+        <a id="linkWA" href="#" target="_blank" class="modal-btn-wa"><i class="fab fa-whatsapp"></i> LAPOR WHATSAPP</a>
+        <a href="manifes.html" class="modal-btn-list">BUKA MANIFEST</a>
+        
+        <button onclick="location.reload()" style="border:none; background:none; color:#ccc; font-size:10px; font-weight:700; margin-top:20px; cursor:pointer; text-transform:uppercase;">Input Baru</button>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
-            authDomain: "mahika-trans.firebaseapp.com", 
-            projectId: "mahika-trans", 
-            storageBucket: "mahika-trans.firebasestorage.app", 
-            messagingSenderId: "1087881066133", 
-            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        messagingSenderId: "1087881066133",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        particlesJS("particles-js", { "particles": { "number": { "value": 30 }, "opacity": { "value": 0.1 }, "size": { "value": 1.5 }, "move": { "speed": 0.6 } } });
+    document.getElementById('btnSimpan').onclick = async function() {
+        const btn = this;
+        const valNama = document.getElementById('nama').value;
+        const valWA = document.getElementById('whatsapp').value;
+        const valKursi = document.getElementById('kursi').value;
+        const valArmada = document.getElementById('armada').value;
+        const valTujuan = document.getElementById('tujuan').value;
+        const valWaktu = document.getElementById('tgl_jam').value;
 
-        document.getElementById('btnSimpan').onclick = async function() {
-            const data = {
-                nama: document.getElementById('nama').value,
-                whatsapp: document.getElementById('whatsapp').value,
-                kursi: document.getElementById('kursi').value,
-                armada: document.getElementById('armada').value,
-                tujuan: document.getElementById('tujuan').value,
-                jam: document.getElementById('jam').value,
+        if(!valNama || !valWA) return alert("Nama dan WA harus diisi!");
+
+        btn.innerText = "MENYIMPAN...";
+        btn.disabled = true;
+
+        try {
+            // Kita simpan ke collection 'bookings' agar muncul di dashboard dashboard tadi
+            await addDoc(collection(db, "bookings"), {
+                nama: valNama,
+                wa: valWA,
+                pax: valKursi,
+                armada: valArmada,
+                tujuan: valTujuan,
+                jam: valWaktu,
+                tgl: valWaktu.split(' ')[0], // Ambil YYYY-MM-DD nya saja
                 createdAt: new Date()
-            };
+            });
 
-            if(!data.nama || !data.whatsapp) return alert("Waduh, Nama & WA diisi dulu Bro!");
+            // Teks untuk WA
+            const textWA = `*MANIFEST BARU - MAHIKA TRANS*%0A━━━━━━━━━━━━━━━━━━━━%0A👤 Nama: ${valNama}%0A📱 WA: ${valWA}%0A💺 Pax: ${valKursi}%0A🚌 Bus: ${valArmada}%0A📍 Rute: ${valTujuan}%0A⏰ Waktu: ${valWaktu}%0A━━━━━━━━━━━━━━━━━━━━`;
+            document.getElementById('linkWA').href = `https://wa.me/6281211407667?text=${textWA}`;
 
-            this.innerText = "SINKRONISASI...";
-            this.disabled = true;
+            // Munculkan Modal
+            document.getElementById('modalSukses').style.display = 'flex';
 
-            try {
-                // Simpan ke collection direktori_rute (Atau sesuaikan jika punya collection manifest)
-                await addDoc(collection(db, "direktori_rute"), data);
-
-                const textWA = `*BOOKING BARU - MAHIKA TRANS*%0A━━━━━━━━━━━━━━━━━━━━%0A👤 *Nama:* ${data.nama}%0A📱 *WA:* ${data.whatsapp}%0A💺 *Kursi:* ${data.kursi}%0A🚌 *Bus:* ${data.armada}%0A📍 *Rute:* ${data.tujuan}%0A⏰ *Waktu:* ${data.jam}%0A━━━━━━━━━━━━━━━━━━━━%0A_Input by Admin Portal_`;
-                document.getElementById('linkWA').href = `https://wa.me/6281211407667?text=${textWA}`;
-
-                document.getElementById('modalSukses').classList.remove('hidden');
-            } catch (e) {
-                alert("Error: " + e);
-            } finally {
-                this.innerText = "SIMPAN MANIFEST";
-                this.disabled = false;
-            }
+        } catch (e) {
+            alert("Gagal simpan: " + e.message);
+        } finally {
+            btn.innerText = "SIMPAN DATA";
+            btn.disabled = false;
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
