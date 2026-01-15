@@ -32,7 +32,6 @@
         60% {transform: translateY(-10px);}
     }
 
-    /* QR Code lebih kecil & tidak memanjang */
     .qr-container { text-align: center; padding: 10px 20px; }
     .qr-container img { 
         width: 130px; height: 130px; margin: 0 auto; 
@@ -65,11 +64,12 @@
         <div class="kolom">
             <p><i class="fas fa-user"></i> <span id="nama"></span></p>
             <p><i class="fas fa-phone"></i> <span id="no_hp"></span></p>
-            <p><i class="fas fa-bus"></i> <span>Mahika Trans</span></p> <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada"></span></p> 
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
         </div>
 
         <div class="kolom">
-            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span> Pax</p>
+            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
             <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
             <p><i class="fas fa-clock"></i> <span id="jam"></span></p>
             <p><i class="fa-solid fa-rupiah-sign"></i> Rp <span id="harga"></span></p>
@@ -139,20 +139,21 @@ if(!ticketID) {
             
             // Masukkan data
             document.getElementById("kodeBooking").innerText = ticketID.substring(0, 8).toUpperCase();
-            document.getElementById("nama").innerText = data.nama;
-            document.getElementById("no_hp").innerText = data.wa || "-";
-            document.getElementById("tujuan").innerText = data.tujuan;
-            document.getElementById("no_kursi").innerText = data.kursi;
+            document.getElementById("nama").innerText = data.nama || "-";
+            document.getElementById("no_hp").innerText = data.wa || "-"; // Munculkan No HP
+            document.getElementById("armada").innerText = data.armada || "-"; // Ambil dari inputan
+            document.getElementById("tujuan").innerText = data.tujuan || "-";
+            document.getElementById("no_kursi").innerText = data.kursi || "-"; // Pax dibuang
             
-            // Jam (Bikin rapi)
-            const jamClean = data.jam ? data.jam.replace(/WIB/gi, "").trim() : "--:--";
-            document.getElementById("jam").innerText = jamClean + " WIB";
+            // Fix Jam (Cegah Double WIB)
+            const jamBersih = data.jam ? data.jam.replace(/WIB/gi, "").trim() : "--:--";
+            document.getElementById("jam").innerText = jamBersih + " WIB";
             
             // Harga
             const hargaNominal = data.harga ? Number(data.harga).toLocaleString("id-ID") : "0";
             document.getElementById("harga").innerText = hargaNominal;
             
-            // Format Tanggal Indonesia (Contoh: 15 Jan 2026)
+            // Format Tanggal Indonesia
             if(data.tgl) {
                 const dateParts = data.tgl.split("-");
                 const dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -160,7 +161,7 @@ if(!ticketID) {
                 document.getElementById("tgl").innerText = dateObj.toLocaleDateString("id-ID", opsi);
             }
 
-            // QR Code (Isi link etiket)
+            // QR Code (Link etiket)
             const currentUrl = window.location.href;
             document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}`;
 
