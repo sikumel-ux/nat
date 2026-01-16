@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Etiket Mahika Trans</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#065084">
-<link rel="icon" href="m.png">
+<link rel="icon" href="../m.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="../stylez.css">
@@ -40,7 +40,7 @@
 <div id="main-content" class="etiket-container hidden">
     <div class="etiket-header">
         <div class="header">
-            <img src="logo.png" alt="Mahika Trans" class="logo">
+            <img src="../logo.png" alt="Mahika Trans" class="logo">
         </div>
         <p class="kode-booking" id="kodeBooking">-</p>
     </div>
@@ -94,9 +94,9 @@ const db = getFirestore(app);
 const params = new URLSearchParams(window.location.search);
 const ticketID = params.get("id");
 
-// Fungsi Penyusup langsung lempar ke 404.html
+// Fungsi Penyusup langsung lempar ke 404.html di folder utama
 function tampilkanPenyusup() {
-    window.location.href = "404.html";
+    window.location.href = "../404.html";
 }
 
 if(!ticketID) {
@@ -133,11 +133,9 @@ if(!ticketID) {
                 document.getElementById("tgl").innerText = dateObj.toLocaleDateString("id-ID", opsi);
             }
 
-            // Generate Kode Random MT-XXXX (4 angka)
+            // QR Code (MT-4 Angka Random)
             const randomDigits = Math.floor(1000 + Math.random() * 9000);
             const qrValue = "MT-" + randomDigits;
-
-            // QR Code (Isi Kode Random)
             document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrValue}`;
 
         } else {
