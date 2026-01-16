@@ -21,8 +21,8 @@
 <div class="form-container">
     <div class="card-input">
         <div class="group-field">
-            <label>Nama Penumpang</label>
-            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+            <label>Nama</label>
+            <input type="text" id="nama" placeholder="Fufufafa">
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -31,38 +31,38 @@
                 <input type="tel" id="whatsapp" placeholder="0812xxx">
             </div>
             <div class="group-field">
-                <label>Nomor Kursi</label>
-                <input type="text" id="kursi" placeholder="Contoh: 1A">
+                <label>Kursi</label>
+                <input type="text" id="kursi" placeholder="12-13">
             </div>
         </div>
 
         <div class="group-field">
-            <label>Armada / Bus</label>
-            <input type="text" id="armada" placeholder="Contoh: Mahika Jaya">
+            <label>Armada</label>
+            <input type="text" id="armada" placeholder="Mahika Jaya">
         </div>
 
         <div class="group-field">
-            <label>Kota Tujuan</label>
-            <input type="text" id="tujuan" placeholder="Contoh: Surabaya">
+            <label>Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Pasar Rebo">
         </div>
 
         <div class="group-field">
-            <label>Harga Tiket (Rp)</label>
+            <label>Harga</label>
             <input type="number" id="harga" placeholder="250000">
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div class="group-field">
-                <label>Tanggal Berangkat</label>
+                <label>Tanggal</label>
                 <input type="date" id="tgl_only">
             </div>
             <div class="group-field">
-                <label>Jam Keberangkatan</label>
-                <input type="text" id="jam_only" placeholder="Contoh: 17:30">
+                <label>Jam</label>
+                <input type="text" id="jam_only" placeholder="17:30">
             </div>
         </div>
 
-        <button id="btnSimpan" class="btn-save">SIMPAN & KIRIM TIKET</button>
+        <button id="btnSimpan" class="btn-save">SIMPAN SEKARANG</button>
     </div>
 </div>
 
@@ -77,18 +77,12 @@
 
 <div id="modalSukses" class="modal">
     <div class="modal-content">
-        <div class="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
-            <i class="fas fa-check"></i>
-        </div>
+        <div class="bg-green-50 text-green-500 w-16 h-16 rounded-full flex items-center justify-center text-2xl mx-auto mb-4"><i class="fas fa-check"></i></div>
         <h3 class="font-bold text-lg">Booking Berhasil!</h3>
-        <p class="text-xs text-gray-400 mb-6 mt-2">Data telah tersimpan di sistem.</p>
+        <p class="text-xs text-gray-400 mb-6 mt-2">Data sudah masuk ke Manifes.</p>
         
-        <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl text-xs font-bold uppercase mb-2">
-            <i class="fab fa-whatsapp mr-1"></i> Kirim WhatsApp
-        </a>
-        <a href="manifes.html" class="block w-full py-4 bg-blue-900 text-white rounded-xl text-xs font-bold uppercase mb-4">
-            Buka Manifes
-        </a>
+        <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl text-xs font-bold uppercase mb-2"><i class="fab fa-whatsapp mr-1"></i> Kirim WhatsApp</a>
+        <a href="manifes.html" class="block w-full py-4 bg-blue-900 text-white rounded-xl text-xs font-bold uppercase mb-4">Buka Manifes</a>
         <button onclick="location.reload()" class="text-[10px] font-bold text-gray-400 uppercase">Input Baru</button>
     </div>
 </div>
@@ -110,7 +104,6 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Default tanggal hari ini
     document.getElementById('tgl_only').valueAsDate = new Date();
 
     document.getElementById('btnSimpan').onclick = async function() {
@@ -124,72 +117,53 @@
         const vTgl = document.getElementById('tgl_only').value;
         const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Wajib isi Nama, WA, Tanggal, dan Jam!");
+        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Lengkapi data yang wajib diisi!");
 
         const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
-        btn.innerText = "SEDANG MENYIMPAN...";
+        btn.innerText = "PROSES...";
         btn.disabled = true;
 
         try {
-            // 1. Simpan data ke koleksi 'bookings'
             const docRef = await addDoc(collection(db, "bookings"), {
-                nama: vNama,
-                wa: vWA,
-                kursi: String(vKursi),
-                armada: vArmada,
-                tujuan: vTujuan,
-                harga: vHarga,
-                tgl: vTgl,
-                jam: vJam + " WIB",
+                nama: vNama, wa: vWA, kursi: String(vKursi), armada: vArmada,
+                tujuan: vTujuan, harga: vHarga, tgl: vTgl, jam: vJam + " WIB",
                 createdAt: serverTimestamp()
             });
 
-            // 2. Format Tanggal Indonesia
             const opsi = { day: 'numeric', month: 'long', year: 'numeric' };
             const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
-            
-            // Link Etiket (Sesuaikan dengan domain kamu jika sudah hosting)
             const linkEtiket = window.location.origin + "/etiket.html?id=" + docRef.id;
 
-            // 3. Draft Pesan WhatsApp Baru (Greeting & Rapi)
-            const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
-                           `Berikut adalah data pemesanan tiket Anda di *MAHIKA TRANS*.%0A%0A` +
-                           `Tanggal: *${tglFormal}*%0A` +
-                           `Jam: *${vJam} WIB*%0A%0A` +
-                           `Nama: ${vNama.toUpperCase()}%0A` +
-                           `Tujuan: ${vTujuan}%0A` +
-                           `Armada: ${vArmada}%0A` +
-                           `No. Kursi: *${vKursi}*%0A%0A` +
+            const textWA = `*E-TIKET MAHIKA TRANS*%0A` +
                            `---------------------------%0A` +
-                           `Etiket Anda:%0A${linkEtiket}%0A` +
-                           `---------------------------%0A%0A` +
-                           `Harap datang maksimal 30 menit sebelum jam pemberangkatan.%0A%0A` +
-                           `Terimakasih.`;
+                           `Nama: *${vNama.toUpperCase()}*%0A` +
+                           `Tujuan: ${vTujuan}%0A` +
+                           `Tanggal: ${tglFormal}%0A` +
+                           `Jam: ${vJam} WIB%0A` +
+                           `Armada: ${vArmada}%0A` +
+                           `No. Kursi: *${vKursi}*%0A` +
+                           `Harga: Rp ${parseInt(vHarga || 0).toLocaleString('id-ID')}%0A` +
+                           `---------------------------%0A` +
+                           `Bukti Tiket Digital:%0A${linkEtiket}%0A%0A` +
+                           `_Mohon datang 30 menit sebelum jadwal. Terimakasih._`;
 
-            // Bersihkan nomor WA
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
-            formattedWA = formattedWA.replace(/[^0-9]/g, '');
-
-            // 4. Update Link Modal & Tampilkan
             document.getElementById('linkWA').href = `https://wa.me/${formattedWA}?text=${textWA}`;
             document.getElementById('modalSukses').style.display = 'flex';
 
         } catch (e) {
-            console.error(e);
-            alert("Terjadi kesalahan sistem.");
+            alert("Gagal simpan: " + e.message);
         } finally {
-            btn.innerText = "SIMPAN & KIRIM TIKET";
+            btn.innerText = "SIMPAN SEKARANG";
             btn.disabled = false;
         }
     }
 
-    // Fungsi Logout
     document.getElementById('logoutBtn').onclick = (e) => {
         e.preventDefault();
-        if(confirm("Yakin ingin keluar?")) {
-            signOut(auth).then(() => location.href = "login.html");
-        }
+        signOut(auth).then(() => location.href = "login.html");
     }
 </script>
 </body>
-</html>
+    </html>
+    
