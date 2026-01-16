@@ -1,0 +1,126 @@
+/* inputnya.css */
+:root { 
+    --primary-blue: #065084; 
+    --bg-darker: #043a60; 
+    --white: #ffffff; 
+    --gold: #FFD700; 
+}
+
+body { 
+    font-family: 'Poppins', sans-serif; 
+    background: #f0f4f8; 
+    margin: 0; 
+    color: #333; 
+    min-height: 100vh; 
+}
+
+/* Header Curvy */
+.header-curvy { 
+    background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+    padding: 50px 25px 80px 25px; 
+    border-radius: 0 0 50px 50px; 
+    box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3); 
+    text-align: center;
+}
+
+.header-curvy h2 { 
+    color: var(--gold); 
+    font-weight: 700; 
+    font-size: 24px; 
+    margin: 0; 
+    text-transform: uppercase; 
+}
+
+.filter-info { 
+    text-align: center; 
+    margin-bottom: 15px; 
+    font-size: 11px; 
+    font-weight: 600; 
+    color: white; 
+    opacity: 0.8; 
+    letter-spacing: 1px; 
+}
+
+/* Container & Card */
+.form-container { 
+    margin-top: -50px; 
+    padding: 0 20px 120px; 
+    position: relative; 
+    z-index: 10; 
+}
+
+.card-input { 
+    background: white; 
+    border-radius: 30px; 
+    padding: 30px 25px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    border-top: 5px solid var(--gold);
+}
+
+/* Input Fields */
+.group-field { margin-bottom: 18px; }
+.group-field label { 
+    display: block; 
+    font-size: 10px; 
+    font-weight: 700; 
+    color: #999; 
+    text-transform: uppercase; 
+    margin-bottom: 6px; 
+    margin-left: 5px; 
+}
+
+.group-field input { 
+    width: 100%; 
+    border: 1.5px solid #eee; 
+    padding: 14px; 
+    border-radius: 15px; 
+    font-family: 'Poppins'; 
+    font-size: 13px; 
+    font-weight: 600; 
+    box-sizing: border-box; 
+    transition: 0.3s; 
+}
+
+.group-field input:focus { 
+    border-color: var(--primary-blue); 
+    outline: none; 
+    background: #fcfcfc; 
+}
+
+/* Button Save */
+.btn-save { 
+    width: 100%; 
+    background: var(--primary-blue); 
+    color: var(--white); 
+    border: none; 
+    padding: 18px; 
+    border-radius: 18px; 
+    font-weight: 700; 
+    font-size: 14px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); 
+    cursor: pointer;
+}
+
+/* Modal */
+.modal { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.85); 
+    z-index: 200; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 20px; 
+    backdrop-filter: blur(5px); 
+}
+
+.modal-content { 
+    background: white; 
+    width: 100%; 
+    max-width: 320px; 
+    border-radius: 35px; 
+    padding: 35px 25px; 
+    text-align: center; 
+}
