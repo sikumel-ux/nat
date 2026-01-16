@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etiket Mahika Trans</title>
+    <link rel="icon" href="m.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="stylez.css">
+
+    <style>
+        body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
+        
+        #loading-screen { 
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; height: 100vh; color: #065084; 
+        }
+
+        .qr-container { text-align: center; padding: 10px 20px; }
+        .qr-container img { 
+            width: 130px; height: 130px; margin: 0 auto; 
+            border: 5px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+        }
+        .teks-barcode { 
+            display: block; font-weight: 700; font-size: 14px; 
+            color: #333; margin-top: 8px; letter-spacing: 1px;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+    <p style="margin-top:15px; font-weight: 600;">Memvalidasi Tiket...</p>
+</div>
+
+<div id="main-content" class="etiket-container hidden">
+    <div class="etiket-header">
+        <div class="header">
+            <img src="logo.png" alt="Mahika Trans" class="logo">
+        </div>
+        <p class="kode-booking">ID TIKET: <span id="id_tiket">-</span></p>
+    </div>
+
+    <div class="info-grid">
+        <div class="kolom">
+            <p><i class="fas fa-user"></i> <span id="nama"></span></p>
+            <p><i class="fas fa-phone"></i> <span id="no_hp"></span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada"></span></p> 
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
+        </div>
+
+        <div class="kolom">
+            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
+            <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
+            <p><i class="fas fa-clock"></i> <span id="jam"></span></p>
+            <p><i class="fa-solid fa-rupiah-sign"></i> <span id="harga"></span></p>
+        </div>
+    </div>
+
+    <div class="tear-line"></div>
+
+    <div class="qr-container">
+        <img id="qrImg" alt="QR Code">
+        <span id="teksBarcode" class="teks-barcode">-</span>
+        <p class="thanks" style="font-size: 10px; margin-top: 15px; color: #666; line-height: 1.4;">
+            Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.
+        </p>
+    </div>
+
+    <div class="keterangan" style="margin-top: 5px;">
+        <p><strong>Perhatian:</strong></p>
+        <p>1. Tiket yang sudah dipesan tidak dapat dibatalkan</p>
+        <p>2. Harap datang maksimal 30 menit sebelum jadwal pemberangkatan</p>
+        <p>3. Anak usia 3 tahun atau tinggi badan 90cm wajib membeli tiket</p>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = { 
+    apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+    authDomain: "mahika-trans.firebaseapp.com", 
+    projectId: "mahika-trans", 
+    storageBucket: "mahika-trans.firebasestorage.app", 
+    appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Ambil ?id= dari URL
+const params = new URLSearchParams(window.location.search);
+const ticketID = params.get("id");
+
+// 1. Cek jika tidak ada ID, buang ke landing.html
+if(!ticketID) {
+    window.location.href = "search.html";
+} else {
+    try {
+        const docRef = doc(db, "bookings", ticketID);
+        const docSnap = await getDoc(docRef);
+
+        if(docSnap.exists()){
+            const data = docSnap.data();
+            
+            // Sembunyikan loader, tampilkan konten
+            document.getElementById("loading-screen").classList.add("hidden");
+            document.getElementById("main-content").classList.remove("hidden");
+            
+            // Isi Data Penumpang
+            document.getElementById("id_tiket").innerText = ticketID; // ID 5 Digit
+            document.getElementById("nama").innerText = data.nama || "-";
+            document.getElementById("no_hp").innerText = data.wa || "-";
+            document.getElementById("armada").innerText = data.armada || "-";
+            document.getElementById("tujuan").innerText = data.tujuan || "-";
+            document.getElementById("no_kursi").innerText = data.kursi || "-";
+            document.getElementById("jam").innerText = data.jam || "-";
+            
+            const hargaNominal = data.harga ? Number(data.harga).toLocaleString("id-ID") : "0";
+            document.getElementById("harga").innerText = "Rp " + hargaNominal;
+            
+            if(data.tgl) {
+                const opsi = { day: "2-digit", month: "long", year: "numeric" };
+                document.getElementById("tgl").innerText = new Date(data.tgl).toLocaleDateString("id-ID", opsi);
+            }
+
+            // 2. Tampilkan Barcode MT-XXXX dari database
+            const kodeBarcode = data.barcode || "MT-0000"; 
+            document.getElementById("teksBarcode").innerText = kodeBarcode;
+            
+            // Generate QR Code berdasarkan teks barcode
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${kodeBarcode}`;
+            document.getElementById("qrImg").src = qrUrl;
+
+        } else {
+            // Jika ID 5 digit tidak ditemukan di DB
+            window.location.href = "404.html";
+        }
+    } catch (e) {
+        console.error(e);
+        window.location.href = "404.html";
+    }
+}
+</script>
+</body>
+</html>
