@@ -18,6 +18,24 @@
         justify-content: center; height: 100vh; color: #065084; 
     }
 
+    /* CSS Tear Line yang tadi hilang */
+    .tear-line {
+        border-top: 2px dashed #cbd5e1;
+        margin: 20px 0;
+        position: relative;
+    }
+    .tear-line::before, .tear-line::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        width: 20px;
+        height: 20px;
+        background: #f4f7f9;
+        border-radius: 50%;
+    }
+    .tear-line::before { left: -30px; }
+    .tear-line::after { right: -30px; }
+
     .qr-container { text-align: center; padding: 10px 20px; }
     .qr-container img { 
         width: 140px; height: 140px; margin: 0 auto; 
@@ -27,7 +45,7 @@
     }
 
     .hidden { display: none !important; }
-    .kode-booking { letter-spacing: 2px; }
+    .kode-booking { letter-spacing: 2px; font-weight: 900; color: #065084; }
 </style>
 </head>
 
@@ -43,7 +61,7 @@
         <div class="header">
             <img src="logo.png" alt="Mahika Trans" class="logo">
         </div>
-        <p class="kode-booking" id="kodeBooking">-------</p>
+        <p class="kode-booking" id="kodeBooking">MT-0000</p>
     </div>
 
     <div class="info-grid">
@@ -95,7 +113,6 @@ const db = getFirestore(app);
 const params = new URLSearchParams(window.location.search);
 const ticketID = params.get("id");
 
-// Fungsi Redirect Penyusup
 function kickPenyusup() {
     window.location.href = "404.html";
 }
@@ -110,29 +127,27 @@ if(!ticketID) {
         if(docSnap.exists()){
             const data = docSnap.data();
             
-            // Kode Booking Pendek (8 Karakter Awal)
-            const shortID = ticketID.substring(0, 8).toUpperCase();
+            // GENERATOR MT-4 ANGKA RANDOM
+            // Kita pakai seed dari 4 karakter terakhir ticketID agar kodenya konsisten untuk tiket tersebut
+            const seed = ticketID.replace(/\D/g,'').substring(0,4) || Math.floor(1000 + Math.random() * 9000);
+            const customID = "MT-" + seed.toString().padEnd(4, '0').substring(0,4);
             
             document.getElementById("loading-screen").classList.add("hidden");
             document.getElementById("main-content").classList.remove("hidden");
             
-            // Set Data ke UI
-            document.getElementById("kodeBooking").innerText = shortID;
+            document.getElementById("kodeBooking").innerText = customID;
             document.getElementById("nama").innerText = data.nama || "-";
             document.getElementById("no_hp").innerText = data.wa || "-";
             document.getElementById("armada").innerText = data.armada || "-"; 
             document.getElementById("tujuan").innerText = data.tujuan || "-";
             document.getElementById("no_kursi").innerText = data.kursi || "-";
             
-            // Format Jam
             const jamBersih = data.jam ? data.jam.replace(/WIB/gi, "").trim() : "--:--";
             document.getElementById("jam").innerText = jamBersih + " WIB";
             
-            // Format Harga
             const hargaNominal = data.harga ? Number(data.harga).toLocaleString("id-ID") : "0";
             document.getElementById("harga").innerText = hargaNominal;
             
-            // Format Tanggal
             if(data.tgl) {
                 const dateParts = data.tgl.split("-");
                 const dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -140,11 +155,10 @@ if(!ticketID) {
                 document.getElementById("tgl").innerText = dateObj.toLocaleDateString("id-ID", opsi);
             }
 
-            // QR Code Simple & Clean
-            document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${shortID}`;
+            // QR Code isi Kode Custom MT-XXXX
+            document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${customID}`;
 
         } else {
-            // ID tidak ditemukan di Firebase
             kickPenyusup();
         }
     } catch (e) {
