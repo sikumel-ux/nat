@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; --emerald: #10b981; }
+        body { font-family: 'Poppins', sans-serif; background: #f4f7f9; margin: 0; color: #333; min-height: 100vh; overflow-x: hidden; }
+        
+        /* HEADER CURVED */
+        .header-dash { 
+            background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); 
+            padding: 60px 25px 80px 25px; 
+            border-radius: 0 0 50px 50px; /* Lengkungan bawah */
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header-dash h1 { font-size: 14px; margin: 0; opacity: 0.7; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
+        .header-dash h2 { font-size: 26px; margin: 5px 0 0 0; font-weight: 700; }
+
+        /* STATS GRID - 3 Cards */
+        .stats-container { margin-top: -50px; padding: 0 20px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        /* Card Komisi Full Width di atas */
+        .stat-card.full { grid-column: span 2; display: flex; align-items: center; gap: 20px; border-bottom: 4px solid var(--emerald); }
+        .stat-card.full i { font-size: 24px; color: var(--emerald); background: rgba(16, 185, 129, 0.1); width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; }
+
+        .stat-card { background: var(--white); padding: 18px 15px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); color: var(--primary-blue); position: relative; overflow: hidden; }
+        .stat-card span { display: block; font-size: 9px; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-card strong { font-size: 18px; font-weight: 800; display: block; color: #1e293b; }
+        
+        .section-title { padding: 35px 25px 15px 25px; font-size: 15px; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; justify-content: space-between; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: #ddd; margin-left: 15px; opacity: 0.5; }
+
+        .antrean-list { padding: 0 20px 120px; }
+        .card-mini { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eee; }
+        .tgl-badge { width: 45px; height: 45px; background: var(--primary-blue); color: white; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; margin-right: 15px; }
+        .tgl-badge b { font-size: 16px; line-height: 1; }
+        
+        .info-mini { flex: 1; }
+        .info-mini b { font-size: 14px; color: #1e293b; display: block; }
+        .info-mini small { font-size: 11px; color: #64748b; display: block; margin-top: 2px; }
+
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); display: flex; justify-content: space-around; padding: 12px 0; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; border: 1px solid #eee; }
+        .nav-bottom a { text-decoration: none; color: #cbd5e1; text-align: center; font-size: 9px; font-weight: 600; flex: 1; transition: 0.3s; }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-dash">
+    <h1 id="greeting">Dashboard Admin</h1>
+    <h2>Mahika Trans</h2>
+</div>
+
+<div class="stats-container">
+    <div class="stats-grid">
+        <div class="stat-card full">
+            <i class="fas fa-wallet"></i>
+            <div>
+                <span>Estimasi Komisi (Bulan Ini)</span>
+                <strong id="statKomisi">Rp 0</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <span>Hari Ini</span>
+            <strong id="statPax">0 Orang</strong>
+        </div>
+        <div class="stat-card">
+            <span>Total Aktif</span>
+            <strong id="statTotal">0 Data</strong>
+        </div>
+    </div>
+</div>
+
+<div class="section-title">Jadwal Terdekat</div>
+<div id="antreanList" class="antrean-list">
+    <p style="text-align: center; opacity: 0.5; font-size: 12px; margin-top: 20px;">Memuat data...</p>
+</div>
+    
+<div class="nav-bottom">
+    <a href="dash.html" class="active"><i class="fas fa-house"></i>Home</a>
+    <a href="inputnya.html"><i class="fas fa-circle-plus"></i>Booking</a>
+    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html" ><i class="fas fa-route"></i>Rute</a>
+    <a href="logout.html" id="logoutBtn"><i class="fas fa-power-off"></i></a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        if (!user) window.location.href = "login.html";
+        else loadDashboardData();
+    });
+
+    async function loadDashboardData() {
+        const list = document.getElementById("antreanList");
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        try {
+            const q = query(collection(db, "bookings"), orderBy("tgl", "asc"));
+            const snap = await getDocs(q);
+            
+            let hariIniCount = 0;
+            let totalAktif = 0;
+            let totalKomisiBulanIni = 0;
+            let html = "";
+
+            snap.forEach(doc => {
+                const d = doc.data();
+                const bookingDate = new Date(d.tgl);
+
+                // Hitung Komisi Bulan Ini
+                if (bookingDate.getMonth() === currentMonth && bookingDate.getFullYear() === currentYear) {
+                    // Asumsi komisi per orang Rp 10.000 (Ganti sesuai kebutuhan)
+                    totalKomisiBulanIni += (Number(d.komisi) || 0);
+                }
+
+                if (d.tgl >= todayStr) {
+                    totalAktif++;
+                    if (d.tgl === todayStr) hariIniCount++;
+
+                    const tglRapi = bookingDate.getDate();
+                    const blnRapi = bookingDate.toLocaleDateString('id-ID', { month: 'short' });
+
+                    html += `
+                        <div class="card-mini">
+                            <div class="tgl-badge"><b>${tglRapi}</b>${blnRapi}</div>
+                            <div class="info-mini">
+                                <b>${d.nama}</b>
+                                <small>${d.armada} • ${d.jam} • ${d.tujuan}</small>
+                            </div>
+                        </div>`;
+                }
+            });
+
+            document.getElementById('statPax').innerText = hariIniCount + " Orang";
+            document.getElementById('statTotal').innerText = totalAktif + " Data";
+            document.getElementById('statKomisi').innerText = "Rp " + totalKomisiBulanIni.toLocaleString('id-ID');
+            list.innerHTML = html || "<p style='text-align:center; opacity:0.5;'>Tidak ada jadwal.</p>";
+
+        } catch (e) {
+            console.error(e);
+            list.innerHTML = "Gagal memuat data.";
+        }
+    }
+
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        signOut(auth);
+    };
+</script>
+</body>
+</html>
