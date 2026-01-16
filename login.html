@@ -62,7 +62,7 @@
 
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                window.location.href = "index.html";
+                window.location.href = "manifes.html";
             } catch (e) {
                 alert("Gagal Login: " + e.message);
                 btn.disabled = false; btn.innerText = "LOGIN ADMIN";
