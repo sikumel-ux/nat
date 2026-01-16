@@ -16,16 +16,19 @@
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .glass-heavy { background: rgba(1, 11, 19, 0.98); backdrop-filter: blur(25px); border-top: 1px solid rgba(255, 255, 255, 0.1); }
 
-        /* Fade Animation for Info */
         .info-fade { display: none; animation: fadeInOut 4s ease-in-out infinite; }
         .info-fade.active { display: block; }
         @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(5px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-5px); } }
 
-        /* Profile Bottom Sheet */
         #company-profile { z-index: 1000; height: 92vh; border-radius: 40px 40px 0 0; }
-        .testi-item { display: none; animation: fadeIn 0.8s ease forwards; }
-        .testi-item.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .testi-item { display: none; }
+        .testi-item.active { display: block; animation: fadeIn 0.8s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Custom Scrollbar */
+        #company-profile::-webkit-scrollbar { width: 0; }
+        .gallery-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding: 10px 0; }
+        .gallery-container img { flex: 0 0 80%; scroll-snap-align: center; border-radius: 20px; object-fit: cover; height: 180px; }
     </style>
 </head>
 <body class="flex flex-col items-center pt-12 px-6">
@@ -39,26 +42,22 @@
         </div>
 
         <div class="h-8 flex justify-center items-center mb-6">
-            <div class="info-fade active text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">🔥 Promo Awal Tahun: Diskon Tiket 10%</div>
+            <div class="info-fade active text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">🔥 Promo: Jakarta - Semarang Diskon 10%</div>
             <div class="info-fade text-[10px] font-bold uppercase tracking-[0.2em] text-sky-400">🚍 Armada Hiace Premio & Elf Executive Ready</div>
-            <div class="info-fade text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">📍 Melayani Door to Door Service</div>
         </div>
 
         <div class="glass rounded-[30px] p-2 flex items-center mb-8 border-white/20 shadow-2xl">
             <div class="pl-4 text-sky-400 opacity-40"><i class="fa-solid fa-magnifying-glass"></i></div>
-            <input type="text" id="search-input" placeholder="Ketik tujuan (Contoh: Jambi)" class="bg-transparent w-full p-4 outline-none text-white text-sm font-semibold tracking-wide placeholder:text-white/10">
+            <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="bg-transparent w-full p-4 outline-none text-white text-sm font-semibold tracking-wide placeholder:text-white/10">
             <button id="btnSearch" class="bg-sky-400 text-black font-black py-4 px-8 rounded-[24px] text-[10px] uppercase transition-all active:scale-95 shadow-lg">CARI</button>
         </div>
 
         <div id="welcome-card" class="glass p-8 rounded-[40px] mb-12 border-white/5 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-5 text-4xl"><i class="fa-solid fa-bus"></i></div>
-            <h2 class="text-lg font-bold text-white mb-2 text-center">Selamat Datang, Bro!</h2>
-            <p class="text-[11px] leading-relaxed text-white/50 mb-4 text-center">Pilih rute perjalananmu dan dapatkan kenyamanan maksimal bersama kami. Full AC & Reclining Seat.</p>
+            <h2 class="text-lg font-bold text-white mb-2">Selamat Datang!</h2>
+            <p class="text-[11px] leading-relaxed text-white/50">Cari rute tujuan Anda dan pesan tiket dengan mudah secara online.</p>
         </div>
 
-        <div id="result-container" class="hidden mb-12">
-            <div id="bus-list" class="space-y-4"></div>
-        </div>
+        <div id="result-container" class="hidden mb-12"><div id="bus-list" class="space-y-4"></div></div>
 
         <div class="flex flex-col items-center gap-4 mt-10">
             <button onclick="toggleProfile()" class="w-16 h-16 glass rounded-full flex flex-col items-center justify-center animate-bounce shadow-2xl">
@@ -66,14 +65,10 @@
                 <span class="text-[7px] font-bold uppercase text-white/40 tracking-[0.2em]">Profile</span>
             </button>
         </div>
-
-        <div class="text-center mt-20 opacity-20">
-            <p class="text-[8px] uppercase tracking-[0.5em]">© 2026 Mahika Trans</p>
-        </div>
     </div>
 
     <div id="company-profile" class="fixed inset-x-0 bottom-0 transform translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.23, 1, 0.32, 1)] glass-heavy overflow-y-auto">
-        <div class="sticky top-0 bg-transparent py-6 flex justify-center cursor-pointer z-50" onclick="toggleProfile()">
+        <div class="sticky top-0 glass-heavy py-6 flex justify-center cursor-pointer z-50" onclick="toggleProfile()">
             <div class="w-16 h-1.5 bg-white/20 rounded-full"></div>
         </div>
         
@@ -83,20 +78,45 @@
                 <p class="text-[9px] font-bold tracking-[0.3em] text-sky-400">Official Reservation Partner</p>
             </div>
 
-            <div class="mb-10 glass p-6 rounded-3xl">
-                <h3 class="text-[10px] font-black uppercase tracking-widest text-sky-400 mb-3">Tentang Kami</h3>
-                <p class="text-xs leading-relaxed text-white/60 text-justify">Solusi transportasi terbaik untuk perjalanan antar kota dengan layanan prima dan armada terbaru.</p>
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-sky-400 mb-3">Unit Kami</h3>
+            <div class="gallery-container mb-10">
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=800" alt="Bus 1">
+                <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=800" alt="Bus 2">
+                <img src="https://images.unsplash.com/photo-1620610738600-449e00045e75?q=80&w=800" alt="Hiace">
             </div>
 
-            <div class="grid grid-cols-4 gap-3 mb-10">
-                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-bus text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Bus</p></div>
-                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-van-shuttle text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Travel</p></div>
-                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-ship text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Kapal</p></div>
-                <div class="glass p-4 rounded-2xl flex flex-col items-center"><i class="fa-solid fa-plane text-sky-400 mb-2"></i><p class="text-[7px] font-bold uppercase">Pesawat</p></div>
+            <div class="mb-10 glass p-6 rounded-[35px] text-center border-dashed border-white/10">
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-sky-400 mb-6 text-center">Apa Kata Mereka</h3>
+                <div class="testi-item active">
+                    <img src="https://i.pravatar.cc/100?u=1" class="w-12 h-12 rounded-full mx-auto mb-4 border-2 border-sky-400">
+                    <p class="text-xs italic text-white/80">"Gak nyesel langganan di sini, adminnya gercep dan unitnya bersih banget!"</p>
+                    <p class="text-[9px] font-black uppercase text-sky-400 mt-3">- Ridho, Jakarta</p>
+                </div>
+                <div class="testi-item">
+                    <img src="https://i.pravatar.cc/100?u=2" class="w-12 h-12 rounded-full mx-auto mb-4 border-2 border-sky-400">
+                    <p class="text-xs italic text-white/80">"Mobilnya wangi, supirnya ramah dan tidak ugal-ugalan. Nyaman sekali."</p>
+                    <p class="text-[9px] font-black uppercase text-sky-400 mt-3">- Siska, Semarang</p>
+                </div>
             </div>
 
-            <a href="https://wa.me/6281211407667" class="w-full py-5 glass border-sky-400/30 text-white flex items-center justify-center gap-3 rounded-2xl font-black text-[11px] uppercase tracking-widest mb-6 hover:bg-sky-400 hover:text-black transition-all">
-                <i class="fa-brands fa-whatsapp text-lg text-sky-400"></i> Priority Reservation
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-sky-400 mb-3">Lokasi Kantor</h3>
+            <div class="glass p-2 rounded-3xl mb-10 overflow-hidden h-[200px]">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126935.24729352702!2d106.789155!3d-6.21462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e16694380f%3A0x6b840139b4b0e5d1!2sJakarta%20Pusat!5e0!3m2!1sid!2sid!4v1700000000000" class="w-full h-full border-0 grayscale invert opacity-70 rounded-2xl"></iframe>
+            </div>
+
+            <div class="mb-10 space-y-4">
+                <div class="flex items-center gap-4 glass p-4 rounded-2xl">
+                    <i class="fa-solid fa-location-dot text-sky-400"></i>
+                    <p class="text-[10px] text-white/60">Jl. Utama Mahika No. 12, Jakarta Timur</p>
+                </div>
+                <div class="flex items-center gap-4 glass p-4 rounded-2xl">
+                    <i class="fa-solid fa-envelope text-sky-400"></i>
+                    <p class="text-[10px] text-white/60">support@mahikatrans.id</p>
+                </div>
+            </div>
+
+            <a href="https://wa.me/6281211407667" class="w-full py-5 bg-sky-400 text-black flex items-center justify-center gap-3 rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-lg">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Priority Reservation
             </a>
         </div>
     </div>
@@ -125,26 +145,16 @@
             panel.style.transform = isOpen ? 'translateY(100%)' : 'translateY(0px)';
         }
 
-        // Interval Animations
-        let currentInfo = 0;
-        const infoItems = document.querySelectorAll('.info-fade');
-        setInterval(() => {
-            infoItems[currentInfo].classList.remove('active');
-            currentInfo = (currentInfo + 1) % infoItems.length;
-            infoItems[currentInfo].classList.add('active');
-        }, 4000);
-
+        // Testimoni Fade Logic
         let currentTesti = 0;
         const testitems = document.querySelectorAll('.testi-item');
-        if(testitems.length) {
-            setInterval(() => {
-                testitems[currentTesti].classList.remove('active');
-                currentTesti = (currentTesti + 1) % testitems.length;
-                testitems[currentTesti].classList.add('active');
-            }, 4000);
-        }
+        setInterval(() => {
+            testitems[currentTesti].classList.remove('active');
+            currentTesti = (currentTesti + 1) % testitems.length;
+            testitems[currentTesti].classList.add('active');
+        }, 5000);
 
-        // --- SEARCH LOGIC (STRICT & SYNCING) ---
+        // Search Logic
         document.getElementById('btnSearch').onclick = async function() {
             const keyword = document.getElementById('search-input').value.trim().toLowerCase();
             if(!keyword) return;
@@ -154,16 +164,10 @@
             const container = document.getElementById('result-container');
             const welcome = document.getElementById('welcome-card');
 
-            // UI Feedback
             btn.disabled = true;
             welcome.classList.add('hidden');
             container.classList.remove('hidden');
-            busList.innerHTML = `
-                <div class="flex flex-col items-center py-12">
-                    <i class="fa-solid fa-bus text-4xl text-sky-400 mb-4 animate-bounce"></i>
-                    <p class="text-[10px] font-black uppercase tracking-[0.3em] text-sky-400 animate-pulse">Syncing Database...</p>
-                    <p class="text-[7px] text-white/20 mt-1 uppercase">Fetching specific route</p>
-                </div>`;
+            busList.innerHTML = `<div class="text-center py-10"><i class="fa-solid fa-bus animate-bounce text-sky-400 mb-2"></i><p class="text-[9px] uppercase tracking-widest text-sky-400">Syncing Database...</p></div>`;
 
             try {
                 const q = collection(db, "direktori_rute");
@@ -173,40 +177,33 @@
                 snap.forEach(doc => {
                     const b = doc.data();
                     const ruteAsli = b.tujuan ? b.tujuan : "";
-                    const armada = b.armada ? b.armada.toLowerCase() : "";
-
-                    // STRICT FILTER: Pecah rute berdasarkan koma
                     const ruteArray = ruteAsli.toLowerCase().split(',').map(item => item.trim());
 
-                    // Cek apakah keyword cocok persis dengan salah satu kota atau armada
-                    if(ruteArray.includes(keyword) || armada.includes(keyword)) {
+                    if(ruteArray.includes(keyword) || (b.armada && b.armada.toLowerCase().includes(keyword))) {
+                        // FIX JAM: Pastikan mengambil data jam dari b.jam
+                        const displayJam = b.jam ? b.jam.toUpperCase().replace('WIB','') : '00:00';
+                        
                         html += `
-                        <div class="glass p-6 rounded-[30px] flex justify-between items-center mb-4 border-l-4 border-sky-400 transition-all active:scale-95" onclick="window.open('https://wa.me/6281211407667?text=Halo Admin, saya mau booking rute ${keyword.toUpperCase()} armada ${b.armada}', '_blank')">
+                        <div class="glass p-6 rounded-[30px] flex justify-between items-center mb-4 border-l-4 border-sky-400">
                             <div class="flex-1">
-                                <p class="text-[8px] font-black text-sky-400 uppercase mb-1 tracking-widest">${b.armada || 'MAHIKA'}</p>
+                                <p class="text-[8px] font-black text-sky-400 uppercase mb-1">${b.armada || 'MAHIKA'}</p>
                                 <h3 class="text-sm font-bold text-white uppercase tracking-tight">${keyword.toUpperCase()}</h3>
-                                <p class="text-[7px] text-white/20 uppercase mt-1">Lintasan: ${ruteAsli}</p>
+                                <p class="text-[7px] text-white/20 uppercase mt-1">Via: ${ruteAsli}</p>
                             </div>
                             <div class="text-right border-l border-white/10 pl-5 ml-2">
-                                <p class="text-2xl font-black text-white tracking-tighter">${(b.jam || '00:00').toUpperCase().replace('WIB','')}</p>
+                                <p class="text-2xl font-black text-white">${displayJam}</p>
                                 <p class="text-[8px] font-bold text-sky-400">WIB</p>
                             </div>
                         </div>`;
                     }
                 });
 
-                // Tampilkan hasil dengan delay biar syncing-nya dapet
                 setTimeout(() => {
-                    busList.innerHTML = html || `
-                        <div class="glass p-10 rounded-3xl text-center">
-                            <p class="text-xs opacity-30 uppercase tracking-widest font-bold">Rute ${keyword.toUpperCase()} tidak ada.</p>
-                        </div>`;
+                    busList.innerHTML = html || `<div class="text-center opacity-30 py-10">Rute tidak ditemukan</div>`;
                     btn.disabled = false;
-                }, 1200);
-
+                }, 1000);
             } catch (e) {
                 console.error(e);
-                busList.innerHTML = '<p class="text-center py-5 text-red-500 text-[10px]">SYNC ERROR</p>';
                 btn.disabled = false;
             }
         }
