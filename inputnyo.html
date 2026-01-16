@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Reservasi | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="inputnya.css">
+    <link rel="stylesheet" href="nav.css">
+</head>
+<body>
+
+<div class="header-curvy">
+    <h2>INPUT BOOKING</h2>
+    <div class="filter-info">Reservasi Tiket</div>
+</div>
+
+<div class="form-container">
+    <div class="card-input">
+        <div class="group-field">
+            <label>Nama Penumpang</label>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="group-field">
+                <label>No. WhatsApp</label>
+                <input type="tel" id="whatsapp" placeholder="0812xxx">
+            </div>
+            <div class="group-field">
+                <label>Nomor Kursi</label>
+                <input type="text" id="kursi" placeholder="Contoh: 1A">
+            </div>
+        </div>
+
+        <div class="group-field">
+            <label>Armada / Bus</label>
+            <input type="text" id="armada" placeholder="Contoh: Mahika Jaya">
+        </div>
+
+        <div class="group-field">
+            <label>Kota Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Contoh: Surabaya">
+        </div>
+
+        <div class="group-field">
+            <label>Harga Tiket (Rp)</label>
+            <input type="number" id="harga" placeholder="250000">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="group-field">
+                <label>Tanggal Berangkat</label>
+                <input type="date" id="tgl_only">
+            </div>
+            <div class="group-field">
+                <label>Jam Keberangkatan</label>
+                <input type="text" id="jam_only" placeholder="Contoh: 17:30">
+            </div>
+        </div>
+
+        <button id="btnSimpan" class="btn-save">SIMPAN & KIRIM TIKET</button>
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="inputnya.html" class="active"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="#" id="logoutBtn" class="nav-logout"><i class="fas fa-power-off"></i>Off</a>
+</div>
+
+<div id="modalSukses" class="modal">
+    <div class="modal-content">
+        <div class="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+            <i class="fas fa-check"></i>
+        </div>
+        <h3 class="font-bold text-lg">Booking Berhasil!</h3>
+        <p class="text-xs text-gray-400 mb-6 mt-2">Data telah tersimpan di sistem.</p>
+        
+        <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl text-xs font-bold uppercase mb-2">
+            <i class="fab fa-whatsapp mr-1"></i> Kirim WhatsApp
+        </a>
+        <a href="manifes.html" class="block w-full py-4 bg-blue-900 text-white rounded-xl text-xs font-bold uppercase mb-4">
+            Buka Manifes
+        </a>
+        <button onclick="location.reload()" class="text-[10px] font-bold text-gray-400 uppercase">Input Baru</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Default tanggal hari ini
+    document.getElementById('tgl_only').valueAsDate = new Date();
+
+    document.getElementById('btnSimpan').onclick = async function() {
+        const btn = this;
+        const vNama = document.getElementById('nama').value;
+        const vWA = document.getElementById('whatsapp').value;
+        const vKursi = document.getElementById('kursi').value;
+        const vArmada = document.getElementById('armada').value;
+        const vTujuan = document.getElementById('tujuan').value;
+        const vHarga = document.getElementById('harga').value;
+        const vTgl = document.getElementById('tgl_only').value;
+        const vJamRaw = document.getElementById('jam_only').value;
+
+        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Wajib isi Nama, WA, Tanggal, dan Jam!");
+
+        const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
+        btn.innerText = "SEDANG MENYIMPAN...";
+        btn.disabled = true;
+
+        try {
+            // 1. Simpan data ke koleksi 'bookings'
+            const docRef = await addDoc(collection(db, "bookings"), {
+                nama: vNama,
+                wa: vWA,
+                kursi: String(vKursi),
+                armada: vArmada,
+                tujuan: vTujuan,
+                harga: vHarga,
+                tgl: vTgl,
+                jam: vJam + " WIB",
+                createdAt: serverTimestamp()
+            });
+
+            // 2. Format Tanggal Indonesia
+            const opsi = { day: 'numeric', month: 'long', year: 'numeric' };
+            const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
+            
+            // Link Etiket (Sesuaikan dengan domain kamu jika sudah hosting)
+            const linkEtiket = window.location.origin + "/etiket.html?id=" + docRef.id;
+
+            // 3. Draft Pesan WhatsApp Baru (Greeting & Rapi)
+            const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
+                           `Berikut adalah data pemesanan tiket Anda di *MAHIKA TRANS*.%0A%0A` +
+                           `Tanggal: *${tglFormal}*%0A` +
+                           `Jam: *${vJam} WIB*%0A%0A` +
+                           `Nama: ${vNama.toUpperCase()}%0A` +
+                           `Tujuan: ${vTujuan}%0A` +
+                           `Armada: ${vArmada}%0A` +
+                           `No. Kursi: *${vKursi}*%0A%0A` +
+                           `---------------------------%0A` +
+                           `Etiket Anda:%0A${linkEtiket}%0A` +
+                           `---------------------------%0A%0A` +
+                           `Harap datang maksimal 30 menit sebelum jam pemberangkatan.%0A%0A` +
+                           `Terimakasih.`;
+
+            // Bersihkan nomor WA
+            let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
+            formattedWA = formattedWA.replace(/[^0-9]/g, '');
+
+            // 4. Update Link Modal & Tampilkan
+            document.getElementById('linkWA').href = `https://wa.me/${formattedWA}?text=${textWA}`;
+            document.getElementById('modalSukses').style.display = 'flex';
+
+        } catch (e) {
+            console.error(e);
+            alert("Terjadi kesalahan sistem.");
+        } finally {
+            btn.innerText = "SIMPAN & KIRIM TIKET";
+            btn.disabled = false;
+        }
+    }
+
+    // Fungsi Logout
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        if(confirm("Yakin ingin keluar?")) {
+            signOut(auth).then(() => location.href = "login.html");
+        }
+    }
+</script>
+</body>
+</html>
