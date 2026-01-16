@@ -1,0 +1,21 @@
+:root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; margin: 0; padding-bottom: 100px; }
+        
+        .header-input { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 30px 20px; border-radius: 0 0 30px 30px; color: white;
+        }
+
+        .form-container { margin-top: 20px; padding: 0 20px; }
+        .input-group { background: white; padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        .input-group label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 2px; text-transform: uppercase; }
+        .input-group input { width: 100%; border: none; outline: none; font-size: 14px; font-weight: 600; color: #1e293b; background: transparent; }
+
+        .btn-simpan { 
+            background: var(--primary-blue); color: white; width: 100%; padding: 18px; 
+            border-radius: 20px; font-weight: 700; margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3);
+            border: none; cursor: pointer;
+        }
+
+        
