@@ -18,16 +18,21 @@
         justify-content: center; height: 100vh; color: #065084; 
     }
 
-    /* CSS Tear Line yang tadi hilang */
+    /* TEAR LINE VERTIKAL BERDERET (Style Karcis) */
     .tear-line {
-        border-top: 2px dashed #cbd5e1;
-        margin: 20px 0;
+        height: 8px;
+        width: 100%;
+        background-image: linear-gradient(to right, #cbd5e1 40%, rgba(255,255,255,0) 0%);
+        background-position: center;
+        background-size: 8px 100%;
+        background-repeat: repeat-x;
+        margin: 25px 0;
         position: relative;
     }
     .tear-line::before, .tear-line::after {
         content: '';
         position: absolute;
-        top: -10px;
+        top: -6px;
         width: 20px;
         height: 20px;
         background: #f4f7f9;
@@ -58,9 +63,7 @@
 
 <div id="main-content" class="etiket-container hidden">
     <div class="etiket-header">
-        <div class="header">
-            <img src="logo.png" alt="Mahika Trans" class="logo">
-        </div>
+        <div class="header"><img src="logo.png" alt="Mahika Trans" class="logo"></div>
         <p class="kode-booking" id="kodeBooking">MT-0000</p>
     </div>
 
@@ -71,7 +74,6 @@
             <p><i class="fas fa-bus"></i> <span id="armada"></span></p> 
             <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
         </div>
-
         <div class="kolom">
             <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
             <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
@@ -113,12 +115,8 @@ const db = getFirestore(app);
 const params = new URLSearchParams(window.location.search);
 const ticketID = params.get("id");
 
-function kickPenyusup() {
-    window.location.href = "404.html";
-}
-
 if(!ticketID) {
-    kickPenyusup();
+    window.location.href = "404.html";
 } else {
     try {
         const docRef = doc(db, "bookings", ticketID);
@@ -127,10 +125,9 @@ if(!ticketID) {
         if(docSnap.exists()){
             const data = docSnap.data();
             
-            // GENERATOR MT-4 ANGKA RANDOM
-            // Kita pakai seed dari 4 karakter terakhir ticketID agar kodenya konsisten untuk tiket tersebut
-            const seed = ticketID.replace(/\D/g,'').substring(0,4) || Math.floor(1000 + Math.random() * 9000);
-            const customID = "MT-" + seed.toString().padEnd(4, '0').substring(0,4);
+            // Format MT-XXXX (Ambil angka dari ID atau Random)
+            const numericPart = ticketID.replace(/\D/g,'').substring(0,4);
+            const customID = "MT-" + (numericPart.length === 4 ? numericPart : Math.floor(1000 + Math.random() * 9000));
             
             document.getElementById("loading-screen").classList.add("hidden");
             document.getElementById("main-content").classList.remove("hidden");
@@ -155,17 +152,16 @@ if(!ticketID) {
                 document.getElementById("tgl").innerText = dateObj.toLocaleDateString("id-ID", opsi);
             }
 
-            // QR Code isi Kode Custom MT-XXXX
             document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${customID}`;
 
         } else {
-            kickPenyusup();
+            window.location.href = "404.html";
         }
     } catch (e) {
-        console.error(e);
-        kickPenyusup();
+        window.location.href = "404.html";
     }
 }
 </script>
 </body>
-</html>
+                                                </html>
+                                                    
