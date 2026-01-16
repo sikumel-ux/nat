@@ -7,8 +7,81 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="inputnya.css">
-    <link rel="stylesheet" href="nav.css">
+    <link rel="stylesheet" href="navbar.css">
+
+    <style>
+        :root { 
+            --primary-blue: #065084; 
+            --bg-darker: #043a60; 
+            --gold: #FFD700; 
+            --white: #ffffff;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #f0f4f8; 
+            margin: 0; 
+            padding-bottom: 100px; /* Ruang untuk navbar bawah */
+            color: #333;
+        }
+
+        /* Header Melengkung */
+        .header-curvy { 
+            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
+            padding: 50px 25px 80px 25px; 
+            border-radius: 0 0 50px 50px; 
+            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3); 
+            text-align: center;
+        }
+
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; text-transform: uppercase; }
+        .filter-info { font-size: 11px; font-weight: 600; color: white; opacity: 0.8; margin-top: 5px; }
+
+        /* Container Form */
+        .form-container { margin-top: -50px; padding: 0 20px; position: relative; z-index: 10; }
+        .card-input { 
+            background: white; border-radius: 30px; padding: 30px 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid var(--gold);
+        }
+
+        /* Input Styling */
+        .group-field { margin-bottom: 18px; }
+        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 6px; margin-left: 5px; }
+        .group-field input { 
+            width: 100%; border: 1.5px solid #eee; padding: 14px; border-radius: 15px; 
+            font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; transition: 0.3s; 
+        }
+        .group-field input:focus { border-color: var(--primary-blue); outline: none; background: #fcfcfc; }
+
+        /* Row Flex untuk tampilan 2 kolom (WA & Kursi, Tgl & Jam) */
+        .row-flex { display: flex; gap: 15px; width: 100%; }
+        .half { flex: 1; }
+
+        .btn-save { 
+            width: 100%; background: var(--primary-blue); color: var(--white); border: none; 
+            padding: 18px; border-radius: 18px; font-weight: 700; 
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px; 
+            box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); cursor: pointer; margin-top: 10px;
+        }
+
+        /* Modal Pop-up */
+        .modal { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+            z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); 
+        }
+        .modal-content { background: white; width: 100%; max-width: 320px; border-radius: 35px; padding: 35px 25px; text-align: center; }
+        
+        .icon-check { 
+            background: #ecfdf5; color: #10b981; width: 60px; height: 60px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 24px; margin: 0 auto 20px;
+        }
+
+        .btn-modal { display: block; width: 100%; padding: 16px; border-radius: 15px; font-size: 12px; font-weight: 700; text-decoration: none; margin-bottom: 10px; text-transform: uppercase; }
+        .btn-wa { background: #22c55e; color: white; }
+        .btn-manifes { background: var(--bg-darker); color: white; }
+        .btn-reload { background: none; border: none; color: #aaa; font-size: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+    </style>
 </head>
 <body>
 
@@ -21,7 +94,7 @@
     <div class="card-input">
         <div class="group-field">
             <label>Nama Penumpang</label>
-            <input type="text" id="nama" placeholder="Masukkan nama">
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
         </div>
 
         <div class="row-flex">
@@ -30,29 +103,29 @@
                 <input type="tel" id="whatsapp" placeholder="0812xxx">
             </div>
             <div class="group-field half">
-                <label>Kursi</label>
-                <input type="text" id="kursi" placeholder="Contoh: 12">
+                <label>Nomor Kursi</label>
+                <input type="text" id="kursi" placeholder="Contoh: 1A">
             </div>
         </div>
 
         <div class="group-field">
-            <label>Armada</label>
+            <label>Armada / Bus</label>
             <input type="text" id="armada" placeholder="Mahika Jaya">
         </div>
 
         <div class="group-field">
-            <label>Tujuan</label>
-            <input type="text" id="tujuan" placeholder="Contoh: Surabaya">
+            <label>Kota Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Contoh: Jakarta">
         </div>
 
         <div class="group-field">
-            <label>Harga (Rp)</label>
+            <label>Harga Tiket (Rp)</label>
             <input type="number" id="harga" placeholder="250000">
         </div>
 
         <div class="row-flex">
             <div class="group-field half">
-                <label>Tanggal</label>
+                <label>Tanggal Berangkat</label>
                 <input type="date" id="tgl_only">
             </div>
             <div class="group-field half">
@@ -61,7 +134,7 @@
             </div>
         </div>
 
-        <button id="btnSimpan" class="btn-save">SIMPAN SEKARANG</button>
+        <button id="btnSimpan" class="btn-save">SIMPAN & KIRIM TIKET</button>
     </div>
 </div>
 
@@ -76,19 +149,13 @@
 
 <div id="modalSukses" class="modal">
     <div class="modal-content">
-        <div class="icon-check">
-            <i class="fas fa-check"></i>
-        </div>
-        <h3>Booking Berhasil!</h3>
-        <p>Data tiket sudah tersimpan di sistem.</p>
+        <div class="icon-check"><i class="fas fa-check"></i></div>
+        <h3 style="font-weight: 700; margin-bottom: 5px;">Booking Berhasil!</h3>
+        <p style="font-size: 12px; color: #999; margin-bottom: 25px;">Data telah tersimpan di database.</p>
         
-        <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa">
-            <i class="fab fa-whatsapp"></i> KIRIM WHATSAPP
-        </a>
-        <a href="manifes.html" class="btn-modal btn-manifes">
-            BUKA MANIFES
-        </a>
-        <button onclick="location.reload()" class="btn-reload">INPUT BARU</button>
+        <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa"><i class="fab fa-whatsapp"></i> Kirim WhatsApp</a>
+        <a href="manifes.html" class="btn-modal btn-manifes">Buka Manifes</a>
+        <button onclick="location.reload()" class="btn-reload">INPUT DATA BARU</button>
     </div>
 </div>
 
@@ -122,10 +189,10 @@
         const vTgl = document.getElementById('tgl_only').value;
         const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Nama, WA, Tanggal, dan Jam wajib diisi!");
+        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Lengkapi data yang wajib diisi!");
 
         const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
-        btn.innerText = "MENYIMPAN...";
+        btn.innerText = "SEDANG MENYIMPAN...";
         btn.disabled = true;
 
         try {
@@ -137,6 +204,8 @@
 
             const opsi = { day: 'numeric', month: 'long', year: 'numeric' };
             const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
+            
+            // SESUAI MISI: Link mengarah ke folder /go/?id=
             const linkEtiket = window.location.origin + "/go/?id=" + docRef.id;
 
             const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
@@ -160,21 +229,18 @@
             document.getElementById('modalSukses').style.display = 'flex';
 
         } catch (e) {
-            console.error(e);
-            alert("Terjadi kesalahan.");
+            alert("Gagal simpan: " + e.message);
         } finally {
-            btn.innerText = "SIMPAN SEKARANG";
+            btn.innerText = "SIMPAN & KIRIM TIKET";
             btn.disabled = false;
         }
     }
 
     document.getElementById('logoutBtn').onclick = (e) => {
         e.preventDefault();
-        if(confirm("Yakin ingin keluar?")) {
-            signOut(auth).then(() => location.href = "login.html");
-        }
+        signOut(auth).then(() => location.href = "login.html");
     }
 </script>
 </body>
-            </html>
-            
+    </html>
+    
