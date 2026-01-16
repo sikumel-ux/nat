@@ -4,35 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Reservasi | Mahika Trans</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="inputnya.css">
-    <link rel="stylesheet" href="nav.css">
+    <link rel="stylesheet" href="navbar.css">
 </head>
 <body>
 
 <div class="header-curvy">
     <h2>INPUT BOOKING</h2>
-    <div class="filter-info">Reservasi Tiket</div>
+    <div class="filter-info">Reservasi Tiket Mahika Trans</div>
 </div>
 
 <div class="form-container">
     <div class="card-input">
         <div class="group-field">
-            <label>Nama</label>
-            <input type="text" id="nama" placeholder="Fufufafa">
+            <label>Nama Penumpang</label>
+            <input type="text" id="nama" placeholder="Masukkan nama">
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div class="group-field">
+        <div class="row-flex">
+            <div class="group-field half">
                 <label>No. WhatsApp</label>
                 <input type="tel" id="whatsapp" placeholder="0812xxx">
             </div>
-            <div class="group-field">
+            <div class="group-field half">
                 <label>Kursi</label>
-                <input type="text" id="kursi" placeholder="12-13">
+                <input type="text" id="kursi" placeholder="Contoh: 12">
             </div>
         </div>
 
@@ -43,20 +42,20 @@
 
         <div class="group-field">
             <label>Tujuan</label>
-            <input type="text" id="tujuan" placeholder="Pasar Rebo">
+            <input type="text" id="tujuan" placeholder="Contoh: Surabaya">
         </div>
 
         <div class="group-field">
-            <label>Harga</label>
+            <label>Harga (Rp)</label>
             <input type="number" id="harga" placeholder="250000">
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div class="group-field">
+        <div class="row-flex">
+            <div class="group-field half">
                 <label>Tanggal</label>
                 <input type="date" id="tgl_only">
             </div>
-            <div class="group-field">
+            <div class="group-field half">
                 <label>Jam</label>
                 <input type="text" id="jam_only" placeholder="17:30">
             </div>
@@ -77,13 +76,19 @@
 
 <div id="modalSukses" class="modal">
     <div class="modal-content">
-        <div class="bg-green-50 text-green-500 w-16 h-16 rounded-full flex items-center justify-center text-2xl mx-auto mb-4"><i class="fas fa-check"></i></div>
-        <h3 class="font-bold text-lg">Booking Berhasil!</h3>
-        <p class="text-xs text-gray-400 mb-6 mt-2">Data sudah masuk ke Manifes.</p>
+        <div class="icon-check">
+            <i class="fas fa-check"></i>
+        </div>
+        <h3>Booking Berhasil!</h3>
+        <p>Data tiket sudah tersimpan di sistem.</p>
         
-        <a id="linkWA" href="#" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl text-xs font-bold uppercase mb-2"><i class="fab fa-whatsapp mr-1"></i> Kirim WhatsApp</a>
-        <a href="manifes.html" class="block w-full py-4 bg-blue-900 text-white rounded-xl text-xs font-bold uppercase mb-4">Buka Manifes</a>
-        <button onclick="location.reload()" class="text-[10px] font-bold text-gray-400 uppercase">Input Baru</button>
+        <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa">
+            <i class="fab fa-whatsapp"></i> KIRIM WHATSAPP
+        </a>
+        <a href="manifes.html" class="btn-modal btn-manifes">
+            BUKA MANIFES
+        </a>
+        <button onclick="location.reload()" class="btn-reload">INPUT BARU</button>
     </div>
 </div>
 
@@ -117,10 +122,10 @@
         const vTgl = document.getElementById('tgl_only').value;
         const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Lengkapi data yang wajib diisi!");
+        if(!vNama || !vWA || !vTgl || !vJamRaw) return alert("Nama, WA, Tanggal, dan Jam wajib diisi!");
 
         const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
-        btn.innerText = "PROSES...";
+        btn.innerText = "MENYIMPAN...";
         btn.disabled = true;
 
         try {
@@ -132,27 +137,31 @@
 
             const opsi = { day: 'numeric', month: 'long', year: 'numeric' };
             const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
-            const linkEtiket = window.location.origin + "/etiket.html?id=" + docRef.id;
+            const linkEtiket = window.location.origin + "/go/?id=" + docRef.id;
 
-            const textWA = `*E-TIKET MAHIKA TRANS*%0A` +
-                           `---------------------------%0A` +
-                           `Nama: *${vNama.toUpperCase()}*%0A` +
+            const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
+                           `Berikut adalah data pemesanan tiket Anda di *MAHIKA TRANS*.%0A%0A` +
+                           `Tanggal: *${tglFormal}*%0A` +
+                           `Jam: *${vJam} WIB*%0A%0A` +
+                           `Nama: ${vNama.toUpperCase()}%0A` +
                            `Tujuan: ${vTujuan}%0A` +
-                           `Tanggal: ${tglFormal}%0A` +
-                           `Jam: ${vJam} WIB%0A` +
                            `Armada: ${vArmada}%0A` +
-                           `No. Kursi: *${vKursi}*%0A` +
-                           `Harga: Rp ${parseInt(vHarga || 0).toLocaleString('id-ID')}%0A` +
+                           `No. Kursi: *${vKursi}*%0A%0A` +
                            `---------------------------%0A` +
-                           `Bukti Tiket Digital:%0A${linkEtiket}%0A%0A` +
-                           `_Mohon datang 30 menit sebelum jadwal. Terimakasih._`;
+                           `Etiket Anda:%0A${linkEtiket}%0A` +
+                           `---------------------------%0A%0A` +
+                           `Harap datang maksimal 30 menit sebelum jam pemberangkatan.%0A%0A` +
+                           `Terimakasih.`;
 
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
+            formattedWA = formattedWA.replace(/[^0-9]/g, '');
+
             document.getElementById('linkWA').href = `https://wa.me/${formattedWA}?text=${textWA}`;
             document.getElementById('modalSukses').style.display = 'flex';
 
         } catch (e) {
-            alert("Gagal simpan: " + e.message);
+            console.error(e);
+            alert("Terjadi kesalahan.");
         } finally {
             btn.innerText = "SIMPAN SEKARANG";
             btn.disabled = false;
@@ -161,9 +170,11 @@
 
     document.getElementById('logoutBtn').onclick = (e) => {
         e.preventDefault();
-        signOut(auth).then(() => location.href = "login.html");
+        if(confirm("Yakin ingin keluar?")) {
+            signOut(auth).then(() => location.href = "login.html");
+        }
     }
 </script>
 </body>
-    </html>
-    
+            </html>
+            
