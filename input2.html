@@ -77,7 +77,7 @@
         </div>
         <div class="input-group">
             <label>Nomor Kursi</label>
-            <input type="text" id="p-kursi" placeholder="Cth: 2A atau 12-13">
+            <input type="text" id="p-kursi" placeholder="Cth: 2A / 12-13">
         </div>
     </div>
 
@@ -114,6 +114,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // Otomatis isi tanggal hari ini
+    document.getElementById('p-tgl').valueAsDate = new Date();
+
     document.getElementById('btnSimpan').onclick = async () => {
         const btn = document.getElementById('btnSimpan');
         const nama = document.getElementById('p-nama').value;
@@ -132,20 +135,25 @@
 
         try {
             const docRef = await addDoc(collection(db, "bookings"), {
-                nama, wa, harga, tgl, jam, armada, kursi, tujuan,
+                nama: nama,
+                wa: wa,
+                harga: harga,
+                tgl: tgl,
+                jam: jam,
+                armada: armada,
+                kursi: String(kursi), // Dipastikan tersimpan sebagai string
+                tujuan: tujuan,
                 createdAt: serverTimestamp()
             });
 
-            const tglIndo = new Date(tgl).toLocaleDateString('id-ID', {
-                day: '2-digit', month: 'long', year: 'numeric'
-            });
+            const opsi = { day: '2-digit', month: 'long', year: 'numeric' };
+            const tglIndo = new Date(tgl).toLocaleDateString('id-ID', opsi);
 
-            // Sesuaikan link etiket dengan hostingan kamu
-            const etiketURL = `${window.location.origin}/etiket.html?id=${docRef.id}`;
+            const etiketURL = `https://mahika-trans.web.app/etiket.html?id=${docRef.id}`;
 
             const pesanWA = `*E-TIKET MAHIKA TRANS*\n` +
                             `--------------------------\n` +
-                            `Nama : ${nama}\n` +
+                            `Nama : ${nama.toUpperCase()}\n` +
                             `Tujuan : ${tujuan}\n` +
                             `Tgl : ${tglIndo}\n` +
                             `Jam : ${jam}\n` +
@@ -159,11 +167,12 @@
 
         } catch (e) {
             console.error(e);
-            alert("Gagal menyimpan!");
+            alert("Gagal menyimpan. Cek koneksi!");
             btn.disabled = false;
             btn.innerHTML = 'SIMPAN & KIRIM TIKET';
         }
     };
 </script>
 </body>
-</html>
+            </html>
+            
