@@ -4,87 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Mahika Trans</title>
+    <link rel="stylesheet" href="dash.css">
+<link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: #f0f4f7; margin: 0; color: #333; min-height: 100vh; }
-        
-        .header-dash { 
-            background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); 
-            padding: 50px 20px 80px 20px; 
-            border-radius: 0 0 50px 50px; 
-            color: white;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(4, 58, 96, 0.2);
-        }
-        .header-dash h1 { font-size: 11px; margin: 0; opacity: 0.6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
-        .header-dash h2 { font-size: 24px; margin: 5px 0 0 0; font-weight: 800; color: var(--gold); }
-
-        .stats-container { margin-top: -45px; padding: 0 15px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        
-        .stat-card { 
-            background: var(--white); 
-            padding: 15px 5px; 
-            border-radius: 22px; 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); 
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255,255,255,0.5);
-            text-decoration: none;
-        }
-        .stat-card i { font-size: 16px; margin-bottom: 6px; color: var(--primary-blue); opacity: 0.7; }
-        .stat-card span { display: block; font-size: 8px; color: #999; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
-        .stat-card strong { font-size: 13px; font-weight: 800; color: var(--primary-blue); }
-        
-        .section-title { padding: 35px 22px 15px; font-size: 14px; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; justify-content: space-between; }
-        .section-title::after { content: ''; flex: 1; height: 1px; background: #cbd5e1; margin-left: 15px; opacity: 0.3; }
-
-        .antrean-list { padding: 0 15px 120px; }
-        .card-mini { background: var(--white); border-radius: 18px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .tgl-badge { width: 42px; height: 42px; background: #f0f7ff; color: var(--primary-blue); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; margin-right: 12px; flex-shrink: 0; }
-        .tgl-badge b { font-size: 15px; line-height: 1; }
-        .info-mini { flex: 1; overflow: hidden; }
-        .info-mini b { font-size: 13px; color: #334155; display: block; text-transform: uppercase; }
-        .info-mini small { font-size: 10px; color: #94a3b8; display: block; margin-top: 1px; }
-
-        /* NAV BOTTOM IMPROVED (BIAR JELAS) */
-        .nav-bottom { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            width: 92%; max-width: 420px; background: #ffffff; 
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 10px 0; border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 1000; 
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        .nav-bottom a { 
-            text-decoration: none; color: #64748b; /* Warna abu-abu lebih gelap biar kelihatan */
-            text-align: center; font-size: 9px; flex: 1; font-weight: 600; 
-            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center;
-        }
-        .nav-bottom a i { font-size: 20px; margin-bottom: 3px; display: block; }
-        
-        /* State Active: Biru Pekat & Ikon Lebih Menonjol */
-        .nav-bottom a.active { 
-            color: var(--primary-blue); 
-        }
-        .nav-bottom a.active i {
-            transform: translateY(-2px);
-        }
-    </style>
 </head>
 <body>
-
 <div class="header-dash">
-    
     <h2>MAHIKA Trans</h2>
     <h1>Management System</h1>
 </div>
-
 <div class="stats-container">
     <div class="stats-grid">
         <div class="stat-card">
