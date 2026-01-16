@@ -1,234 +1,82 @@
-/* inputnya.css - Mahika Trans Management System */
-
 :root { 
     --primary-blue: #065084; 
     --bg-darker: #043a60; 
-    --white: #ffffff; 
     --gold: #FFD700; 
-    --gray-text: #999;
-    --border-color: #eee;
 }
 
 body { 
     font-family: 'Poppins', sans-serif; 
     background: #f0f4f8; 
     margin: 0; 
-    color: #333; 
-    min-height: 100vh; 
+    padding-bottom: 100px;
 }
 
-/* Header Melengkung */
 .header-curvy { 
     background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
-    padding: 50px 25px 80px 25px; 
-    border-radius: 0 0 50px 50px; 
-    box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3); 
+    padding: 40px 20px 70px; 
+    border-radius: 0 0 40px 40px; 
     text-align: center;
 }
 
-.header-curvy h2 { 
-    color: var(--gold); 
-    font-weight: 700; 
-    font-size: 24px; 
-    margin: 0; 
-    text-transform: uppercase; 
-}
+.header-curvy h2 { color: var(--gold); margin: 0; font-size: 22px; }
+.filter-info { color: white; opacity: 0.7; font-size: 11px; margin-top: 5px; }
 
-.filter-info { 
-    text-align: center; 
-    margin-bottom: 15px; 
-    font-size: 11px; 
-    font-weight: 600; 
-    color: white; 
-    opacity: 0.8; 
-    letter-spacing: 1px; 
-}
-
-/* Container Form */
 .form-container { 
-    margin-top: -50px; 
-    padding: 0 20px 120px; 
-    position: relative; 
-    z-index: 10; 
-}
-
-.card-input { 
-    background: var(--white); 
-    border-radius: 30px; 
-    padding: 30px 25px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
-    border-top: 5px solid var(--gold);
-}
-
-/* Styling Input Field */
-.group-field { 
-    margin-bottom: 18px; 
-}
-
-.group-field label { 
-    display: block; 
-    font-size: 10px; 
-    font-weight: 700; 
-    color: var(--gray-text); 
-    text-transform: uppercase; 
-    margin-bottom: 6px; 
-    margin-left: 5px; 
-}
-
-.group-field input { 
-    width: 100%; 
-    border: 1.5px solid var(--border-color); 
-    padding: 14px; 
-    border-radius: 15px; 
-    font-family: 'Poppins', sans-serif; 
-    font-size: 13px; 
-    font-weight: 600; 
-    box-sizing: border-box; 
-    transition: all 0.3s ease; 
-}
-
-.group-field input:focus { 
-    border-color: var(--primary-blue); 
-    outline: none; 
-    background: #fcfcfc; 
-    box-shadow: 0 0 0 3px rgba(6, 80, 132, 0.05);
-}
-
-/* Tombol Simpan */
-.btn-save { 
-    width: 100%; 
-    background: var(--primary-blue); 
-    color: var(--white); 
-    border: none; 
-    padding: 18px; 
-    border-radius: 18px; 
-    font-weight: 700; 
-    font-size: 14px; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); 
-    cursor: pointer; 
-    transition: transform 0.2s active;
-}
-
-.btn-save:active {
-    transform: scale(0.98);
-}
-
-/* Modal Sukses */
-.modal { 
-    display: none; 
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.85); 
-    z-index: 200; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px; 
-    backdrop-filter: blur(5px); 
-}
-
-.modal-content { 
-    background: white; 
-    width: 100%; 
-    max-width: 320px; 
-    border-radius: 35px; 
-    padding: 35px 25px; 
-    text-align: center; 
-    animation: zoomIn 0.3s ease-out;
-}
-
-@keyframes zoomIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
-    font-size: 11px; 
-    font-weight: 600; 
-    color: white; 
-    opacity: 0.8; 
-    letter-spacing: 1px; 
-}
-
-/* Container & Card */
-.form-container { 
-    margin-top: -50px; 
-    padding: 0 20px 120px; 
-    position: relative; 
-    z-index: 10; 
+    margin-top: -40px; 
+    padding: 0 20px; 
 }
 
 .card-input { 
     background: white; 
-    border-radius: 30px; 
-    padding: 30px 25px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
-    border-top: 5px solid var(--gold);
+    border-radius: 25px; 
+    padding: 25px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-top: 4px solid var(--gold);
 }
 
-/* Input Fields */
-.group-field { margin-bottom: 18px; }
-.group-field label { 
-    display: block; 
-    font-size: 10px; 
-    font-weight: 700; 
-    color: #999; 
-    text-transform: uppercase; 
-    margin-bottom: 6px; 
-    margin-left: 5px; 
-}
-
+.group-field { margin-bottom: 15px; }
+.group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 5px; margin-left: 5px; }
 .group-field input { 
-    width: 100%; 
-    border: 1.5px solid #eee; 
-    padding: 14px; 
-    border-radius: 15px; 
-    font-family: 'Poppins'; 
-    font-size: 13px; 
-    font-weight: 600; 
-    box-sizing: border-box; 
-    transition: 0.3s; 
+    width: 100%; border: 1.5px solid #eee; padding: 12px; border-radius: 12px; 
+    font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; 
 }
 
-.group-field input:focus { 
-    border-color: var(--primary-blue); 
-    outline: none; 
-    background: #fcfcfc; 
-}
+/* Flexbox untuk baris kolom 2 */
+.row-flex { display: flex; gap: 15px; }
+.half { flex: 1; }
 
-/* Button Save */
 .btn-save { 
-    width: 100%; 
-    background: var(--primary-blue); 
-    color: var(--white); 
-    border: none; 
-    padding: 18px; 
-    border-radius: 18px; 
-    font-weight: 700; 
-    font-size: 14px; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); 
-    cursor: pointer;
+    width: 100%; background: var(--primary-blue); color: white; border: none; 
+    padding: 16px; border-radius: 15px; font-weight: 700; font-size: 14px; 
+    box-shadow: 0 8px 15px rgba(6, 80, 132, 0.3); margin-top: 10px;
 }
 
-/* Modal */
+/* Modal Styling */
 .modal { 
-    display: none; 
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.85); 
-    z-index: 200; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px; 
-    backdrop-filter: blur(5px); 
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
+    z-index: 9999; align-items: center; justify-content: center; padding: 20px; 
+    backdrop-filter: blur(5px);
 }
 
 .modal-content { 
-    background: white; 
-    width: 100%; 
-    max-width: 320px; 
-    border-radius: 35px; 
-    padding: 35px 25px; 
-    text-align: center; 
+    background: white; width: 100%; max-width: 320px; border-radius: 30px; 
+    padding: 30px 20px; text-align: center; 
 }
+
+.icon-check { 
+    background: #ecfdf5; color: #10b981; width: 60px; height: 60px; 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+    font-size: 24px; margin: 0 auto 15px;
+}
+
+.modal-content h3 { margin: 0; font-size: 18px; color: #111; }
+.modal-content p { font-size: 12px; color: #777; margin: 10px 0 25px; }
+
+.btn-modal { 
+    display: block; width: 100%; padding: 15px; border-radius: 12px; 
+    font-size: 12px; font-weight: 700; text-decoration: none; margin-bottom: 10px; 
+}
+
+.btn-wa { background: #22c55e; color: white; }
+.btn-manifes { background: var(--bg-darker); color: white; }
+.btn-reload { background: none; border: none; color: #999; font-size: 11px; font-weight: 700; cursor: pointer; margin-top: 10px; }
