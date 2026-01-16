@@ -13,53 +13,52 @@
         /* HEADER EXTRA CURVED */
         .header-dash { 
             background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); 
-            padding: 50px 20px 70px 20px; 
-            border-radius: 0 0 45px 45px; 
+            padding: 50px 20px 75px 20px; 
+            border-radius: 0 0 50px 50px; 
             color: white;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(4, 58, 96, 0.2);
         }
-        .header-dash h1 { font-size: 12px; margin: 0; opacity: 0.6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
-        .header-dash h2 { font-size: 22px; margin: 5px 0 0 0; font-weight: 700; }
+        .header-dash h1 { font-size: 11px; margin: 0; opacity: 0.6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
+        .header-dash h2 { font-size: 24px; margin: 5px 0 0 0; font-weight: 800; color: var(--gold); }
 
         /* STATS GRID JEJER 3 */
         .stats-container { margin-top: -45px; padding: 0 15px; }
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* Jejer 3 Sama Rata */
-            gap: 10px; 
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         
         .stat-card { 
             background: var(--white); 
-            padding: 15px 10px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); 
+            padding: 15px 5px; 
+            border-radius: 22px; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); 
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.5);
         }
-        .stat-card i { font-size: 16px; margin-bottom: 8px; color: var(--primary-blue); opacity: 0.8; }
-        .stat-card span { display: block; font-size: 8px; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
-        .stat-card strong { font-size: 13px; font-weight: 800; color: #1e293b; white-space: nowrap; }
+        .stat-card i { font-size: 16px; margin-bottom: 6px; color: var(--primary-blue); opacity: 0.7; }
+        .stat-card span { display: block; font-size: 8px; color: #999; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+        .stat-card strong { font-size: 13px; font-weight: 800; color: #1e293b; }
         
-        /* Warna khusus komisi agar menonjol */
         .card-komisi strong { color: var(--emerald); }
 
-        .section-title { padding: 30px 20px 15px; font-size: 14px; font-weight: 700; color: var(--primary-blue); opacity: 0.8; }
-        .antrean-list { padding: 0 15px 120px; }
-        .card-mini { background: var(--white); border-radius: 18px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .tgl-badge { width: 40px; height: 40px; background: var(--primary-blue); color: white; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; margin-right: 12px; flex-shrink: 0; }
-        .tgl-badge b { font-size: 14px; line-height: 1; }
-        .info-mini { flex: 1; overflow: hidden; }
-        .info-mini b { font-size: 13px; color: #1e293b; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .info-mini small { font-size: 10px; color: #64748b; display: block; }
+        .section-title { padding: 35px 22px 15px; font-size: 14px; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; justify-content: space-between; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: #cbd5e1; margin-left: 15px; opacity: 0.3; }
 
-        .nav-bottom { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 400px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-radius: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 100; }
-        .nav-bottom a { text-decoration: none; color: #cbd5e1; text-align: center; font-size: 8px; flex: 1; }
-        .nav-bottom a i { font-size: 18px; margin-bottom: 4px; display: block; }
+        .antrean-list { padding: 0 15px 120px; }
+        .card-mini { background: var(--white); border-radius: 18px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .tgl-badge { width: 42px; height: 42px; background: #f0f7ff; color: var(--primary-blue); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; margin-right: 12px; flex-shrink: 0; }
+        .tgl-badge b { font-size: 15px; line-height: 1; }
+        
+        .info-mini { flex: 1; overflow: hidden; }
+        .info-mini b { font-size: 13px; color: #334155; display: block; text-transform: uppercase; }
+        .info-mini small { font-size: 10px; color: #94a3b8; display: block; margin-top: 1px; }
+
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: #fff; display: flex; justify-content: space-around; padding: 14px 0; border-radius: 28px; box-shadow: 0 10px 35px rgba(0,0,0,0.12); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #cbd5e1; text-align: center; font-size: 9px; flex: 1; font-weight: 600; }
+        .nav-bottom a i { font-size: 19px; margin-bottom: 4px; display: block; }
         .nav-bottom a.active { color: var(--primary-blue); }
     </style>
 </head>
@@ -83,7 +82,7 @@
             <strong id="statTotal">0</strong>
         </div>
         <div class="stat-card card-komisi">
-            <i class="fas fa-wallet" style="color: var(--emerald);"></i>
+            <i class="fas fa-wallet"></i>
             <span>KOMISI</span>
             <strong id="statKomisi">0</strong>
         </div>
@@ -92,7 +91,7 @@
 
 <div class="section-title">Jadwal Terdekat</div>
 <div id="antreanList" class="antrean-list">
-    <p style="text-align: center; opacity: 0.5; font-size: 11px; margin-top: 20px;">Menyinkronkan data...</p>
+    <p style="text-align: center; opacity: 0.5; font-size: 11px; margin-top: 25px;">Sinkronisasi data...</p>
 </div>
     
 <div class="nav-bottom">
@@ -130,39 +129,27 @@
         const list = document.getElementById("antreanList");
         const now = new Date();
         const todayStr = now.toISOString().split('T')[0];
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
+        const currentBulanFilter = todayStr.substring(0, 7); // Hasil: "2026-01"
 
         try {
-            const q = query(collection(db, "bookings"), orderBy("tgl", "asc"));
-            const snap = await getDocs(q);
+            // 1. LOAD DATA BOOKINGS (Untuk Pax & Jadwal)
+            const qBook = query(collection(db, "bookings"), orderBy("tgl", "asc"));
+            const snapBook = await getDocs(qBook);
             
             let hariIniCount = 0;
             let totalAktif = 0;
-            let totalKomisiBulanIni = 0;
             let html = "";
 
-            snap.forEach(doc => {
+            snapBook.forEach(doc => {
                 const d = doc.data();
-                const bookingDate = new Date(d.tgl);
-
-                // LOGIKA KOMISI: Mengambil dari field 'komisi' hasil input manual
-                if (bookingDate.getMonth() === currentMonth && bookingDate.getFullYear() === currentYear) {
-                    // Kita bersihkan dulu data komisi kalau ada titik/koma/rupiah
-                    const valKomisi = d.komisi ? String(d.komisi).replace(/[^0-9]/g, '') : "0";
-                    totalKomisiBulanIni += Number(valKomisi);
-                }
-
                 if (d.tgl >= todayStr) {
                     totalAktif++;
                     if (d.tgl === todayStr) hariIniCount++;
 
-                    const tglRapi = bookingDate.getDate();
-                    const blnRapi = bookingDate.toLocaleDateString('id-ID', { month: 'short' });
-
+                    const bDate = new Date(d.tgl);
                     html += `
                         <div class="card-mini">
-                            <div class="tgl-badge"><b>${tglRapi}</b>${blnRapi}</div>
+                            <div class="tgl-badge"><b>${bDate.getDate()}</b>${bDate.toLocaleDateString('id-ID', { month: 'short' })}</div>
                             <div class="info-mini">
                                 <b>${d.nama}</b>
                                 <small>${d.armada} • ${d.jam} • ${d.tujuan}</small>
@@ -171,17 +158,32 @@
                 }
             });
 
+            // 2. LOAD DATA KOMISI (Khusus untuk Angka Komisi)
+            const snapKomisi = await getDocs(collection(db, "komisi"));
+            let totalKomisiBulanIni = 0;
+
+            snapKomisi.forEach(doc => {
+                const dk = doc.data();
+                // Filter berdasarkan field 'bulan' yang ada di inputan komisi.html
+                if (dk.bulan === currentBulanFilter) {
+                    totalKomisiBulanIni += Number(dk.komisi || 0);
+                }
+            });
+
+            // TAMPILKAN DATA
             document.getElementById('statPax').innerText = hariIniCount;
             document.getElementById('statTotal').innerText = totalAktif;
             
-            // Format Komisi jadi ringkas (Contoh: 1.5jt atau Nominal Lengkap)
+            // Format Komisi (Ribuan/Jutaan)
             if (totalKomisiBulanIni >= 1000000) {
-                document.getElementById('statKomisi').innerText = (totalKomisiBulanIni / 1000000).toFixed(1) + " Jt";
+                document.getElementById('statKomisi').innerText = (totalKomisiBulanIni / 1000000).toFixed(1) + "M";
+            } else if (totalKomisiBulanIni >= 1000) {
+                document.getElementById('statKomisi').innerText = (totalKomisiBulanIni / 1000).toFixed(0) + "K";
             } else {
-                document.getElementById('statKomisi').innerText = (totalKomisiBulanIni / 1000).toFixed(0) + " K";
+                document.getElementById('statKomisi').innerText = totalKomisiBulanIni;
             }
             
-            list.innerHTML = html || "<p style='text-align:center; opacity:0.5; font-size:11px;'>Tidak ada jadwal.</p>";
+            list.innerHTML = html || "<p style='text-align:center; opacity:0.5; font-size:11px;'>Belum ada jadwal masuk.</p>";
 
         } catch (e) {
             console.error(e);
