@@ -12,9 +12,27 @@
     <style>
         body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
         #loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: #065084; }
-        .qr-container { text-align: center; padding: 10px 20px; }
-        .qr-container img { width: 130px; height: 130px; border: 5px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 15px; }
-        .teks-barcode { display: block; font-weight: 800; font-size: 16px; color: #065084; margin-top: 10px; letter-spacing: 2px; }
+        
+        .qr-container { text-align: center; padding: 20px; }
+        .qr-container img { 
+            width: 140px; height: 140px; 
+            border: 6px solid white; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            border-radius: 15px; 
+        }
+        
+        /* Teks MT-XXXX di bawah QR */
+        .teks-barcode-qr { 
+            display: block; font-weight: 800; font-size: 18px; 
+            color: #065084; margin-top: 10px; letter-spacing: 2px;
+        }
+
+        /* Ucapan Terimakasih */
+        .thanks-note {
+            font-size: 11px; color: #777; margin-top: 15px; 
+            line-height: 1.5; padding: 0 20px;
+        }
+
         .hidden { display: none !important; }
     </style>
 </head>
@@ -28,7 +46,7 @@
 <div id="main-content" class="etiket-container hidden">
     <div class="etiket-header">
         <div class="header"><img src="../logo.png" alt="Mahika Trans" class="logo"></div>
-        <p class="kode-booking">ID: <span id="id_tiket">-</span></p>
+        <p class="kode-booking">MT-<span id="id_tiket">-</span></p>
     </div>
 
     <div class="info-grid">
@@ -50,8 +68,18 @@
 
     <div class="qr-container">
         <img id="qrImg" alt="QR Code">
-        <span id="teksBarcode" class="teks-barcode">-</span>
-        <p class="thanks" style="font-size: 10px; margin-top: 15px; color: #666;">Terimakasih atas kepercayaan Anda.</p>
+        <span id="teksMT" class="teks-barcode-qr">-</span>
+        
+        <p class="thanks-note">
+            Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.<br>
+            Semoga perjalanan Anda menyenangkan.
+        </p>
+    </div>
+
+    <div class="keterangan">
+        <p><strong>Perhatian:</strong></p>
+        <p>1. Tiket yang sudah dipesan tidak dapat dibatalkan.</p>
+        <p>2. Harap datang 30 menit sebelum jadwal pemberangkatan.</p>
     </div>
 </div>
 
@@ -74,7 +102,7 @@ const params = new URLSearchParams(window.location.search);
 const ticketID = params.get("id");
 
 if(!ticketID) {
-    window.location.href = "../index.html";
+    window.location.href = "../landing.html";
 } else {
     try {
         const docRef = doc(db, "bookings", ticketID);
@@ -101,15 +129,14 @@ if(!ticketID) {
                 document.getElementById("tgl").innerText = new Date(data.tgl).toLocaleDateString("id-ID", opsi);
             }
 
-            // --- BAGIAN PERBAIKAN MT-XXXX ---
-            // Ambil field 'barcode' yang isinya "MT-1234"
-            const kodeLengkap = data.barcode || "MT-00000"; 
+            // AMBIL DATA MT-XXXX DARI DATABASE
+            const kodeMT = data.barcode || "MT-00000"; 
             
-            // Tampilkan teksnya di bawah QR
-            document.getElementById("teksBarcode").innerText = kodeLengkap;
+            // Tampilkan teks MT-XXXX di bawah QR
+            document.getElementById("teksMT").innerText = kodeMT;
             
-            // Masukkan ke QR Code
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${kodeLengkap}`;
+            // Masukkan kode MT ke dalam gambar QR
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${kodeMT}`;
             document.getElementById("qrImg").src = qrUrl;
 
         } else {
