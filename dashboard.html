@@ -10,7 +10,6 @@
         :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
         body { font-family: 'Poppins', sans-serif; background: #f0f4f7; margin: 0; color: #333; min-height: 100vh; }
         
-        /* HEADER EXTRA CURVED */
         .header-dash { 
             background: radial-gradient(circle at top right, var(--bg-darker), var(--primary-blue)); 
             padding: 50px 20px 80px 20px; 
@@ -22,7 +21,6 @@
         .header-dash h1 { font-size: 11px; margin: 0; opacity: 0.6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
         .header-dash h2 { font-size: 24px; margin: 5px 0 0 0; font-weight: 800; color: var(--gold); }
 
-        /* STATS GRID JEJER 3 */
         .stats-container { margin-top: -45px; padding: 0 15px; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         
@@ -37,12 +35,10 @@
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(255,255,255,0.5);
-            text-decoration: none; /* Biar link ga ada garis bawah */
+            text-decoration: none;
         }
         .stat-card i { font-size: 16px; margin-bottom: 6px; color: var(--primary-blue); opacity: 0.7; }
         .stat-card span { display: block; font-size: 8px; color: #999; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
-        
-        /* WARNA STRONG DISAMAKAN SEMUA */
         .stat-card strong { font-size: 13px; font-weight: 800; color: var(--primary-blue); }
         
         .section-title { padding: 35px 22px 15px; font-size: 14px; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; justify-content: space-between; }
@@ -52,15 +48,33 @@
         .card-mini { background: var(--white); border-radius: 18px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .tgl-badge { width: 42px; height: 42px; background: #f0f7ff; color: var(--primary-blue); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; margin-right: 12px; flex-shrink: 0; }
         .tgl-badge b { font-size: 15px; line-height: 1; }
-        
         .info-mini { flex: 1; overflow: hidden; }
         .info-mini b { font-size: 13px; color: #334155; display: block; text-transform: uppercase; }
         .info-mini small { font-size: 10px; color: #94a3b8; display: block; margin-top: 1px; }
 
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: #fff; display: flex; justify-content: space-around; padding: 14px 0; border-radius: 28px; box-shadow: 0 10px 35px rgba(0,0,0,0.12); z-index: 100; }
-        .nav-bottom a { text-decoration: none; color: #cbd5e1; text-align: center; font-size: 9px; flex: 1; font-weight: 600; }
-        .nav-bottom a i { font-size: 19px; margin-bottom: 4px; display: block; }
-        .nav-bottom a.active { color: var(--primary-blue); }
+        /* NAV BOTTOM IMPROVED (BIAR JELAS) */
+        .nav-bottom { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 92%; max-width: 420px; background: #ffffff; 
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 10px 0; border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 1000; 
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-bottom a { 
+            text-decoration: none; color: #64748b; /* Warna abu-abu lebih gelap biar kelihatan */
+            text-align: center; font-size: 9px; flex: 1; font-weight: 600; 
+            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center;
+        }
+        .nav-bottom a i { font-size: 20px; margin-bottom: 3px; display: block; }
+        
+        /* State Active: Biru Pekat & Ikon Lebih Menonjol */
+        .nav-bottom a.active { 
+            color: var(--primary-blue); 
+        }
+        .nav-bottom a.active i {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -101,7 +115,7 @@
     <a href="manifes.html"><i class="fas fa-list"></i>Manifes</a>
     <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
     <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
-    <a href="logout.html" id="logoutBtn"><i class="fas fa-power-off"></i></a>
+    <a href="logout.html" id="logoutBtn" style="color: #ef4444;"><i class="fas fa-power-off"></i>Off</a>
 </div>
 
 <script type="module">
@@ -133,7 +147,6 @@
         const currentBulanFilter = todayStr.substring(0, 7);
 
         try {
-            // LOAD BOOKINGS
             const qBook = query(collection(db, "bookings"), orderBy("tgl", "asc"));
             const snapBook = await getDocs(qBook);
             
@@ -158,7 +171,6 @@
                 }
             });
 
-            // LOAD KOMISI
             const snapKomisi = await getDocs(collection(db, "komisi"));
             let totalKomisiBulanIni = 0;
             snapKomisi.forEach(doc => {
@@ -171,7 +183,6 @@
             document.getElementById('statPax').innerText = hariIniCount;
             document.getElementById('statTotal').innerText = totalAktif;
             
-            // Format Komisi
             if (totalKomisiBulanIni >= 1000000) {
                 document.getElementById('statKomisi').innerText = (totalKomisiBulanIni / 1000000).toFixed(1) + "M";
             } else if (totalKomisiBulanIni >= 1000) {
