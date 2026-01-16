@@ -11,7 +11,7 @@
         :root { --primary-blue: #065084; --gold: #FFD700; }
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: #111; /* Background gelap biar dramatis */
+            background: #111; 
             margin: 0; overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             min-height: 100vh; 
@@ -21,17 +21,17 @@
         .road {
             position: absolute; bottom: 0; width: 100%; height: 50vh;
             background: #222;
-            clip-path: polygon(45% 0%, 55% 0%, 100% 100%, 0% 100%);
+            clip-path: polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%);
             border-bottom: 5px solid #444;
         }
 
-        /* Garis Putih Jalan */
+        /* Garis Putih Jalan Gerak */
         .road::after {
             content: ''; position: absolute; left: 50%; top: 0;
-            width: 10px; height: 100%;
+            width: 8px; height: 100%;
             background: repeating-linear-gradient(transparent, transparent 20px, white 20px, white 40px);
             transform: translateX(-50%);
-            animation: moveRoad 0.5s linear infinite;
+            animation: moveRoad 0.3s linear infinite; /* Dipercepat biar kelihatan ngebut */
         }
 
         @keyframes moveRoad {
@@ -39,61 +39,74 @@
             100% { background-position: 0 40px; }
         }
 
-        /* Bus Maju ke Layar */
+        /* Container Bus Diem di Tempat */
         .bus-container {
-            position: relative; z-index: 10;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            animation: busMaju 3s ease-in forwards;
+            position: absolute; 
+            bottom: 10%; /* Posisi bus di atas jalan */
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .bus-icon {
-            font-size: 20px; /* Mulai dari kecil */
+            font-size: 80px; /* Ukuran pas di layar */
             color: var(--gold);
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            text-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+            /* Animasi Goyang Mantul (Suspensi) */
+            animation: busGoyang 0.4s ease-in-out infinite alternate;
         }
 
-        @keyframes busMaju {
-            0% { transform: scale(1) translateY(0); opacity: 0; }
-            20% { opacity: 1; }
-            80% { transform: scale(50) translateY(10px); opacity: 1; }
-            100% { transform: scale(150) translateY(20px); opacity: 0; } /* Efek menabrak layar */
+        @keyframes busGoyang {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(0.5deg); }
+            100% { transform: translateY(-2px) rotate(-0.5deg); }
+        }
+
+        /* Cahaya Lampu Bus di Aspal */
+        .bus-light {
+            width: 120px; height: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            filter: blur(10px);
+            border-radius: 50%;
+            margin-top: -10px;
         }
 
         .text-overlay {
             position: absolute; top: 20%; text-align: center; width: 100%;
             z-index: 20; color: white;
         }
-        
+
+        /* Efek transisi halus saat pindah */
         .overlay-black {
             position: fixed; inset: 0; background: black; opacity: 0;
             pointer-events: none; z-index: 99;
-            animation: darken 3s forwards;
+            animation: fadeOut 0.5s forwards 2.5s;
         }
 
-        @keyframes darken {
-            0%, 80% { opacity: 0; }
-            100% { opacity: 1; }
+        @keyframes fadeOut {
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
     <div class="text-overlay">
-        <h1 class="text-3xl font-bold italic tracking-wider text-[#FFD700]">MAHIKA TRANS</h1>
-        <p class="text-[10px] text-gray-400 mt-2 tracking-[5px] uppercase"Otw, bosskuuu..</p>
+        <h1 class="text-4xl font-bold italic tracking-wider text-[#FFD700] drop-shadow-lg">MAHIKA TRANS</h1>
+        <p class="text-[10px] text-gray-400 mt-2 tracking-[5px] uppercase">Otw, bosskuuu..</p>
     </div>
 
     <div class="road"></div>
 
     <div class="bus-container">
         <i class="fas fa-bus bus-icon"></i>
+        <div class="bus-light"></div>
     </div>
 
     <div class="overlay-black"></div>
 
     <script>
-        // Tunggu animasi selesai (3 detik), baru pindah
+        // Redirect setelah 3 detik
         setTimeout(() => {
             window.location.href = "https://mahikatrans.my.id";
         }, 3000);
