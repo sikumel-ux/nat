@@ -1,9 +1,12 @@
-/* inputnya.css */
+/* inputnya.css - Mahika Trans Management System */
+
 :root { 
     --primary-blue: #065084; 
     --bg-darker: #043a60; 
     --white: #ffffff; 
     --gold: #FFD700; 
+    --gray-text: #999;
+    --border-color: #eee;
 }
 
 body { 
@@ -14,7 +17,7 @@ body {
     min-height: 100vh; 
 }
 
-/* Header Curvy */
+/* Header Melengkung */
 .header-curvy { 
     background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
     padding: 50px 25px 80px 25px; 
@@ -34,6 +37,111 @@ body {
 .filter-info { 
     text-align: center; 
     margin-bottom: 15px; 
+    font-size: 11px; 
+    font-weight: 600; 
+    color: white; 
+    opacity: 0.8; 
+    letter-spacing: 1px; 
+}
+
+/* Container Form */
+.form-container { 
+    margin-top: -50px; 
+    padding: 0 20px 120px; 
+    position: relative; 
+    z-index: 10; 
+}
+
+.card-input { 
+    background: var(--white); 
+    border-radius: 30px; 
+    padding: 30px 25px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    border-top: 5px solid var(--gold);
+}
+
+/* Styling Input Field */
+.group-field { 
+    margin-bottom: 18px; 
+}
+
+.group-field label { 
+    display: block; 
+    font-size: 10px; 
+    font-weight: 700; 
+    color: var(--gray-text); 
+    text-transform: uppercase; 
+    margin-bottom: 6px; 
+    margin-left: 5px; 
+}
+
+.group-field input { 
+    width: 100%; 
+    border: 1.5px solid var(--border-color); 
+    padding: 14px; 
+    border-radius: 15px; 
+    font-family: 'Poppins', sans-serif; 
+    font-size: 13px; 
+    font-weight: 600; 
+    box-sizing: border-box; 
+    transition: all 0.3s ease; 
+}
+
+.group-field input:focus { 
+    border-color: var(--primary-blue); 
+    outline: none; 
+    background: #fcfcfc; 
+    box-shadow: 0 0 0 3px rgba(6, 80, 132, 0.05);
+}
+
+/* Tombol Simpan */
+.btn-save { 
+    width: 100%; 
+    background: var(--primary-blue); 
+    color: var(--white); 
+    border: none; 
+    padding: 18px; 
+    border-radius: 18px; 
+    font-weight: 700; 
+    font-size: 14px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); 
+    cursor: pointer; 
+    transition: transform 0.2s active;
+}
+
+.btn-save:active {
+    transform: scale(0.98);
+}
+
+/* Modal Sukses */
+.modal { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.85); 
+    z-index: 200; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 20px; 
+    backdrop-filter: blur(5px); 
+}
+
+.modal-content { 
+    background: white; 
+    width: 100%; 
+    max-width: 320px; 
+    border-radius: 35px; 
+    padding: 35px 25px; 
+    text-align: center; 
+    animation: zoomIn 0.3s ease-out;
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
     font-size: 11px; 
     font-weight: 600; 
     color: white; 
