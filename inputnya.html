@@ -186,7 +186,7 @@
             const opsi = { day: 'numeric', month: 'long', year: 'numeric' };
             const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
 
-            const linkEtiket = window.location.origin + "/etiket.html?id=" + docRef.id;
+            const linkEtiket = window.location.origin + "/?id=" + docRef.id;
 
             // 3. Draft Pesan WA (Nomor tujuan dinamis dari input)
             const textWA = `*E-TIKET MAHIKA TRANS*%0A` +
