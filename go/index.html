@@ -8,11 +8,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../stylez.css">
     <style>
-        body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
+        body { padding-bottom: 30px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
         #loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: #065084; }
-        .qr-container { text-align: center; padding: 20px; }
-        .qr-container img { width: 150px; height: 150px; border: 6px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 15px; }
-        .thanks-note { font-size: 11px; color: #777; margin-top: 20px; line-height: 1.5; padding: 0 20px; font-style: italic; }
+        
+        /* Posisi Tear Line & QR biar gak terlalu bawah */
+        .tear-line { margin: 15px 0; }
+        .qr-container { text-align: center; padding: 10px 20px; }
+        .qr-container img { width: 140px; height: 140px; border: 5px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; }
+        
+        .thanks-note { font-size: 11px; color: #666; margin-top: 12px; line-height: 1.4; font-style: italic; }
+        
+        .keterangan { margin-top: 20px; padding: 0 25px; text-align: left; }
+        .keterangan p { margin: 3px 0; font-size: 11px; color: #444; line-height: 1.5; }
+        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -26,7 +34,7 @@
 <div id="main-content" class="etiket-container hidden">
     <div class="etiket-header">
         <div class="header"><img src="../logo.png" alt="Logo" class="logo"></div>
-        <p class="kode-booking">KODE: <span id="seri_tiket">-</span></p>
+        <p class="kode-booking"><span id="seri_tiket">-</span></p>
     </div>
 
     <div class="info-grid">
@@ -51,6 +59,13 @@
             Semoga perjalanan Anda menyenangkan bersama <strong>Mahika Trans</strong>.
         </p>
     </div>
+
+    <div class="keterangan">
+        <p><strong>Perhatian:</strong></p>
+        <p>1. Tiket yang sudah dipesan tidak dapat dibatalkan</p>
+        <p>2. Harap datang maksimal 30 menit sebelum jadwal pemberangkatan</p>
+        <p>3. Anak usia 3 tahun atau tinggi badan 90cm wajib membeli tiket</p>
+    </div>
 </div>
 
 <script type="module">
@@ -71,8 +86,9 @@ const db = getFirestore(app);
 const params = new URLSearchParams(window.location.search);
 const ticketID = params.get("id");
 
-if(!ticketID) { window.location.href = "../landing.html"; } 
-else {
+if(!ticketID) { 
+    window.location.href = "../index.html"; 
+} else {
     try {
         const docRef = doc(db, "bookings", ticketID);
         const docSnap = await getDoc(docRef);
@@ -94,8 +110,8 @@ else {
                 document.getElementById("tgl").innerText = new Date(data.tgl).toLocaleDateString("id-ID", opsi);
             }
 
-            // QR Code murni ID 6 Angka
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${ticketID}`;
+            // QR Code murni isi ID 6 angka
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${ticketID}`;
             document.getElementById("qrImg").src = qrUrl;
 
         } else { window.location.href = "../404.html"; }
