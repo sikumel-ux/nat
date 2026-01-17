@@ -44,7 +44,7 @@
         </div>
         <div class="group-field"><label>Armada</label><input type="text" id="armada" placeholder="Mahika Jaya"></div>
         <div class="group-field"><label>Tujuan</label><input type="text" id="tujuan" placeholder="Kota Tujuan"></div>
-        <div class="group-field"><label>Harga (Rp)</label><input type="number" id="harga" placeholder="250000"></div>
+        <div class="group-field"><label>Harga</label><input type="number" id="harga" placeholder="250000"></div>
         <div class="row-flex">
             <div class="group-field half"><label>Tanggal</label><input type="date" id="tgl_only"></div>
             <div class="group-field half"><label>Jam</label><input type="text" id="jam_only" placeholder="17:30"></div>
@@ -100,28 +100,43 @@
         const vArmada = document.getElementById('armada').value;
         const vTujuan = document.getElementById('tujuan').value;
         const vHarga = document.getElementById('harga').value;
-        const vTgl = document.getElementById('tgl_only').value;
+        const vTglRaw = document.getElementById('tgl_only').value;
         const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA || !vTgl) return alert("Lengkapi data!");
+        if(!vNama || !vWA || !vTglRaw) return alert("Lengkapi data!");
 
         btn.innerText = "MENYIMPAN...";
         btn.disabled = true;
 
         const customID = Math.floor(100000 + Math.random() * 900000).toString();
 
+        // Format tanggal untuk teks WA (DD-MM-YYYY)
+        const d = new Date(vTglRaw);
+        const vTglIndo = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+
         try {
             await setDoc(doc(db, "bookings", customID), {
                 nama: vNama, wa: vWA, kursi: String(vKursi), armada: vArmada,
-                tujuan: vTujuan, harga: vHarga, tgl: vTgl, jam: vJamRaw + " WIB",
+                tujuan: vTujuan, harga: vHarga, tgl: vTglRaw, jam: vJamRaw + " WIB",
                 createdAt: serverTimestamp()
             });
 
-            const linkEtiket = window.location.origin + "/go/?id=" + customID;
-            const textWA = `Halo *${vNama.toUpperCase()}*, tiket Anda di *MAHIKA TRANS* berhasil dipesan.%0A%0A` +
+            // Link ke subdomain baru
+            const linkEtiket = "https://go.mahikatrans.com/?id=" + customID;
+
+            // Format Teks WhatsApp Request Baru
+            const textWA = `Halo, *${vNama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0A` +
+                           `Tanggal: *${vTglIndo}*%0A` +
+                           `Jam: *${vJamRaw} WIB*%0A%0A` +
+                           `Nama: ${vNama}%0A` +
+                           `Armada: ${vArmada}%0A` +
                            `Tujuan: ${vTujuan}%0A` +
-                           `No. Kursi: *${vKursi}*%0A%0A` +
-                           `Link Etiket:%0A${linkEtiket}%0A%0A` +
+                           `No kursi: *${vKursi}*%0A%0A` +
+                           `Bukti pemesanan tiket Anda:%0A` +
+                           `------------------------------------------------%0A` +
+                           `${linkEtiket}%0A` +
+                           `------------------------------------------------%0A%0A` +
+                           `Harap datang 30 menit sebelum jam keberangkatan.%0A%0A` +
                            `Terimakasih.`;
 
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
@@ -131,7 +146,6 @@
         finally { btn.innerText = "SIMPAN & KIRIM TIKET"; btn.disabled = false; }
     }
 
-    // Fungsi Logout
     document.getElementById('logoutBtn').onclick = (e) => {
         e.preventDefault();
         signOut(auth).then(() => location.href = "login.html");
