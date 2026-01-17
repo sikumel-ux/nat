@@ -53,6 +53,15 @@
     </div>
 </div>
 
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="inputnya.html" class="active"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="#" id="logoutBtn" class="nav-logout"><i class="fas fa-power-off"></i>Off</a>
+</div>
+
 <div id="modalSukses" class="modal">
     <div class="modal-content">
         <i class="fas fa-circle-check icon-check"></i>
@@ -67,6 +76,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
@@ -78,6 +88,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     document.getElementById('tgl_only').valueAsDate = new Date();
 
@@ -119,7 +130,12 @@
         } catch (e) { alert("Error: " + e.message); }
         finally { btn.innerText = "SIMPAN & KIRIM TIKET"; btn.disabled = false; }
     }
+
+    // Fungsi Logout
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => location.href = "login.html");
+    }
 </script>
-    
 </body>
 </html>
