@@ -37,7 +37,7 @@
 
         .po-card { 
             background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; 
-            border-left: 6px solid var(--primary-blue); box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            border-left: 6px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.02);
             position: relative;
         }
         .rute-text { font-size: 11px; color: #666; margin-top: 8px; background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px dashed #e2e8f0; line-height: 1.6; }
@@ -77,11 +77,8 @@
                 <input type="text" id="jamInput" placeholder="18:00">
             </div>
         </div>
-        <button id="btnSimpanRute" class="btn-save">SIMPAN & GABUNGKAN</button>
-        
-        <button id="btnCleanup" class="w-full mt-4 text-[9px] font-bold text-red-400 uppercase tracking-widest bg-red-50 py-2 rounded-xl border border-red-100">
-            <i class="fas fa-broom mr-1"></i> Rapikan Database Berantakan
-        </button>
+        <button id="btnSimpanRute" class="btn-save">SIMPAN JADWAL RUTE</button>
+        <p class="text-[9px] text-gray-400 mt-2 text-center">*Satu armada bisa punya banyak jam berbeda</p>
     </div>
 </div>
 
@@ -97,12 +94,12 @@
     <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
     <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
     <a href="input-rute.html" class="active"><i class="fas fa-route"></i>Rute</a>
-    <a href="logout.html" id="logoutBtn"><i class="fas fa-power-off"></i>Logout</a>
+    <a href="logout.html" id="logoutBtn"><i class="fas fa-power-off"></i>Off</a>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, doc, getDoc, setDoc, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
@@ -115,11 +112,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // LOAD DATA
     async function loadRuteData() {
         const div = document.getElementById('displayRute');
         const snap = await getDocs(collection(db, "direktori_rute"));
         let html = "";
-        const sortedData = snap.docs.map(d => d.data()).sort((a, b) => a.armada.localeCompare(b.armada));
+        
+        // Sort berdasarkan Nama Armada
+        const sortedData = snap.docs.map(d => ({id: d.id, ...d.data()}))
+                           .sort((a, b) => a.armada.localeCompare(b.armada));
 
         sortedData.forEach(data => {
             const jam = data.jam || "--:--";
@@ -128,25 +129,31 @@
                     <b class="text-blue-900 uppercase text-sm font-bold">${data.armada}</b>
                     <span class="jam-badge">${jam} WIB</span>
                     <div class="rute-text">${data.tujuan}</div>
+                    <button onclick="hapusRute('${data.id}')" class="text-[9px] text-red-400 mt-2 font-bold uppercase"><i class="fas fa-trash mr-1"></i> Hapus Jadwal Ini</button>
                 </div>`;
         });
         div.innerHTML = html || "<p class='text-center text-xs text-gray-400'>Data kosong.</p>";
     }
 
+    // SIMPAN DATA
     document.getElementById('btnSimpanRute').onclick = async function() {
         const po = document.getElementById('poName').value.trim().toUpperCase();
         const ruteInput = document.getElementById('ruteInput').value.trim();
-        const jamInput = document.getElementById('jamInput').value.trim() || "19:00";
+        const jamInput = document.getElementById('jamInput').value.trim().replace(':', ''); // Hapus titik dua buat ID
 
-        if(!po || !ruteInput) return alert("Lengkapi data dulu!");
+        if(!po || !ruteInput || !jamInput) return alert("Nama, Rute, dan Jam wajib diisi!");
 
         this.innerText = "PROSES...";
-        const docId = po.replace(/\s+/g, '_'); 
+        
+        // UNIK ID: Gabungan Nama Armada + Jam (Contoh: MURNI_JAYA_0600)
+        // Ini kuncinya supaya jam 06:00 dan 12:30 gak tumpang tindih
+        const docId = po.replace(/\s+/g, '_') + "_" + jamInput; 
         const docRef = doc(db, "direktori_rute", docId);
         
         try {
             const snap = await getDoc(docRef);
             let ruteFinal = "";
+            const jamTampil = document.getElementById('jamInput').value.trim();
 
             if(snap.exists()){
                 const lama = snap.data().tujuan.split(',').map(s => s.trim());
@@ -159,53 +166,25 @@
             await setDoc(docRef, { 
                 armada: po, 
                 tujuan: ruteFinal, 
-                jam: jamInput, // Simpan Jam
+                jam: jamTampil,
                 updatedAt: new Date() 
             });
 
             document.getElementById('ruteInput').value = "";
             document.getElementById('jamInput').value = "";
             loadRuteData();
-            alert("Rute " + po + " Berhasil Diperbarui!");
+            alert("Jadwal " + po + " jam " + jamTampil + " berhasil disimpan!");
         } catch(e) { alert("Error: " + e.message); }
-        this.innerText = "SIMPAN & GABUNGKAN";
+        this.innerText = "SIMPAN JADWAL RUTE";
     };
 
-    document.getElementById('btnCleanup').onclick = async function() {
-        if(!confirm("Merapikan database akan menghapus duplikat. Lanjutkan?")) return;
-        const btn = this;
-        btn.innerText = "MERAPIKAN...";
-        try {
-            const snap = await getDocs(collection(db, "direktori_rute"));
-            let mapPO = {};
-            let allDocs = [];
-            snap.forEach(d => {
-                const data = d.data();
-                const poName = data.armada.toUpperCase().trim();
-                const ruteArr = data.tujuan.split(',').map(s => s.trim());
-                const jam = data.jam || "19:00";
-                
-                if(!mapPO[poName]) mapPO[poName] = { rute: [], jam: jam };
-                mapPO[poName].rute = [...new Set([...mapPO[poName].rute, ...ruteArr])];
-                allDocs.push(d.id);
-            });
-            const batch = writeBatch(db);
-            allDocs.forEach(id => { batch.delete(doc(db, "direktori_rute", id)); });
-            Object.keys(mapPO).forEach(po => {
-                const cleanId = po.replace(/\s+/g, '_');
-                batch.set(doc(db, "direktori_rute", cleanId), {
-                    armada: po,
-                    tujuan: mapPO[po].rute.filter(x => x).sort().join(', '),
-                    jam: mapPO[po].jam,
-                    updatedAt: new Date()
-                });
-            });
-            await batch.commit();
-            alert("Database Sekarang Sudah Rapi!");
+    // FUNGSI HAPUS (Tambahan biar enak manage-nya)
+    window.hapusRute = async (id) => {
+        if(confirm("Hapus jadwal ini?")){
+            await deleteDoc(doc(db, "direktori_rute", id));
             loadRuteData();
-        } catch(e) { alert("Gagal: " + e.message); }
-        btn.innerHTML = '<i class="fas fa-broom mr-1"></i> Rapikan Database Berantakan';
-    };
+        }
+    }
 
     loadRuteData();
 </script>
