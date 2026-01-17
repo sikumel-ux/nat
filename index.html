@@ -53,7 +53,7 @@
 
         <div id="welcome-card" class="glass p-8 rounded-[40px] mb-12 border-white/5 text-center">
             <h2 class="text-lg font-bold text-white mb-2">Selamat Datang!</h2>
-            <p class="text-[11px] leading-relaxed text-white/50">Cari rute tujuanmu dan hubungi kami langsung via WhatsApp untuk pemesanan cepat.</p>
+            <p class="text-[11px] leading-relaxed text-white/50">Cari rute tujuanmu dan hubungi kami langsung via WhatsApp untuk reservasi.</p>
         </div>
 
         <div id="result-container" class="hidden mb-12">
@@ -227,7 +227,7 @@
                 });
 
                 setTimeout(() => {
-                    busList.innerHTML = html || `<div class="glass p-10 rounded-3xl text-center"><p class="text-xs opacity-30 uppercase font-bold">Rute tidak ditemukan.</p></div>`;
+                    busList.innerHTML = html || `<div class="glass p-10 rounded-3xl text-center"><p class="text-xs opacity-30 uppercase font-bold">Rute tidak ditemukan. Silakan hubungi admin.</p></div>`;
                     btn.disabled = false;
                 }, 1000);
 
