@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etiket Mahika Trans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../stylez.css">
+    <style>
+        body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
+        #loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: #065084; }
+        .qr-container { text-align: center; padding: 20px; }
+        .qr-container img { width: 150px; height: 150px; border: 6px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 15px; }
+        .thanks-note { font-size: 11px; color: #777; margin-top: 20px; line-height: 1.5; padding: 0 20px; font-style: italic; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+    <p style="margin-top:15px; font-weight:600;">Memvalidasi Tiket...</p>
+</div>
+
+<div id="main-content" class="etiket-container hidden">
+    <div class="etiket-header">
+        <div class="header"><img src="../logo.png" alt="Logo" class="logo"></div>
+        <p class="kode-booking">KODE: <span id="seri_tiket">-</span></p>
+    </div>
+
+    <div class="info-grid">
+        <div class="kolom">
+            <p><i class="fas fa-user"></i> <span id="nama"></span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada"></span></p> 
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
+        </div>
+        <div class="kolom">
+            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
+            <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
+            <p><i class="fas fa-clock"></i> <span id="jam"></span></p>
+        </div>
+    </div>
+
+    <div class="tear-line"></div>
+
+    <div class="qr-container">
+        <img id="qrImg" alt="QR Code">
+        <p class="thanks-note">
+            Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.<br>
+            Semoga perjalanan Anda menyenangkan bersama <strong>Mahika Trans</strong>.
+        </p>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = { 
+    apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+    authDomain: "mahika-trans.firebaseapp.com", 
+    projectId: "mahika-trans", 
+    storageBucket: "mahika-trans.firebasestorage.app", 
+    appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const params = new URLSearchParams(window.location.search);
+const ticketID = params.get("id");
+
+if(!ticketID) { window.location.href = "../landing.html"; } 
+else {
+    try {
+        const docRef = doc(db, "bookings", ticketID);
+        const docSnap = await getDoc(docRef);
+
+        if(docSnap.exists()){
+            const data = docSnap.data();
+            document.getElementById("loading-screen").classList.add("hidden");
+            document.getElementById("main-content").classList.remove("hidden");
+            
+            document.getElementById("seri_tiket").innerText = ticketID;
+            document.getElementById("nama").innerText = data.nama || "-";
+            document.getElementById("armada").innerText = data.armada || "-";
+            document.getElementById("tujuan").innerText = data.tujuan || "-";
+            document.getElementById("no_kursi").innerText = data.kursi || "-";
+            document.getElementById("jam").innerText = data.jam || "-";
+            
+            if(data.tgl) {
+                const opsi = { day: "2-digit", month: "long", year: "numeric" };
+                document.getElementById("tgl").innerText = new Date(data.tgl).toLocaleDateString("id-ID", opsi);
+            }
+
+            // QR Code murni ID 6 Angka
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${ticketID}`;
+            document.getElementById("qrImg").src = qrUrl;
+
+        } else { window.location.href = "../404.html"; }
+    } catch (e) { window.location.href = "../404.html"; }
+}
+</script>
+</body>
+</html>
