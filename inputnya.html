@@ -24,7 +24,6 @@
         .half { flex: 1; }
         .btn-save { width: 100%; background: var(--primary-blue); color: var(--white); border: none; padding: 18px; border-radius: 18px; font-weight: 700; cursor: pointer; }
         
-        /* Modal Style */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 100%; max-width: 300px; border-radius: 35px; padding: 40px 25px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .icon-check { color: var(--primary-blue); font-size: 70px; margin-bottom: 15px; }
@@ -38,14 +37,14 @@
 <div class="header-curvy"><h2>INPUT BOOKING</h2></div>
 <div class="form-container">
     <div class="card-input">
-        <div class="group-field"><label>Nama Penumpang</label><input type="text" id="nama" placeholder="Nama"></div>
+        <div class="group-field"><label>Nama Penumpang</label><input type="text" id="nama" placeholder="Nama lengkap"></div>
         <div class="row-flex">
             <div class="group-field half"><label>No. WhatsApp</label><input type="tel" id="whatsapp" placeholder="0812..."></div>
             <div class="group-field half"><label>Kursi</label><input type="text" id="kursi" placeholder="1A"></div>
         </div>
         <div class="group-field"><label>Armada</label><input type="text" id="armada" placeholder="Mahika Jaya"></div>
         <div class="group-field"><label>Tujuan</label><input type="text" id="tujuan" placeholder="Kota Tujuan"></div>
-        <div class="group-field"><label>Harga (Rp)</label><input type="number" id="harga" placeholder="250000"></div>
+        <div class="group-field"><label>Harga</label><input type="number" id="harga" placeholder="250000"></div>
         <div class="row-flex">
             <div class="group-field half"><label>Tanggal</label><input type="date" id="tgl_only"></div>
             <div class="group-field half"><label>Jam</label><input type="text" id="jam_only" placeholder="17:30"></div>
@@ -67,7 +66,7 @@
     <div class="modal-content">
         <i class="fas fa-circle-check icon-check"></i>
         <h3 style="font-weight:700; margin:0;">Berhasil!</h3>
-        <p style="font-size:12px; color:#999; margin-bottom:25px;">Data tiket sudah masuk sistem.</p>
+        <p style="font-size:12px; color:#999; margin-bottom:25px;">Tiket berhasil disimpan.</p>
         <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa">Kirim WhatsApp</a>
         <a href="manifes.html" class="btn-modal btn-manifes">Buka Manifes</a>
         <button onclick="location.reload()" style="background:none; border:none; color:#aaa; font-size:10px; cursor:pointer; margin-top:10px;">INPUT DATA BARU</button>
@@ -101,35 +100,46 @@
         const vArmada = document.getElementById('armada').value;
         const vTujuan = document.getElementById('tujuan').value;
         const vHarga = document.getElementById('harga').value;
-        const vTgl = document.getElementById('tgl_only').value;
+        const vTglRaw = document.getElementById('tgl_only').value;
         const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA || !vTgl) return alert("Lengkapi data!");
+        if(!vNama || !vWA || !vTglRaw) return alert("Lengkapi data!");
 
         btn.innerText = "MENYIMPAN...";
         btn.disabled = true;
 
         const customID = Math.floor(100000 + Math.random() * 900000).toString();
 
+        // Format tanggal untuk teks WA (DD-MM-YYYY)
+        const d = new Date(vTglRaw);
+        const vTglIndo = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+
         try {
             await setDoc(doc(db, "bookings", customID), {
                 nama: vNama, wa: vWA, kursi: String(vKursi), armada: vArmada,
-                tujuan: vTujuan, harga: vHarga, tgl: vTgl, jam: vJamRaw + " WIB",
+                tujuan: vTujuan, harga: vHarga, tgl: vTglRaw, jam: vJamRaw + " WIB",
                 createdAt: serverTimestamp()
             });
 
-            // UPDATE LINK
-            const linkEtiket = "https://go.mahikatrans.my.id/?id=" + customID;
+            // Link ke subdomain baru
+            const linkEtiket = "https://go.mahikatrans.com/?id=" + customID;
 
-            const textWA = `Halo *${vNama.toUpperCase()}*, tiket Anda di *MAHIKA TRANS* berhasil dipesan.%0A%0A` +
+            // Format Teks WhatsApp Request Baru
+            const textWA = `Halo, *${vNama}*..%0ABerikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0A` +
+                           `Tanggal: *${vTglIndo}*%0A` +
+                           `Jam: *${vJamRaw} WIB*%0A%0A` +
+                           `Nama: ${vNama}%0A` +
+                           `Armada: ${vArmada}%0A` +
                            `Tujuan: ${vTujuan}%0A` +
-                           `No. Kursi: *${vKursi}*%0A%0A` +
-                           `Etiket Anda:%0A${linkEtiket}%0A%0A` +
+                           `No kursi: *${vKursi}*%0A%0A` +
+                           `Bukti pemesanan tiket Anda:%0A` +
+                           `------------------------------------------------%0A` +
+                           `${linkEtiket}%0A` +
+                           `------------------------------------------------%0A%0A` +
+                           `Harap datang 30 menit sebelum jam keberangkatan.%0A%0A` +
                            `Terimakasih.`;
 
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
-            formattedWA = formattedWA.replace(/[^0-9]/g, '');
-
             document.getElementById('linkWA').href = `https://wa.me/${formattedWA}?text=${textWA}`;
             document.getElementById('modalSukses').style.display = 'flex';
         } catch (e) { alert("Error: " + e.message); }
@@ -142,4 +152,5 @@
     }
 </script>
 </body>
-</html>
+    </html>
+    
