@@ -65,11 +65,6 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    onAuthStateChanged(auth, (user) => {
-        if (!user) window.location.href = "login.html";
-        else loadDashboardData();
-    });
-
     async function loadDashboardData() {
         const list = document.getElementById("antreanList");
         const now = new Date();
