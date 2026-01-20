@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Reservasi | Mahika Trans</title>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#065084">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="nav.css">
@@ -151,6 +156,17 @@
         signOut(auth).then(() => location.href = "login.html");
     }
 </script>
+
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('PWA Ready!', reg))
+        .catch(err => console.log('PWA Failed', err));
+    });
+  }
+    </script>
+    
 </body>
     </html>
     
