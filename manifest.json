@@ -1,0 +1,20 @@
+{
+  "name": "Mahika",
+  "short_name": "Mahika",
+  "start_url": "masuk.html",
+  "display": "standalone",
+  "background_color": "#065084",
+  "theme_color": "#065084",
+  "icons": [
+    {
+      "src": "logone.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logone.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
