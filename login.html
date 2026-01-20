@@ -3,71 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mahika Trans</title>
+    <title>Login Admin | Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
     <style>
-        body { background: linear-gradient(135deg, #005b96 0%, #6497b1 100%); }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        body { font-family: 'Poppins', sans-serif; background: #065084; }
+        .login-card { border-top: 5px solid #FFD700; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
-    <div class="glass w-full max-w-md p-8 rounded-[2rem] shadow-2xl text-center border border-white/20">
-        <div class="mb-8">
-            <div class="bg-[#005b96] w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg rotate-3">
-                <i class="fas fa-bus-alt text-white text-3xl"></i>
-            </div>
-            <h1 class="text-3xl font-black text-[#005b96] tracking-tighter">MAHIKA TRANS</h1>
-            <p class="text-[#6497b1] font-medium italic">Internal System Access</p>
-        </div>
+<body class="flex items-center justify-center min-h-screen px-5">
 
-        <div class="space-y-4 text-left">
-            <div>
-                <label class="text-[10px] font-black text-[#005b96] ml-2 uppercase">Email Admin</label>
-                <input type="email" id="email" class="w-full px-5 py-4 bg-[#b3cde0]/20 border-2 border-transparent focus:border-[#005b96] rounded-2xl outline-none transition-all" placeholder="admin@mahika.com">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-[#005b96] ml-2 uppercase">Password</label>
-                <input type="password" id="pass" class="w-full px-5 py-4 bg-[#b3cde0]/20 border-2 border-transparent focus:border-[#005b96] rounded-2xl outline-none transition-all" placeholder="••••••••">
-            </div>
-            <button onclick="login()" id="btnLogin" class="w-full bg-[#005b96] hover:bg-[#01497c] text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all mt-4">
-                LOGIN ADMIN
-            </button>
-        </div>
+<div class="bg-white w-full max-w-md rounded-[40px] p-10 shadow-2xl login-card">
+    <div class="text-center mb-8">
+        <h2 class="text-2xl font-black text-blue-900">ADMIN LOGIN</h2>
+        <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mt-1">Mahika Trans System</p>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    <div class="space-y-4">
+        <div>
+            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Email Admin</label>
+            <input type="email" id="email" class="w-full border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none font-semibold text-sm" placeholder="admin@mahikatrans.com">
+        </div>
+        <div>
+            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Password</label>
+            <input type="password" id="password" class="w-full border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none font-semibold text-sm" placeholder="••••••••">
+        </div>
+        <button id="btnLogin" class="w-full bg-blue-900 text-white font-bold p-4 rounded-2xl shadow-lg hover:bg-blue-800 transition uppercase tracking-wider">Masuk Sekarang</button>
+    </div>
+    
+    <div id="boxError" class="hidden mt-4 p-3 bg-red-50 border border-red-100 rounded-xl text-center">
+        <p id="errMsg" class="text-red-500 text-[11px] font-bold"></p>
+    </div>
+</div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
-            authDomain: "mahika-trans.firebaseapp.com",
-            projectId: "mahika-trans",
-            storageBucket: "mahika-trans.firebasestorage.app",
-            messagingSenderId: "1087881066133",
-            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
-        };
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
 
-        window.login = async () => {
-            const btn = document.getElementById('btnLogin');
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-            if(!email || !pass) return alert("Email & Password jangan dikosongin!");
-            btn.disabled = true; btn.innerText = "Checking...";
+    // Satpam: Kalau sudah login, langsung ke Dashboard
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            window.location.href = "dash.html";
+        }
+    });
 
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-                window.location.href = "manifes.html";
-            } catch (e) {
-                alert("Gagal Login: " + e.message);
-                btn.disabled = false; btn.innerText = "LOGIN ADMIN";
+    document.getElementById('btnLogin').onclick = async function() {
+        const email = document.getElementById('email').value.trim();
+        const pass = document.getElementById('password').value;
+        const btn = this;
+        const errorBox = document.getElementById('boxError');
+        const errorMsg = document.getElementById('errMsg');
+
+        if(!email || !pass) {
+            alert("Email dan Password harus diisi!");
+            return;
+        }
+
+        btn.innerText = "MENGECEK...";
+        btn.disabled = true;
+        errorBox.classList.add('hidden');
+
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            // Jika sukses, onAuthStateChanged di atas yang akan redirect
+        } catch (e) {
+            console.error("Firebase Error Code:", e.code);
+            errorBox.classList.remove('hidden');
+            
+            // Terjemahan Error agar mudah dipahami
+            switch (e.code) {
+                case 'auth/user-not-found':
+                    errorMsg.innerText = "EMAIL TIDAK TERDAFTAR!";
+                    break;
+                case 'auth/wrong-password':
+                    errorMsg.innerText = "PASSWORD SALAH!";
+                    break;
+                case 'auth/invalid-email':
+                    errorMsg.innerText = "FORMAT EMAIL SALAH!";
+                    break;
+                case 'auth/network-request-failed':
+                    errorMsg.innerText = "KONEKSI INTERNET BERMASALAH!";
+                    break;
+                case 'auth/too-many-requests':
+                    errorMsg.innerText = "TERLALU BANYAK PERCOBAAN. COBA LAGI NANTI!";
+                    break;
+                default:
+                    errorMsg.innerText = "GAGAL: " + e.message;
             }
-        };
-    </script>
+            
+            btn.innerText = "Masuk Sekarang";
+            btn.disabled = false;
+        }
+    };
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed', err));
+    });
+  }
+</script>
+
 </body>
 </html>
