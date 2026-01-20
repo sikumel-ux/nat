@@ -9,32 +9,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #065084; }
-        .login-card { border-top: 5px solid #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #065084; overflow: hidden; }
+        .login-card { border-top: 5px solid #FFD700; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        input:focus { border-color: #065084 !important; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen px-5">
 
-<div class="bg-white w-full max-w-md rounded-[40px] p-10 shadow-2xl login-card">
+<div class="bg-white w-full max-w-md rounded-[40px] p-8 md:p-10 login-card">
     <div class="text-center mb-8">
-        <h2 class="text-2xl font-black text-blue-900">ADMIN LOGIN</h2>
-        <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold mt-1">Mahika Trans System</p>
+        <h2 class="text-2xl font-black text-blue-900 uppercase">Admin Login</h2>
+        <p class="text-gray-400 text-[10px] uppercase tracking-[0.2em] font-bold mt-1">Mahika Trans System</p>
     </div>
 
     <div class="space-y-4">
         <div>
-            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Email Admin</label>
-            <input type="email" id="email" class="w-full border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none font-semibold text-sm" placeholder="admin@mahikatrans.com">
+            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase tracking-wider">Email Admin</label>
+            <input type="email" id="email" class="w-full border-2 border-gray-100 p-4 rounded-2xl outline-none font-semibold text-sm transition-all" placeholder="admin@mahikatrans.com">
         </div>
         <div>
-            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Password</label>
-            <input type="password" id="password" class="w-full border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none font-semibold text-sm" placeholder="••••••••">
+            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase tracking-wider">Password</label>
+            <input type="password" id="password" class="w-full border-2 border-gray-100 p-4 rounded-2xl outline-none font-semibold text-sm transition-all" placeholder="••••••••">
         </div>
-        <button id="btnLogin" class="w-full bg-blue-900 text-white font-bold p-4 rounded-2xl shadow-lg hover:bg-blue-800 transition uppercase tracking-wider">Masuk Sekarang</button>
+        <button id="btnLogin" class="w-full bg-blue-900 text-white font-bold p-4 rounded-2xl shadow-lg hover:bg-blue-800 active:scale-95 transition-all uppercase tracking-widest text-sm">
+            Masuk Sekarang
+        </button>
     </div>
     
-    <div id="boxError" class="hidden mt-4 p-3 bg-red-50 border border-red-100 rounded-xl text-center">
-        <p id="errMsg" class="text-red-500 text-[11px] font-bold"></p>
+    <div id="boxError" class="hidden mt-5 p-4 bg-red-50 border border-red-100 rounded-2xl text-center">
+        <p id="errMsg" class="text-red-500 text-[11px] font-bold uppercase"></p>
     </div>
 </div>
 
@@ -50,71 +53,74 @@
         appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
     };
 
-    // Init Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Satpam: Kalau sudah login, langsung ke Dashboard
+    // CEK STATUS LOGIN (Jika sudah login, lempar ke dashboard)
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            window.location.href = "dash.html";
+            window.location.href = "dash.html"; 
         }
     });
 
     document.getElementById('btnLogin').onclick = async function() {
-        const email = document.getElementById('email').value.trim();
+        const email = document.getElementById('email').value.trim(); // Trim hapus spasi
         const pass = document.getElementById('password').value;
         const btn = this;
         const errorBox = document.getElementById('boxError');
         const errorMsg = document.getElementById('errMsg');
 
         if(!email || !pass) {
-            alert("Email dan Password harus diisi!");
+            showError("Email & Password wajib diisi!");
             return;
         }
 
-        btn.innerText = "MENGECEK...";
+        // Reset Tampilan
+        btn.innerText = "MEMVERIFIKASI...";
         btn.disabled = true;
         errorBox.classList.add('hidden');
 
         try {
             await signInWithEmailAndPassword(auth, email, pass);
-            // Jika sukses, onAuthStateChanged di atas yang akan redirect
+            // Sukses login akan dideteksi oleh onAuthStateChanged di atas
         } catch (e) {
             console.error("Firebase Error Code:", e.code);
-            errorBox.classList.remove('hidden');
             
-            // Terjemahan Error agar mudah dipahami
+            let pesan = "";
             switch (e.code) {
+                case 'auth/invalid-credential':
+                    pesan = "Email atau Password Salah!";
+                    break;
                 case 'auth/user-not-found':
-                    errorMsg.innerText = "EMAIL TIDAK TERDAFTAR!";
+                    pesan = "User Tidak Ditemukan!";
                     break;
                 case 'auth/wrong-password':
-                    errorMsg.innerText = "PASSWORD SALAH!";
-                    break;
-                case 'auth/invalid-email':
-                    errorMsg.innerText = "FORMAT EMAIL SALAH!";
-                    break;
-                case 'auth/network-request-failed':
-                    errorMsg.innerText = "KONEKSI INTERNET BERMASALAH!";
+                    pesan = "Password Tidak Akurat!";
                     break;
                 case 'auth/too-many-requests':
-                    errorMsg.innerText = "TERLALU BANYAK PERCOBAAN. COBA LAGI NANTI!";
+                    pesan = "Terlalu banyak percobaan. Tunggu sebentar!";
                     break;
                 default:
-                    errorMsg.innerText = "GAGAL: " + e.message;
+                    pesan = "Gagal Masuk: " + e.code;
             }
-            
+            showError(pesan);
             btn.innerText = "Masuk Sekarang";
             btn.disabled = false;
         }
     };
+
+    function showError(txt) {
+        const errorBox = document.getElementById('boxError');
+        const errorMsg = document.getElementById('errMsg');
+        errorMsg.innerText = txt;
+        errorBox.classList.remove('hidden');
+    }
 </script>
 
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed', err));
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA SW Failed', err));
     });
   }
 </script>
