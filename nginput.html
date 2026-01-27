@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Input | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; margin: 0; padding-bottom: 120px; }
+        .header-input { background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); padding: 30px 20px; border-radius: 0 0 30px 30px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .form-container { margin-top: 20px; padding: 0 20px; }
+        .input-group { background: white; padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        .input-group label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 2px; text-transform: uppercase; }
+        .input-group input, .input-group select { width: 100%; border: none; outline: none; font-size: 14px; font-weight: 600; color: #1e293b; background: transparent; }
+        .btn-simpan { background: var(--primary-blue); color: white; width: 100%; padding: 18px; border-radius: 20px; font-weight: 700; margin-top: 15px; box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); border: none; cursor: pointer; transition: 0.3s; }
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 9px; font-weight: 600; flex: 1; }
+        .nav-bottom a i { font-size: 18px; margin-bottom: 3px; display: block; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-input text-center">
+    <h1 class="text-xl font-bold italic tracking-tighter">MAHIKA TRANS</h1>
+    <p class="text-[10px] opacity-70 tracking-widest uppercase font-semibold">Panel Input Tiket & Kwitansi</p>
+</div>
+
+<div class="form-container">
+    <div class="input-group">
+        <label>Jenis Tiket</label>
+        <select id="p-layanan">
+            <option value="travel">TRAVEL (Kwitansi Kalimat: "Telah Diterima...")</option>
+            <option value="bus">BUS (Digital Boarding Pass)</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>Nama Penumpang</label>
+        <input type="text" id="p-nama" placeholder="Contoh: Ahmad Subarjo">
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div class="input-group">
+            <label>No. WhatsApp</label>
+            <input type="number" id="p-wa" placeholder="08123456xxx">
+        </div>
+        <div class="input-group">
+            <label>Harga (Rp)</label>
+            <input type="number" id="p-harga" placeholder="250000">
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div class="input-group">
+            <label>Tanggal</label>
+            <input type="date" id="p-tgl">
+        </div>
+        <div class="input-group">
+            <label>Jam</label>
+            <input type="text" id="p-jam" placeholder="Cth: 19:00 WIB">
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+        <div class="input-group">
+            <label>Armada</label>
+            <input type="text" id="p-armada" placeholder="Hiace / Elf / Jetbus">
+        </div>
+        <div class="input-group">
+            <label>Nomor Kursi</label>
+            <input type="text" id="p-kursi" placeholder="Cth: 2A">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label>Tujuan / Rute</label>
+        <input type="text" id="p-tujuan" placeholder="Cth: Yogyakarta - Jakarta (PP)">
+    </div>
+
+    <button id="btnSimpan" class="btn-simpan">
+        <i class="fas fa-paper-plane mr-2"></i> SIMPAN & KIRIM VIA WA
+    </button>
+</div>
+
+<div class="nav-bottom">
+    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="input.html" class="active"><i class="fas fa-circle-plus"></i>Input</a>
+    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="logout.html"><i class="fas fa-power-off"></i>Keluar</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Konfigurasi Firebase Kamu
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById('btnSimpan').onclick = async () => {
+        const btn = document.getElementById('btnSimpan');
+        
+        const data = {
+            layanan: document.getElementById('p-layanan').value, // 'travel' atau 'bus'
+            nama: document.getElementById('p-nama').value,
+            wa: document.getElementById('p-wa').value,
+            nominal: document.getElementById('p-harga').value,
+            tgl: document.getElementById('p-tgl').value,
+            jam: document.getElementById('p-jam').value,
+            armada: document.getElementById('p-armada').value,
+            kursi: document.getElementById('p-kursi').value,
+            tujuan: document.getElementById('p-tujuan').value,
+            createdAt: serverTimestamp()
+        };
+
+        if(!data.nama || !data.wa || !data.tgl || !data.tujuan) {
+            return alert("Harap lengkapi data utama (Nama, WA, Tanggal, Tujuan)!");
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Memproses...';
+
+        try {
+            // 1. Simpan ke Firebase
+            const docRef = await addDoc(collection(db, "bookings"), data);
+            
+            // 2. Buat URL satu pintu ke subdomain go
+            const etiketURL = `https://go.mahikatrans.com/?id=${docRef.id}`;
+            
+            // 3. Siapkan Pesan WA
+            const jenis = data.layanan === 'travel' ? 'KWITANSI TRAVEL' : 'TIKET BUS';
+            const pesanWA = `*${jenis} MAHIKA TRANS*\n` +
+                            `--------------------------\n` +
+                            `Nama  : ${data.nama}\n` +
+                            `Rute  : ${data.tujuan}\n` +
+                            `Tgl   : ${data.tgl}\n` +
+                            `--------------------------\n` +
+                            `Klik link dibawah untuk melihat tiket digital/kwitansi Anda:\n${etiketURL}\n\n` +
+                            `_Simpan link ini sebagai bukti perjalanan anda._`;
+            
+            // 4. Redirect ke WhatsApp
+            let waFormatted = data.wa.startsWith('0') ? '62' + data.wa.substring(1) : data.wa;
+            window.location.href = `https://wa.me/${waFormatted}?text=${encodeURIComponent(pesanWA)}`;
+
+        } catch (e) {
+            console.error("Error: ", e);
+            alert("Gagal menyimpan data ke database!");
+            btn.disabled = false;
+            btn.innerHTML = 'SIMPAN & KIRIM VIA WA';
+        }
+    };
+</script>
+</body>
+</html>
