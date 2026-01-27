@@ -3,107 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kwitansi Mahika Trans</title>
+    <title>E-Ticket Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Plus+Jakarta+Sans:wght@800&family=Libre+Barcode+128&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #4b5563; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 10px; }
+        body { background: #334155; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
         
-        /* KERTAS KWITANSI KUNING */
-        .kertas-kwitansi { 
-            background: #fff9c4; 
-            width: 100%; 
-            max-width: 700px; 
-            padding: 40px; 
-            border: 1px solid #d1d5db;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            position: relative;
-            font-family: 'Courier Prime', monospace;
-            color: #1e293b;
-        }
-
-        /* EFEK TULISAN TANGAN */
-        .tulisan-tangan { 
-            font-family: 'Dancing Script', crossorigin; 
-            font-size: 22px; 
-            color: #1d4ed8; /* Biru tinta pulpen */
-            padding-left: 10px;
-        }
-
-        .garis-titik { border-bottom: 2px dotted #64748b; flex-grow: 1; display: flex; align-items: flex-end; min-height: 30px; }
-        .label-nota { font-weight: bold; font-size: 14px; text-transform: uppercase; white-space: nowrap; }
+        /* --- STYLE TRAVEL (KWITANSI KLASIK) --- */
+        .box-travel { background: #fff; padding: 30px; border: 1px solid #000; box-shadow: 10px 10px 0px #000; font-family: 'Courier Prime', monospace; }
+        .line-dot { border-bottom: 2px dotted #000; flex-grow: 1; padding-left: 10px; font-weight: bold; }
         .row-nota { display: flex; align-items: flex-end; margin-bottom: 15px; }
-        
-        /* STEMPEL LUNAS */
-        .stempel {
-            position: absolute;
-            bottom: 80px;
-            right: 50px;
-            border: 4px double #ef4444;
-            color: #ef4444;
-            font-weight: 900;
-            padding: 5px 15px;
-            transform: rotate(-15deg);
-            opacity: 0.5;
-            font-size: 24px;
-            border-radius: 5px;
-        }
+
+        /* --- STYLE BUS (BOARDING PASS SESUAI GAMBARMU) --- */
+        .box-bus { background: #065084; color: white; border-radius: 20px; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .barcode-font { font-family: 'Libre Barcode 128'; font-size: 60px; line-height: 1; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="text-white font-bold animate-pulse">SEDANG MENULIS...</div>
+    <div id="loading" class="text-white animate-pulse font-bold">LOADING TICKET...</div>
 
-    <div id="konten" class="hidden kertas-kwitansi">
-        <div class="flex justify-between border-b-2 border-slate-800 pb-4 mb-8">
-            <div>
-                <h1 class="text-2xl font-black italic">MAHIKA TRANS</h1>
-                <p class="text-[10px]">Travel - Shuttle - Bus Pariwisata</p>
-                <p class="text-[10px]">Special Region of Yogyakarta</p>
-            </div>
-            <div class="text-right">
-                <h2 class="text-xl font-bold underline">KWITANSI</h2>
-                <p class="text-[10px]">No. <span id="d-id"></span></p>
-            </div>
+    <div id="view-travel" class="hidden w-full max-w-md box-travel">
+        <div class="text-center border-b-2 border-black pb-4 mb-6">
+            <h1 class="text-2xl font-bold">MAHIKA TRANS</h1>
+            <p class="text-[10px] uppercase">Bukti Pembayaran Travel Executive</p>
         </div>
 
         <div class="row-nota">
-            <span class="label-nota">Telah diterima dari :</span>
-            <div class="garis-titik"><span id="d-nama" class="tulisan-tangan"></span></div>
+            <span class="text-sm">Telah diterima dari :</span>
+            <div id="t-nama" class="line-dot uppercase"></div>
         </div>
-
         <div class="row-nota">
-            <span class="label-nota">Banyaknya uang :</span>
-            <div class="garis-titik bg-slate-100/50"><span id="d-terbilang" class="tulisan-tangan text-base"></span></div>
+            <span class="text-sm">Uang sejumlah :</span>
+            <div id="t-terbilang" class="line-dot italic"></div>
         </div>
-
         <div class="row-nota">
-            <span class="label-nota">Untuk pembayaran :</span>
-            <div class="garis-titik"><span id="d-guna" class="tulisan-tangan"></span></div>
+            <span class="text-sm">Guna membayar :</span>
+            <div id="t-guna" class="line-dot uppercase"></div>
         </div>
 
-        <div class="flex justify-between items-center mt-12">
-            <div class="bg-white border-2 border-slate-800 p-4 text-2xl font-bold flex items-center">
-                <span class="mr-4">Rp.</span>
-                <span id="d-nominal" class="tulisan-tangan text-3xl"></span>
+        <div class="mt-8 flex justify-between items-center">
+            <div class="border-2 border-black p-2 font-bold text-xl bg-gray-100">
+                Rp. <span id="t-nominal"></span> ,-
             </div>
-            
-            <div class="text-center w-48">
-                <p class="text-xs mb-16">Yogyakarta, <span id="d-tgl"></span></p>
-                <p class="font-bold underline decoration-2 uppercase">MAHIKA TRANS</p>
+            <div class="text-center text-[10px]">
+                <p>Yogyakarta, <span id="t-tgl"></span></p>
+                <div class="h-12"></div>
+                <p class="font-bold underline">KASIR</p>
             </div>
         </div>
+    </div>
 
-        <div class="stempel">LUNAS</div>
-
-        <div class="mt-8 text-[9px] text-slate-400">
-            * Validasi Digital: <span id="d-val"></span><br>
-            * Unit: <span id="d-unit"></span> | Kursi: <span id="d-kursi"></span>
+    <div id="view-bus" class="hidden w-full max-w-md box-bus">
+        <div class="bg-yellow-400 p-4 text-blue-900 flex justify-between items-center">
+            <span class="font-black italic text-xl uppercase">Mahika Trans Bus</span>
+            <span class="bg-blue-900 text-white text-[9px] px-2 py-1 font-bold rounded">BOARDING PASS</span>
         </div>
-
-        <img id="d-qr" class="absolute top-4 right-4 w-12 h-12 opacity-30">
+        <div class="p-6">
+            <div class="flex justify-between mb-6">
+                <div>
+                    <p class="text-[10px] opacity-60 uppercase">Passenger Name</p>
+                    <h2 id="b-nama" class="text-xl font-bold uppercase"></h2>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] opacity-60 uppercase">Seat</p>
+                    <p id="b-kursi" class="text-3xl font-black text-yellow-400"></p>
+                </div>
+            </div>
+            <div class="border-t border-blue-400/30 pt-4 flex justify-between">
+                <div>
+                    <p class="text-[10px] opacity-60 uppercase">Route</p>
+                    <p id="b-tujuan" class="font-bold text-sm uppercase"></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] opacity-60 uppercase">Departure</p>
+                    <p id="b-tgl" class="font-bold text-sm"></p>
+                </div>
+            </div>
+            <div class="mt-10 flex flex-col items-center border-t border-dashed border-blue-400 pt-6">
+                <p class="barcode-font text-white">MAHIKA-BUS-2026</p>
+                <p id="b-id" class="text-[8px] tracking-[4px] opacity-50 uppercase"></p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -127,18 +110,24 @@
                 if (doc.exists) {
                     const d = doc.data();
                     document.getElementById('loading').style.display = 'none';
-                    document.getElementById('konten').classList.remove('hidden');
 
-                    document.getElementById('d-id').innerText = bid.substring(0,6).toUpperCase();
-                    document.getElementById('d-nama').innerText = d.nama;
-                    document.getElementById('d-terbilang').innerText = terbilang(d.nominal) + " Rupiah";
-                    document.getElementById('d-guna').innerText = "Booking " + (d.layanan || "Tiket").toUpperCase() + " Rute " + d.tujuan;
-                    document.getElementById('d-nominal').innerText = Number(d.nominal).toLocaleString('id-ID') + ",-";
-                    document.getElementById('d-tgl').innerText = d.tgl;
-                    document.getElementById('d-unit').innerText = d.armada || '-';
-                    document.getElementById('d-kursi').innerText = d.kursi || '-';
-                    document.getElementById('d-val').innerText = bid;
-                    document.getElementById('d-qr').src = `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${bid}`;
+                    if (d.layanan === 'travel') {
+                        // TAMPILKAN TRAVEL
+                        document.getElementById('view-travel').classList.remove('hidden');
+                        document.getElementById('t-nama').innerText = d.nama;
+                        document.getElementById('t-nominal').innerText = Number(d.nominal).toLocaleString('id-ID');
+                        document.getElementById('t-terbilang').innerText = terbilang(d.nominal) + " Rupiah";
+                        document.getElementById('t-guna').innerText = "TIKET TRAVEL RUTE " + d.tujuan;
+                        document.getElementById('t-tgl').innerText = d.tgl;
+                    } else {
+                        // TAMPILKAN BUS
+                        document.getElementById('view-bus').classList.remove('hidden');
+                        document.getElementById('b-nama').innerText = d.nama;
+                        document.getElementById('b-tujuan').innerText = d.tujuan;
+                        document.getElementById('b-kursi').innerText = d.kursi || 'ANY';
+                        document.getElementById('b-tgl').innerText = d.tgl + " | " + d.jam;
+                        document.getElementById('b-id').innerText = bid.toUpperCase();
+                    }
                 }
             } catch (e) { console.log(e); }
         }
@@ -148,9 +137,7 @@
             if (n < 12) return b[n];
             if (n < 20) return terbilang(n - 10) + " Belas";
             if (n < 100) return terbilang(Math.floor(n / 10)) + " Puluh " + terbilang(n % 10);
-            if (n < 200) return "Seratus " + terbilang(n - 100);
             if (n < 1000) return terbilang(Math.floor(n / 100)) + " Ratus " + terbilang(n % 100);
-            if (n < 2000) return "Seribu " + terbilang(n - 1000);
             if (n < 1000000) return terbilang(Math.floor(n / 1000)) + " Ribu " + terbilang(n % 1000);
             return "";
         }
