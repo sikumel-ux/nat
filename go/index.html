@@ -3,71 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kwitansi Digital Mahika Trans</title>
+    <title>Kwitansi Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #3f3f46; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 10px; font-family: 'Courier Prime', monospace; }
-        .kwitansi-box { background: #fffef0; width: 100%; max-width: 600px; padding: 40px 25px; border: 2px solid #000; box-shadow: 15px 15px 0px #000; position: relative; }
-        .garis-bawah { border-bottom: 2px dotted #000; flex-grow: 1; padding-left: 10px; font-weight: bold; font-size: 16px; color: #000; min-height: 24px; }
-        .baris { display: flex; align-items: flex-end; margin-bottom: 20px; line-height: 1.5; flex-wrap: wrap; }
-        .stempel-lunas { position: absolute; top: 50%; right: 10%; border: 4px solid rgba(220, 38, 38, 0.4); color: rgba(220, 38, 38, 0.4); padding: 5px 15px; transform: rotate(-15deg); font-size: 30px; font-weight: 900; border-radius: 10px; pointer-events: none; }
+        body { background: #4b5563; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 10px; }
+        
+        /* KERTAS KWITANSI KUNING */
+        .kertas-kwitansi { 
+            background: #fff9c4; 
+            width: 100%; 
+            max-width: 700px; 
+            padding: 40px; 
+            border: 1px solid #d1d5db;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+            font-family: 'Courier Prime', monospace;
+            color: #1e293b;
+        }
+
+        /* EFEK TULISAN TANGAN */
+        .tulisan-tangan { 
+            font-family: 'Dancing Script', crossorigin; 
+            font-size: 22px; 
+            color: #1d4ed8; /* Biru tinta pulpen */
+            padding-left: 10px;
+        }
+
+        .garis-titik { border-bottom: 2px dotted #64748b; flex-grow: 1; display: flex; align-items: flex-end; min-height: 30px; }
+        .label-nota { font-weight: bold; font-size: 14px; text-transform: uppercase; white-space: nowrap; }
+        .row-nota { display: flex; align-items: flex-end; margin-bottom: 15px; }
+        
+        /* STEMPEL LUNAS */
+        .stempel {
+            position: absolute;
+            bottom: 80px;
+            right: 50px;
+            border: 4px double #ef4444;
+            color: #ef4444;
+            font-weight: 900;
+            padding: 5px 15px;
+            transform: rotate(-15deg);
+            opacity: 0.5;
+            font-size: 24px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="text-white font-bold animate-pulse text-center">MENULIS KWITANSI...</div>
+    <div id="loading" class="text-white font-bold animate-pulse">SEDANG MENULIS...</div>
 
-    <div id="konten" class="hidden kwitansi-box">
-        <div class="text-center mb-10 border-b-4 border-black pb-4">
-            <h1 class="text-3xl font-black tracking-tighter">MAHIKA TRANS</h1>
-            <p class="text-xs font-bold uppercase tracking-widest">Jasa Transportasi & Shuttle Executive</p>
-        </div>
-
-        <div class="baris">
-            <span class="whitespace-nowrap">Telah diterima dari :</span>
-            <div id="d-nama" class="garis-bawah uppercase"></div>
-        </div>
-
-        <div class="baris">
-            <span class="whitespace-nowrap">Uang sejumlah :</span>
-            <div id="d-terbilang" class="garis-bawah italic"></div>
-        </div>
-
-        <div class="baris">
-            <span class="whitespace-nowrap">Guna membayar :</span>
-            <div id="d-guna" class="garis-bawah uppercase"></div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mt-6 text-sm">
-            <div class="border border-black p-2">
-                <p>Tgl: <span id="d-tgl" class="font-bold"></span></p>
-                <p>Jam: <span id="d-jam" class="font-bold"></span></p>
+    <div id="konten" class="hidden kertas-kwitansi">
+        <div class="flex justify-between border-b-2 border-slate-800 pb-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-black italic">MAHIKA TRANS</h1>
+                <p class="text-[10px]">Travel - Shuttle - Bus Pariwisata</p>
+                <p class="text-[10px]">Special Region of Yogyakarta</p>
             </div>
-            <div class="border border-black p-2">
-                <p>Unit: <span id="d-unit" class="font-bold"></span></p>
-                <p>No Kursi: <span id="d-kursi" class="font-bold"></span></p>
+            <div class="text-right">
+                <h2 class="text-xl font-bold underline">KWITANSI</h2>
+                <p class="text-[10px]">No. <span id="d-id"></span></p>
             </div>
         </div>
 
-        <div class="mt-12 flex justify-between items-center">
-            <div class="bg-gray-100 border-4 border-black p-4 text-2xl font-bold">
-                Rp. <span id="d-nominal"></span> ,-
+        <div class="row-nota">
+            <span class="label-nota">Telah diterima dari :</span>
+            <div class="garis-titik"><span id="d-nama" class="tulisan-tangan"></span></div>
+        </div>
+
+        <div class="row-nota">
+            <span class="label-nota">Banyaknya uang :</span>
+            <div class="garis-titik bg-slate-100/50"><span id="d-terbilang" class="tulisan-tangan text-base"></span></div>
+        </div>
+
+        <div class="row-nota">
+            <span class="label-nota">Untuk pembayaran :</span>
+            <div class="garis-titik"><span id="d-guna" class="tulisan-tangan"></span></div>
+        </div>
+
+        <div class="flex justify-between items-center mt-12">
+            <div class="bg-white border-2 border-slate-800 p-4 text-2xl font-bold flex items-center">
+                <span class="mr-4">Rp.</span>
+                <span id="d-nominal" class="tulisan-tangan text-3xl"></span>
             </div>
             
-            <div class="text-center">
-                <p class="text-[10px] mb-12">Yogyakarta, <span id="d-tgl2"></span></p>
-                <p class="font-bold underline uppercase">Administrasi</p>
+            <div class="text-center w-48">
+                <p class="text-xs mb-16">Yogyakarta, <span id="d-tgl"></span></p>
+                <p class="font-bold underline decoration-2 uppercase">MAHIKA TRANS</p>
             </div>
         </div>
 
-        <div class="stempel-lunas">LUNAS</div>
+        <div class="stempel">LUNAS</div>
 
-        <div class="mt-10 flex justify-center border-t border-black pt-6">
-            <img id="d-qr" class="w-24 h-24 border border-black p-1">
+        <div class="mt-8 text-[9px] text-slate-400">
+            * Validasi Digital: <span id="d-val"></span><br>
+            * Unit: <span id="d-unit"></span> | Kursi: <span id="d-kursi"></span>
         </div>
+
+        <img id="d-qr" class="absolute top-4 right-4 w-12 h-12 opacity-30">
     </div>
 
     <script>
@@ -93,15 +129,15 @@
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('konten').classList.remove('hidden');
 
+                    document.getElementById('d-id').innerText = bid.substring(0,6).toUpperCase();
                     document.getElementById('d-nama').innerText = d.nama;
-                    document.getElementById('d-terbilang').innerText = "# " + terbilang(d.nominal) + " Rupiah #";
-                    document.getElementById('d-guna').innerText = "TIKET " + (d.layanan || "PERJALANAN").toUpperCase() + " RUTE " + d.tujuan;
-                    document.getElementById('d-nominal').innerText = Number(d.nominal).toLocaleString('id-ID');
+                    document.getElementById('d-terbilang').innerText = terbilang(d.nominal) + " Rupiah";
+                    document.getElementById('d-guna').innerText = "Booking " + (d.layanan || "Tiket").toUpperCase() + " Rute " + d.tujuan;
+                    document.getElementById('d-nominal').innerText = Number(d.nominal).toLocaleString('id-ID') + ",-";
                     document.getElementById('d-tgl').innerText = d.tgl;
-                    document.getElementById('d-tgl2').innerText = d.tgl;
-                    document.getElementById('d-jam').innerText = d.jam;
                     document.getElementById('d-unit').innerText = d.armada || '-';
                     document.getElementById('d-kursi').innerText = d.kursi || '-';
+                    document.getElementById('d-val').innerText = bid;
                     document.getElementById('d-qr').src = `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${bid}`;
                 }
             } catch (e) { console.log(e); }
@@ -116,7 +152,7 @@
             if (n < 1000) return terbilang(Math.floor(n / 100)) + " Ratus " + terbilang(n % 100);
             if (n < 2000) return "Seribu " + terbilang(n - 1000);
             if (n < 1000000) return terbilang(Math.floor(n / 1000)) + " Ribu " + terbilang(n % 1000);
-            return "Besar";
+            return "";
         }
         init();
     </script>
