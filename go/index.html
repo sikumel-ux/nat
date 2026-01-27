@@ -5,96 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>E-Ticket Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Plus+Jakarta+Sans:wght@800&family=Libre+Barcode+128&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Orbitron:wght@900&family=Libre+Barcode+128&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #d1d5db; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        
-        /* GAYA TRAVEL: KWITANSI KERTAS KLASIK */
-        .paper-receipt { 
-            background: #fff; font-family: 'Courier Prime', monospace; 
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.1); padding: 30px; border: 1px solid #ddd;
-            position: relative;
+        /* BACKGROUND LUAR */
+        body { background: #1a1a1a; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+        /* --- STYLE 1: TRAVEL (NOTA KERTAS KUNING JADUL) --- */
+        .style-travel { 
+            background: #fff9c4; font-family: 'Special Elite', cursive; 
+            color: #2c2c2c; padding: 30px; border-left: 10px solid #fbc02d;
+            box-shadow: 15px 15px 0px #5d4037; position: relative;
         }
-        .paper-receipt::after {
-            content: ""; position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px;
-            background: linear-gradient(-45deg, #fff 5px, transparent 0), linear-gradient(45deg, #fff 5px, transparent 0);
-            background-size: 10px 10px;
+        .style-travel h1 { border-bottom: 2px solid #2c2c2c; padding-bottom: 5px; }
+        .stempel { 
+            border: 3px solid #d32f2f; color: #d32f2f; padding: 5px; 
+            transform: rotate(-15deg); display: inline-block; font-weight: bold;
+            position: absolute; right: 20px; top: 150px; opacity: 0.6;
         }
 
-        /* GAYA BUS: MODERN TICKET STUB */
-        .bus-ticket {
-            background: #065084; color: white; font-family: 'Plus Jakarta Sans', sans-serif;
-            border-radius: 20px; overflow: hidden; position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        /* --- STYLE 2: BUS (DIGITAL DARK BOARDING PASS) --- */
+        .style-bus {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            color: #38bdf8; font-family: 'Orbitron', sans-serif;
+            border: 2px solid #38bdf8; border-radius: 0px; padding: 0;
+            box-shadow: 0 0 20px #38bdf8; position: relative; overflow: hidden;
         }
-        .bus-ticket .notch {
-            position: absolute; width: 40px; height: 40px; background: #d1d5db; border-radius: 50%; top: 60%;
-        }
-        .barcode { font-family: 'Libre Barcode 128', cursive; font-size: 70px; }
+        .bus-header { background: #38bdf8; color: #0f172a; padding: 15px; text-align: center; }
+        .neon-text { text-shadow: 0 0 10px #38bdf8; }
+        .barcode-neon { font-family: 'Libre Barcode 128'; font-size: 80px; color: #38bdf8; }
+        .cut-line { border-top: 2px dashed #38bdf8; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="font-bold text-slate-600">MENYIAPKAN TIKET...</div>
+    <div id="loading" class="text-white animate-bounce">Tunggu Sebentar...</div>
 
-    <div id="view-travel" class="hidden w-full max-w-sm paper-receipt">
-        <div class="text-center border-b-2 border-black pb-4 mb-4">
-            <h1 class="text-2xl font-bold">MAHIKA TRANS</h1>
-            <p class="text-xs">Travel & Shuttle Service</p>
-        </div>
-        <div class="space-y-4 text-sm">
-            <p class="text-center font-bold underline">KWITANSI PEMBAYARAN</p>
-            <p>Telah diterima dari: <br><span id="t-nama" class="font-bold text-lg uppercase"></span></p>
-            <p>Untuk Pembayaran: <br><span class="font-bold">Travel Jurusan <span id="t-tujuan" class="uppercase"></span></span></p>
-            <div class="border-2 border-black p-2 text-center">
-                <p class="text-xs">JUMLAH (Rp):</p>
-                <p id="t-nominal" class="text-2xl font-bold"></p>
+    <div id="view-travel" class="hidden w-full max-w-sm style-travel">
+        <h1 class="text-xl font-bold">MAHIKA TRANS (TRAVEL)</h1>
+        <p class="text-xs italic mb-4">Bukti Pembayaran Tiket Travel</p>
+        
+        <div class="space-y-4">
+            <p>Sudah Terima Dari: <br><span id="t-nama" class="font-bold underline text-lg"></span></p>
+            <p>Guna Membayar: <br>Travel Jurusan <span id="t-tujuan" class="font-bold"></span></p>
+            
+            <div class="my-6">
+                <p class="text-xs uppercase">Terbilang:</p>
+                <p id="t-terbilang" class="italic font-bold"></p>
             </div>
-            <p class="italic text-xs">Terbilang: <span id="t-terbilang"></span></p>
-            <div class="flex justify-between items-end pt-4">
-                <div class="text-[10px]">
-                    <p id="t-tgl"></p>
-                    <p id="t-jam"></p>
+
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold bg-gray-200 px-2">
+                    Rp <span id="t-nominal"></span>
                 </div>
-                <img id="t-qr" class="w-20 h-20">
+                <img id="t-qr" class="w-20 h-20 grayscale">
             </div>
+            
+            <div class="stempel text-xl">LUNAS</div>
+            <p class="text-[10px] mt-6 border-t border-black pt-2">Tgl: <span id="t-tgl"></span> | Jam: <span id="t-jam"></span></p>
         </div>
     </div>
 
-    <div id="view-bus" class="hidden w-full max-w-sm bus-ticket">
-        <div class="p-6 bg-yellow-400 text-blue-900 flex justify-between items-center">
-            <span class="font-black italic text-xl">MAHIKA BUS</span>
-            <span class="text-[10px] font-bold border-2 border-blue-900 px-2 py-1 rounded">BOARDING PASS</span>
+    <div id="view-bus" class="hidden w-full max-w-sm style-bus">
+        <div class="bus-header">
+            <h1 class="text-xl font-black">BOARDING PASS</h1>
         </div>
-        <div class="p-6 space-y-6">
-            <div class="flex justify-between">
+        
+        <div class="p-6">
+            <div class="mb-6">
+                <p class="text-[9px] uppercase tracking-widest text-white">Passenger Name</p>
+                <h2 id="b-nama" class="text-xl font-bold neon-text uppercase"></h2>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <p class="text-blue-200 text-[10px] uppercase font-bold">Passenger</p>
-                    <p id="b-nama" class="text-xl font-bold leading-none"></p>
+                    <p class="text-[9px] uppercase text-white">Route</p>
+                    <p id="b-tujuan" class="text-sm font-bold"></p>
                 </div>
                 <div class="text-right">
-                    <p class="text-blue-200 text-[10px] uppercase font-bold">Seat</p>
-                    <p id="b-kursi" class="text-3xl font-black leading-none"></p>
+                    <p class="text-[9px] uppercase text-white">Seat</p>
+                    <p id="b-kursi" class="text-3xl font-black neon-text"></p>
                 </div>
             </div>
-            <div class="flex justify-between border-t border-blue-400 pt-4">
-                <div>
-                    <p class="text-blue-200 text-[10px] uppercase font-bold">Destination</p>
-                    <p id="b-tujuan" class="font-bold uppercase"></p>
-                </div>
-                <div class="text-right">
-                    <p class="text-blue-200 text-[10px] uppercase font-bold">Time</p>
-                    <p id="b-jam" class="font-bold"></p>
-                </div>
+
+            <div class="cut-line"></div>
+
+            <div class="flex justify-between text-[10px]">
+                <span>DEPARTURE: <span id="b-tgl" class="text-white"></span></span>
+                <span>TIME: <span id="b-jam" class="text-white"></span></span>
             </div>
-            <div class="notch -left-5"></div>
-            <div class="notch -right-5"></div>
-            
-            <div class="pt-8 flex flex-col items-center">
-                <p class="barcode">12345678</p>
-                <p id="b-id" class="text-[10px] tracking-[4px] opacity-50"></p>
+
+            <div class="mt-8 flex flex-col items-center">
+                <p class="barcode-neon">BUS-MAHIKA-2026</p>
+                <p id="b-id" class="text-[8px] tracking-[5px] text-white opacity-50"></p>
             </div>
         </div>
     </div>
@@ -118,25 +122,26 @@
             try {
                 let doc = await db.collection("bookings").doc(bid).get();
                 if (doc.exists) {
-                    const data = doc.data();
+                    const d = doc.data();
                     document.getElementById('loading').style.display = 'none';
 
-                    if (data.layanan === 'travel') {
+                    if (d.layanan === 'travel') {
                         document.getElementById('view-travel').classList.remove('hidden');
-                        document.getElementById('t-nama').innerText = data.nama;
-                        document.getElementById('t-tujuan').innerText = data.tujuan;
-                        document.getElementById('t-nominal').innerText = "Rp " + Number(data.nominal).toLocaleString('id-ID');
-                        document.getElementById('t-terbilang').innerText = terbilang(data.nominal) + " Rupiah";
-                        document.getElementById('t-tgl').innerText = "Tgl: " + data.tgl;
-                        document.getElementById('t-jam').innerText = "Jam: " + data.jam;
-                        document.getElementById('t-qr').src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${bid}`;
+                        document.getElementById('t-nama').innerText = d.nama;
+                        document.getElementById('t-tujuan').innerText = d.tujuan;
+                        document.getElementById('t-nominal').innerText = Number(d.nominal).toLocaleString('id-ID');
+                        document.getElementById('t-terbilang').innerText = terbilang(d.nominal) + " Rupiah";
+                        document.getElementById('t-tgl').innerText = d.tgl;
+                        document.getElementById('t-jam').innerText = d.jam;
+                        document.getElementById('t-qr').src = `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${bid}`;
                     } else {
                         document.getElementById('view-bus').classList.remove('hidden');
-                        document.getElementById('b-nama').innerText = data.nama;
-                        document.getElementById('b-kursi').innerText = data.kursi || '-';
-                        document.getElementById('b-tujuan').innerText = data.tujuan;
-                        document.getElementById('b-jam').innerText = data.tgl + " | " + data.jam;
-                        document.getElementById('b-id').innerText = bid.substring(0,8).toUpperCase();
+                        document.getElementById('b-nama').innerText = d.nama;
+                        document.getElementById('b-tujuan').innerText = d.tujuan;
+                        document.getElementById('b-kursi').innerText = d.kursi || 'N/A';
+                        document.getElementById('b-tgl').innerText = d.tgl;
+                        document.getElementById('b-jam').innerText = d.jam;
+                        document.getElementById('b-id').innerText = bid.toUpperCase();
                     }
                 }
             } catch (e) { console.log(e); }
@@ -154,4 +159,5 @@
         init();
     </script>
 </body>
-</html>
+    </html>
+    
