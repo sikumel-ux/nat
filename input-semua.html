@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Booking | Mahika Trans</title>
+    <title>Admin Input | Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -26,31 +26,31 @@
 
 <div class="header-input text-center">
     <h1 class="text-xl font-bold italic tracking-tighter">MAHIKA TRANS</h1>
-    <p class="text-[10px] opacity-70 tracking-widest uppercase font-semibold">Input Data Penumpang</p>
+    <p class="text-[10px] opacity-70 tracking-widest uppercase font-semibold">Panel Input Tiket & Kwitansi</p>
 </div>
 
 <div class="form-container">
     <div class="input-group">
-        <label>Jenis Tiket / Layanan</label>
+        <label>Jenis Tiket</label>
         <select id="p-layanan">
-            <option value="travel">TRAVEL (Format Kwitansi)</option>
-            <option value="bus">BUS (Format Boarding Pass)</option>
+            <option value="travel">TRAVEL (Kwitansi Kalimat: "Telah Diterima...")</option>
+            <option value="bus">BUS (Digital Boarding Pass)</option>
         </select>
     </div>
 
     <div class="input-group">
         <label>Nama Penumpang</label>
-        <input type="text" id="p-nama" placeholder="Contoh: Budi Santoso">
+        <input type="text" id="p-nama" placeholder="Contoh: Ahmad Subarjo">
     </div>
 
     <div class="grid grid-cols-2 gap-3">
         <div class="input-group">
             <label>No. WhatsApp</label>
-            <input type="number" id="p-wa" placeholder="08123xxx">
+            <input type="number" id="p-wa" placeholder="08123456xxx">
         </div>
         <div class="input-group">
             <label>Harga (Rp)</label>
-            <input type="number" id="p-harga" placeholder="200000">
+            <input type="number" id="p-harga" placeholder="250000">
         </div>
     </div>
 
@@ -61,7 +61,7 @@
         </div>
         <div class="input-group">
             <label>Jam</label>
-            <input type="text" id="p-jam" placeholder="19:00 WIB">
+            <input type="text" id="p-jam" placeholder="Cth: 19:00 WIB">
         </div>
     </div>
 
@@ -71,18 +71,18 @@
             <input type="text" id="p-armada" placeholder="Hiace / Elf / Jetbus">
         </div>
         <div class="input-group">
-            <label>Kursi</label>
-            <input type="text" id="p-kursi" placeholder="2A / Depan">
+            <label>Nomor Kursi</label>
+            <input type="text" id="p-kursi" placeholder="Cth: 2A">
         </div>
     </div>
 
     <div class="input-group">
         <label>Tujuan / Rute</label>
-        <input type="text" id="p-tujuan" placeholder="Cth: Semarang - Jakarta">
+        <input type="text" id="p-tujuan" placeholder="Cth: Yogyakarta - Jakarta (PP)">
     </div>
 
     <button id="btnSimpan" class="btn-simpan">
-        <i class="fas fa-paper-plane mr-2"></i> SIMPAN & KIRIM TIKET
+        <i class="fas fa-paper-plane mr-2"></i> SIMPAN & KIRIM VIA WA
     </button>
 </div>
 
@@ -90,13 +90,14 @@
     <a href="dash.html"><i class="fas fa-house"></i>Home</a>
     <a href="input.html" class="active"><i class="fas fa-circle-plus"></i>Input</a>
     <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
-    <a href="#" onclick="location.reload()" class="text-red-500"><i class="fas fa-sync"></i>Refresh</a>
+    <a href="logout.html"><i class="fas fa-power-off"></i>Keluar</a>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // Konfigurasi Firebase Kamu
     const firebaseConfig = { 
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
         authDomain: "mahika-trans.firebaseapp.com", 
@@ -110,8 +111,9 @@
 
     document.getElementById('btnSimpan').onclick = async () => {
         const btn = document.getElementById('btnSimpan');
+        
         const data = {
-            layanan: document.getElementById('p-layanan').value,
+            layanan: document.getElementById('p-layanan').value, // 'travel' atau 'bus'
             nama: document.getElementById('p-nama').value,
             wa: document.getElementById('p-wa').value,
             nominal: document.getElementById('p-harga').value,
@@ -123,33 +125,40 @@
             createdAt: serverTimestamp()
         };
 
-        if(!data.nama || !data.wa || !data.tgl) return alert("Harap isi Nama, WA, dan Tanggal!");
+        if(!data.nama || !data.wa || !data.tgl || !data.tujuan) {
+            return alert("Harap lengkapi data utama (Nama, WA, Tanggal, Tujuan)!");
+        }
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Menyimpan...';
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Memproses...';
 
         try {
+            // 1. Simpan ke Firebase
             const docRef = await addDoc(collection(db, "bookings"), data);
             
-            // Link ini mengarah ke folder /go/
+            // 2. Buat URL satu pintu ke subdomain go
             const etiketURL = `https://go.mahikatrans.com/?id=${docRef.id}`;
             
-            const pesanWA = `*E-TIKET ${data.layanan.toUpperCase()} MAHIKA TRANS*\n` +
+            // 3. Siapkan Pesan WA
+            const jenis = data.layanan === 'travel' ? 'KWITANSI TRAVEL' : 'TIKET BUS';
+            const pesanWA = `*${jenis} MAHIKA TRANS*\n` +
                             `--------------------------\n` +
                             `Nama  : ${data.nama}\n` +
-                            `Tujuan: ${data.tujuan}\n` +
+                            `Rute  : ${data.tujuan}\n` +
+                            `Tgl   : ${data.tgl}\n` +
                             `--------------------------\n` +
-                            `Lihat Tiket Digital Anda:\n${etiketURL}\n\n` +
-                            `_Terima kasih telah memilih Mahika Trans!_`;
+                            `Klik link dibawah untuk melihat tiket digital/kwitansi Anda:\n${etiketURL}\n\n` +
+                            `_Simpan link ini sebagai bukti perjalanan anda._`;
             
-            let formattedWA = data.wa.startsWith('0') ? '62' + data.wa.substring(1) : data.wa;
-            window.location.href = `https://wa.me/${formattedWA}?text=${encodeURIComponent(pesanWA)}`;
+            // 4. Redirect ke WhatsApp
+            let waFormatted = data.wa.startsWith('0') ? '62' + data.wa.substring(1) : data.wa;
+            window.location.href = `https://wa.me/${waFormatted}?text=${encodeURIComponent(pesanWA)}`;
 
         } catch (e) {
-            console.error(e);
-            alert("Terjadi kesalahan.");
+            console.error("Error: ", e);
+            alert("Gagal menyimpan data ke database!");
             btn.disabled = false;
-            btn.innerHTML = 'SIMPAN & KIRIM TIKET';
+            btn.innerHTML = 'SIMPAN & KIRIM VIA WA';
         }
     };
 </script>
