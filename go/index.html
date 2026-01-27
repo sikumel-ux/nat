@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>E-Ticket Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F1F5F9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .bento-card { background: white; border-radius: 2.5rem; box-shadow: 0 25px 50px -12px rgba(6, 80, 132, 0.2); width: 100%; max-width: 380px; overflow: hidden; position: relative; }
+        .line-accent { height: 16px; background: #065084; width: 100%; position: absolute; top: 0; left: 0; }
+        .bg-soft { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+    </style>
+</head>
+<body>
+
+    <div id="loading" class="text-blue-900 font-bold animate-pulse">Memuat Tiket...</div>
+
+    <div id="konten" class="bento-card hidden">
+        <div class="line-accent"></div>
+        <div class="p-8 pt-12">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-black text-blue-900">MAHIKA TRANS</h1>
+                <p id="sub-header" class="text-[9px] font-extrabold text-amber-500 uppercase tracking-widest mt-1"></p>
+            </div>
+
+            <div id="area-teks" class="text-[13px] text-slate-600 leading-relaxed text-center mb-6"></div>
+
+            <div class="bg-soft p-6 rounded-[2rem] text-center border border-blue-50 mb-6">
+                <p id="d-nominal" class="text-3xl font-black text-blue-900"></p>
+                <div class="w-10 h-[1px] bg-blue-200 mx-auto my-3"></div>
+                <p id="d-terbilang" class="text-[9px] text-blue-700 italic font-bold uppercase"></p>
+            </div>
+
+            <div class="flex justify-center mb-6">
+                <div class="p-2 bg-white rounded-3xl border shadow-inner">
+                    <img id="qrcodeimg" class="w-32 h-32">
+                </div>
+            </div>
+
+            <div id="info-trip" class="text-[10px] bg-slate-50 p-4 rounded-2xl border border-slate-100 font-bold text-slate-500 space-y-1">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+            authDomain: "mahika-trans.firebaseapp.com", 
+            projectId: "mahika-trans", 
+            storageBucket: "mahika-trans.firebasestorage.app", 
+            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const params = new URLSearchParams(window.location.search);
+        let bid = params.get('id');
+
+        async function init() {
+            if (!bid) return alert("ID Tiket Hilang!");
+            try {
+                let doc = await db.collection("bookings").doc(bid).get();
+                if (doc.exists) {
+                    const d = doc.data();
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('konten').classList.remove('hidden');
+
+                    // SWITCH LOGIKA TAMPILAN
+                    if (d.layanan === 'travel') {
+                        document.getElementById('sub-header').innerText = "Executive Shuttle & Travel";
+                        document.getElementById('area-teks').innerHTML = `Telah diterima uang sejumlah dari Bapak/Ibu <strong class="text-slate-900 uppercase">${d.nama}</strong> untuk pembayaran travel jurusan <strong class="text-slate-900 uppercase">${d.tujuan}</strong> sejumlah:`;
+                    } else {
+                        document.getElementById('sub-header').innerText = "Bus Executive Ticket";
+                        document.getElementById('area-teks').innerHTML = `<span class="font-bold text-lg text-slate-800">E-TICKET BUS</span><br>Nama: ${d.nama.toUpperCase()}<br>Rute: ${d.tujuan.toUpperCase()}`;
+                    }
+
+                    document.getElementById('d-nominal').innerText = "Rp " + Number(d.nominal).toLocaleString('id-ID');
+                    document.getElementById('d-terbilang').innerText = "~ " + terbilang(d.nominal) + " Rupiah ~";
+                    document.getElementById('info-trip').innerHTML = `
+                        <div class="flex justify-between"><span>TANGGAL</span> <span class="text-slate-800">${d.tgl}</span></div>
+                        <div class="flex justify-between"><span>JAM</span> <span class="text-slate-800">${d.jam}</span></div>
+                        <div class="flex justify-between"><span>ARMADA/KURSI</span> <span class="text-slate-800">${d.armada} / ${d.kursi}</span></div>
+                    `;
+                    document.getElementById('qrcodeimg').src = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${bid}`;
+                }
+            } catch (e) { console.log(e); }
+        }
+
+        function terbilang(n) {
+            const b = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+            if (n < 12) return b[n];
+            if (n < 20) return terbilang(n - 10) + " Belas";
+            if (n < 100) return terbilang(Math.floor(n / 10)) + " Puluh " + terbilang(n % 10);
+            if (n < 200) return "Seratus " + terbilang(n - 100);
+            if (n < 1000) return terbilang(Math.floor(n / 100)) + " Ratus " + terbilang(n % 100);
+            if (n < 2000) return "Seribu " + terbilang(n - 1000);
+            if (n < 1000000) return terbilang(Math.floor(n / 1000)) + " Ribu " + terbilang(n % 1000);
+            return "";
+        }
+        init();
+    </script>
+</body>
+</html>
