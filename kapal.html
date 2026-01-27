@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Ticket | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #065084; }
+        .input-card { border-top: 6px solid #FFD700; border-radius: 40px; }
+        input, select { border: 2px solid #F1F5F9 !important; }
+        input:focus { border-color: #065084 !important; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-5">
+
+<div class="bg-white w-full max-w-md p-8 shadow-2xl input-card">
+    <div class="text-center mb-8">
+        <h2 class="text-2xl font-extrabold text-blue-900">INPUT BOOKING</h2>
+        <p class="text-[10px] font-bold text-gray-400 tracking-widest uppercase">Mahika Trans Management</p>
+    </div>
+
+    <div class="space-y-4">
+        <div>
+            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Nama Penumpang</label>
+            <input type="text" id="nama" class="w-full p-4 rounded-2xl outline-none font-semibold text-sm" placeholder="Contoh: Budi Santoso">
+        </div>
+
+        <div>
+            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">WhatsApp (No HP)</label>
+            <input type="number" id="hp" class="w-full p-4 rounded-2xl outline-none font-semibold text-sm" placeholder="628123456xxx">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Tanggal</label>
+                <input type="date" id="tgl" class="w-full p-4 rounded-2xl outline-none font-semibold text-sm">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Jam</label>
+                <input type="time" id="jam" class="w-full p-4 rounded-2xl outline-none font-semibold text-sm">
+            </div>
+        </div>
+
+        <div>
+            <label class="text-[10px] font-bold text-gray-400 ml-4 uppercase">Tujuan</label>
+            <select id="tujuan" class="w-full p-4 rounded-2xl outline-none font-semibold text-sm appearance-none">
+                <option value="">Pilih Tujuan</option>
+                <option value="JOGJA - SEMARANG">JOGJA - SEMARANG</option>
+                <option value="SEMARANG - JOGJA">SEMARANG - JOGJA</option>
+                <option value="JOGJA - SURABAYA">JOGJA - SURABAYA</option>
+            </select>
+        </div>
+
+        <button id="btnSimpan" class="w-full bg-blue-900 text-white font-bold p-4 rounded-2xl shadow-lg hover:bg-blue-800 transition-all uppercase tracking-widest mt-4">
+            Simpan & Kirim Tiket
+        </button>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    document.getElementById('btnSimpan').onclick = async function() {
+        const nama = document.getElementById('nama').value;
+        const hp = document.getElementById('hp').value;
+        const tgl = document.getElementById('tgl').value;
+        const jam = document.getElementById('jam').value;
+        const tujuan = document.getElementById('tujuan').value;
+        const btn = this;
+
+        if(!nama || !hp || !tgl || !tujuan) {
+            alert("Mohon lengkapi semua data!");
+            return;
+        }
+
+        btn.innerText = "SEDANG MENYIMPAN...";
+        btn.disabled = true;
+
+        try {
+            const docRef = await db.collection("bookings").add({
+                nama: nama,
+                hp: hp,
+                tgl: tgl,
+                jam: jam,
+                tujuan: tujuan,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            const bookingId = docRef.id;
+            const invoiceUrl = `https://go.mahikatrans.com/invoice.html?id=${bookingId}`;
+            
+            // Format Pesan WhatsApp
+            const pesan = `Halo Kak ${nama}, Berikut adalah E-Ticket Mahika Trans Anda.\n\n` +
+                          `Tujuan: ${tujuan}\n` +
+                          `Tanggal: ${tgl}\n` +
+                          `Jam: ${jam}\n\n` +
+                          `Lihat Tiket Digital: ${invoiceUrl}\n\n` +
+                          `Terima kasih telah memilih Mahika Trans!`;
+
+            // Redirect ke WhatsApp
+            window.location.href = `https://api.whatsapp.com/send?phone=${hp}&text=${encodeURIComponent(pesan)}`;
+
+        } catch (e) {
+            console.error(e);
+            alert("Gagal menyimpan data!");
+            btn.innerText = "Simpan & Kirim Tiket";
+            btn.disabled = false;
+        }
+    };
+</script>
+
+</body>
+</html>
