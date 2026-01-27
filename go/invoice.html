@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kwitansi Pembayaran | Mahika Trans</title>
+    <title>E-Ticket Mahika Trans</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -19,94 +19,59 @@
             background-image: radial-gradient(circle at 2px 2px, #CBD5E1 1px, transparent 0);
             background-size: 24px 24px;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            padding: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0; padding: 20px;
         }
         .bento-card { 
-            background: white; 
-            border-radius: 2.5rem; 
+            background: white; border-radius: 2.5rem; 
             box-shadow: 0 25px 50px -12px rgba(6, 80, 132, 0.2);
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            max-width: 380px;
+            position: relative; overflow: hidden;
+            width: 100%; max-width: 380px;
             border: 1px solid rgba(255,255,255,0.8);
         }
-        .line-accent { 
-            height: 16px; 
-            background: #065084; 
-            width: 100%; 
-            position: absolute; 
-            top: 0; 
-            left: 0;
-            z-index: 10;
-        }
+        .line-accent { height: 16px; background: #065084; width: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
         .bg-mahika-soft { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
-        .floating { animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        
-        .mahika-footer {
-            margin-top: 24px;
-            text-align: center;
-            opacity: 0.4;
-        }
     </style>
 </head>
 <body>
 
     <div id="loading" class="flex flex-col items-center gap-3">
         <div class="w-10 h-10 border-4 border-blue-100 border-t-blue-900 rounded-full animate-spin"></div>
-        <p class="text-[10px] font-bold text-blue-900 uppercase tracking-widest">Memuat Kwitansi...</p>
-    </div>
-
-    <div id="penyusup" class="bento-card p-10 text-center hidden">
-        <div class="line-accent bg-rose-600"></div>
-        <div class="flex justify-center mb-6 mt-6">
-            <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-rose-600 floating border border-slate-100">
-                <i class="fa-solid fa-file-circle-xmark text-4xl"></i>
-            </div>
-        </div>
-        <h1 class="text-5xl font-black text-slate-900 tracking-tighter">404</h1>
-        <p class="text-lg font-extrabold text-slate-800 uppercase mt-2 text-[13px] tracking-widest">Tiket Tidak Ditemukan</p>
+        <p class="text-[10px] font-bold text-blue-900 uppercase tracking-widest">Memproses Tiket...</p>
     </div>
 
     <div id="konten" class="bento-card hidden">
         <div class="line-accent"></div>
         
         <div class="p-8 pt-12">
-            <div class="text-center mb-6">
+            <div class="text-center mb-8">
                 <h1 class="text-2xl font-black text-blue-900 leading-none tracking-tighter">MAHIKA TRANS</h1>
                 <p class="text-[8px] text-amber-500 font-bold uppercase tracking-[0.3em] mt-2">Executive Shuttle & Travel</p>
-                
-                <div class="mt-8">
+                <div class="mt-6">
                     <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">BUKTI PEMBAYARAN</h2>
                     <div class="w-8 h-1 bg-amber-400 mx-auto mt-2 rounded-full"></div>
                 </div>
             </div>
 
-            <div class="text-[12px] text-slate-600 leading-relaxed">
-                <p class="mb-4 text-center">
-                    Telah diterima uang dari Bapak/Ibu <strong id="d-nama" class="text-slate-900 uppercase font-bold"></strong>, untuk pembayaran tiket Travel jurusan <strong id="d-tujuan" class="text-slate-900 uppercase font-bold"></strong>, sebesar:
+            <div class="text-[13px] text-slate-600 leading-relaxed">
+                <p class="mb-6 text-center">
+                    Telah diterima uang sejumlah dari Bapak/Ibu <strong id="d-nama" class="text-slate-900 uppercase"></strong> untuk pembayaran travel jurusan <strong id="d-tujuan" class="text-slate-900 uppercase"></strong> sejumlah:
                 </p>
 
                 <div class="bg-mahika-soft p-6 rounded-[2rem] text-center shadow-sm border border-blue-50 mb-6">
                     <p id="d-nominal" class="text-3xl font-black text-blue-900"></p>
                     <div class="w-12 h-[1px] bg-blue-200 mx-auto my-3"></div>
-                    <p id="d-terbilang" class="text-[9px] text-blue-700 italic font-bold uppercase leading-tight px-2"></p>
+                    <p id="d-terbilang" class="text-[9px] text-blue-700 italic font-bold uppercase leading-tight"></p>
                 </div>
 
-                <div class="flex flex-col items-center mb-6">
+                <div class="flex justify-center mb-8">
                     <div class="p-2 bg-white rounded-3xl border-4 border-slate-50 shadow-inner">
-                        <img id="qrcodeimg" alt="QR Code" class="w-32 h-32">
+                        <img id="qrcodeimg" alt="QR" class="w-32 h-32">
                     </div>
                 </div>
 
                 <p class="text-center italic text-[9px] text-slate-400 py-3 border-y border-dashed border-slate-100 uppercase tracking-widest">
-                    Semoga perjalanan Anda menyenangkan
+                    Terima kasih atas kepercayaan Anda
                 </p>
             </div>
 
@@ -123,12 +88,6 @@
         </div>
     </div>
 
-    <div id="footer-brand" class="mahika-footer hidden">
-        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.4em]">
-            Generated by <span class="text-blue-900">Mahika</span> System
-        </p>
-    </div>
-
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
@@ -142,52 +101,26 @@
         const db = firebase.firestore();
 
         const params = new URLSearchParams(window.location.search);
-        let kodeUrl = params.get('id');
-
-        function tampilkanPenyusup() {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('penyusup').classList.remove('hidden');
-        }
+        let bookingId = params.get('id');
 
         async function init() {
-            if (!kodeUrl) return tampilkanPenyusup();
+            if (!bookingId) return alert("Link tidak valid");
             try {
-                let doc = await db.collection("bookings").doc(kodeUrl).get();
+                let doc = await db.collection("bookings").doc(bookingId).get();
                 if (doc.exists) {
-                    render(doc.data(), doc.id);
-                } else {
-                    tampilkanPenyusup();
+                    const data = doc.data();
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('konten').classList.remove('hidden');
+                    
+                    document.getElementById('d-nama').innerText = data.nama;
+                    document.getElementById('d-tujuan').innerText = data.tujuan;
+                    document.getElementById('d-nominal').innerText = "Rp " + Number(data.nominal).toLocaleString('id-ID');
+                    document.getElementById('d-terbilang').innerText = "~ " + terbilang(data.nominal) + " Rupiah ~";
+                    document.getElementById('d-tgl').innerText = data.tgl;
+                    document.getElementById('d-jam').innerText = data.jam;
+                    document.getElementById('qrcodeimg').src = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${bookingId}&choe=UTF-8`;
                 }
-            } catch (e) {
-                console.error(e);
-                tampilkanPenyusup();
-            }
-        }
-
-        function render(data, id) {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('konten').classList.remove('hidden');
-            document.getElementById('footer-brand').classList.remove('hidden');
-            
-            document.getElementById('d-nama').innerText = data.nama || '-';
-            document.getElementById('d-tujuan').innerText = data.tujuan || '-';
-            // Pastikan field nominal ada di database, jika tidak ada ganti dengan harga tiket rute
-            const harga = data.nominal || data.harga || 0;
-            document.getElementById('d-nominal').innerText = "Rp " + Number(harga).toLocaleString('id-ID');
-            document.getElementById('d-terbilang').innerText = "~ " + terbilang(harga) + " Rupiah ~";
-            
-            // Format Tanggal
-            let tglTampil = "-";
-            if (data.tgl) {
-                const dateObj = new Date(data.tgl);
-                tglTampil = dateObj.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-            }
-            document.getElementById('d-tgl').innerText = tglTampil;
-            document.getElementById('d-jam').innerText = data.jam || '--:--';
-
-            // QR CODE (ID Booking)
-            const qrUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(id)}&choe=UTF-8`;
-            document.getElementById('qrcodeimg').src = qrUrl;
+            } catch (e) { console.error(e); }
         }
 
         function terbilang(angka) {
@@ -201,9 +134,7 @@
             else if (angka < 1000000) return terbilang(Math.floor(angka / 1000)) + " Ribu " + terbilang(angka % 1000);
             return "";
         }
-
         init();
     </script>
 </body>
-  </html>
-  
+</html>
