@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>E-Ticket | Mahika Trans</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #F8FAFC; 
+            background-image: radial-gradient(circle at 2px 2px, #E2E8F0 1px, transparent 0);
+            background-size: 24px 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .bento-card { 
+            background: white; 
+            border-radius: 2.5rem; 
+            box-shadow: 0 25px 50px -12px rgba(6, 80, 132, 0.15);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .line-accent { 
+            height: 16px; 
+            background: #065084; /* Biru Mahika */
+            width: 100%; 
+            position: absolute; 
+            top: 0; 
+            left: 0;
+            z-index: 10;
+        }
+        .bg-mahika-light { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        
+        .mahika-footer {
+            margin-top: 24px;
+            text-align: center;
+            opacity: 0.5;
+        }
+        .ticket-cut {
+            position: relative;
+            border-top: 2px dashed #E2E8F0;
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+        .ticket-cut::before, .ticket-cut::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            width: 24px;
+            height: 24px;
+            background: #F8FAFC;
+            border-radius: 50%;
+        }
+        .ticket-cut::before { left: -40px; }
+        .ticket-cut::after { right: -40px; }
+    </style>
+</head>
+<body>
+
+    <div id="loading" class="flex flex-col items-center gap-3">
+        <div class="w-10 h-10 border-4 border-blue-100 border-t-blue-800 rounded-full animate-spin"></div>
+        <p class="text-[10px] font-bold text-blue-800 uppercase tracking-widest">Memvalidasi Tiket...</p>
+    </div>
+
+    <div id="penyusup" class="bento-card p-10 text-center hidden">
+        <div class="line-accent bg-rose-600"></div>
+        <div class="flex justify-center mb-6 mt-6">
+            <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-rose-600 floating border border-slate-100">
+                <i class="fa-solid fa-ticket-simple text-4xl"></i>
+            </div>
+        </div>
+        <h1 class="text-2xl font-black text-slate-900 tracking-tighter uppercase">Tiket Tidak Ada</h1>
+        <p class="text-xs font-bold text-slate-500 uppercase mt-2 tracking-widest">Silahkan cek kembali link Anda</p>
+    </div>
+
+    <div id="konten" class="bento-card hidden">
+        <div class="line-accent"></div>
+        
+        <div class="p-8 pt-12">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-black text-blue-900 leading-none tracking-tighter">MAHIKA TRANS</h1>
+                <p class="text-[8px] text-amber-500 font-bold uppercase tracking-[0.3em] mt-2">Executive Shuttle & Travel</p>
+                
+                <div class="mt-8">
+                    <h2 class="text-lg font-black text-slate-800 uppercase tracking-tight">E-TICKET INVOICE</h2>
+                    <div class="w-8 h-1 bg-amber-400 mx-auto mt-2 rounded-full"></div>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-[12px]">
+                <div class="flex justify-between border-b border-slate-50 pb-2">
+                    <span class="text-slate-400 font-bold uppercase text-[10px]">Nama Penumpang</span>
+                    <span id="d-nama" class="text-slate-900 font-black uppercase"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-50 pb-2">
+                    <span class="text-slate-400 font-bold uppercase text-[10px]">No. Handphone</span>
+                    <span id="d-hp" class="text-slate-900 font-black"></span>
+                </div>
+
+                <div class="bg-mahika-light p-5 rounded-[2rem] shadow-sm border border-blue-50 my-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-[9px] text-blue-400 font-black uppercase">Tanggal</p>
+                            <p id="d-tgl" class="text-sm font-black text-blue-900"></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[9px] text-blue-400 font-black uppercase">Jam</p>
+                            <p id="d-jam" class="text-sm font-black text-blue-900"></p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-blue-100">
+                        <p class="text-[9px] text-blue-400 font-black uppercase">Tujuan Keberangkatan</p>
+                        <p id="d-tujuan" class="text-sm font-black text-blue-900 uppercase"></p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center ticket-cut">
+                    <div class="p-3 bg-white rounded-3xl border-4 border-slate-50 shadow-inner">
+                        <img id="qrcodeimg" alt="QR Ticket" class="w-32 h-32">
+                    </div>
+                    <p id="d-kode" class="mt-4 text-[10px] font-black text-slate-400 tracking-[0.5em] uppercase"></p>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-dashed border-slate-200">
+                <div class="flex justify-between items-end">
+                    <div class="text-[9px] text-slate-400 font-bold leading-tight">
+                        STATUS PEMBAYARAN<br>
+                        <span class="text-emerald-600 text-[11px] font-black uppercase tracking-widest">LUNAS / PAID</span>
+                    </div>
+                    <div class="text-right">
+                        <img src="logo.png" alt="Logo" class="h-6 ml-auto mb-1 opacity-20">
+                        <p class="text-[8px] font-black text-blue-900 opacity-30 uppercase">Mahika Trans Management</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-brand" class="mahika-footer hidden">
+        <p class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.4em]">
+            Official Digital Ticket <span class="text-blue-900">Mahika Trans</span>
+        </p>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+            authDomain: "mahika-trans.firebaseapp.com",
+            projectId: "mahika-trans",
+            storageBucket: "mahika-trans.firebasestorage.app",
+            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const params = new URLSearchParams(window.location.search);
+        let bookingId = params.get('id');
+
+        function showError() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('penyusup').classList.remove('hidden');
+        }
+
+        async function init() {
+            if (!bookingId) return showError();
+            try {
+                // Mencari di koleksi "bookings"
+                let doc = await db.collection("bookings").doc(bookingId).get();
+                if (doc.exists) {
+                    render(doc.data(), doc.id);
+                } else {
+                    showError();
+                }
+            } catch (e) {
+                console.error(e);
+                showError();
+            }
+        }
+
+        function render(data, id) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('konten').classList.remove('hidden');
+            document.getElementById('footer-brand').classList.remove('hidden');
+            
+            document.getElementById('d-nama').innerText = data.nama || '-';
+            document.getElementById('d-hp').innerText = data.hp || '-';
+            document.getElementById('d-tujuan').innerText = data.tujuan || '-';
+            document.getElementById('d-jam').innerText = data.jam || '--:--';
+            document.getElementById('d-kode').innerText = id.substring(0, 8).toUpperCase();
+
+            // Format Tanggal
+            if (data.tgl) {
+                const dateObj = new Date(data.tgl);
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                document.getElementById('d-tgl').innerText = dateObj.toLocaleDateString('id-ID', options);
+            }
+
+            // QR Code menggunakan ID Booking
+            const qrUrl = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(id)}&choe=UTF-8`;
+            document.getElementById('qrcodeimg').src = qrUrl;
+        }
+
+        init();
+    </script>
+</body>
+</html>
