@@ -137,7 +137,7 @@
             const docRef = await addDoc(collection(db, "bookings"), data);
             
             // 2. Buat URL satu pintu ke subdomain go
-            const etiketURL = `https://go.mahikatrans.com/?id=${docRef.id}`;
+            const etiketURL = `https://go.mahikatrans.my.id/?id=${docRef.id}`;
             
             // 3. Siapkan Pesan WA
             const jenis = data.layanan === 'travel' ? 'KWITANSI TRAVEL' : 'TIKET BUS';
