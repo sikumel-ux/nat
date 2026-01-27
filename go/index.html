@@ -3,99 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kwitansi Mahika Trans</title>
+    <title>Kwitansi Digital Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #52525b; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; }
-        
-        /* GAYA TRAVEL: KWITANSI REALISTIK */
-        .style-travel { 
-            background: #fffef0; font-family: 'Courier Prime', monospace; 
-            padding: 40px 25px; color: #1a1a1a; position: relative;
-            box-shadow: 10px 10px 0px #000; border: 1px solid #000;
-        }
-        .dot-line { border-bottom: 2px dotted #000; flex-grow: 1; padding-left: 10px; font-weight: bold; color: #000; }
-        .receipt-row { display: flex; align-items: flex-end; margin-bottom: 12px; line-height: 1.2; }
-
-        /* GAYA BUS: BOARDING PASS (BIAR BEDA DRATIS) */
-        .style-bus {
-            background: #065084; color: white; border-radius: 15px; 
-            font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 2px solid #fbbf24;
-        }
+        body { background: #3f3f46; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 10px; font-family: 'Courier Prime', monospace; }
+        .kwitansi-box { background: #fffef0; width: 100%; max-width: 600px; padding: 40px 25px; border: 2px solid #000; box-shadow: 15px 15px 0px #000; position: relative; }
+        .garis-bawah { border-bottom: 2px dotted #000; flex-grow: 1; padding-left: 10px; font-weight: bold; font-size: 16px; color: #000; min-height: 24px; }
+        .baris { display: flex; align-items: flex-end; margin-bottom: 20px; line-height: 1.5; flex-wrap: wrap; }
+        .stempel-lunas { position: absolute; top: 50%; right: 10%; border: 4px solid rgba(220, 38, 38, 0.4); color: rgba(220, 38, 38, 0.4); padding: 5px 15px; transform: rotate(-15deg); font-size: 30px; font-weight: 900; border-radius: 10px; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="text-white">Sabar, lagi nulis kwitansi...</div>
+    <div id="loading" class="text-white font-bold animate-pulse text-center">MENULIS KWITANSI...</div>
 
-    <div id="view-travel" class="hidden w-full max-w-lg style-travel">
-        <div class="text-center mb-8 border-b-4 border-double border-black pb-2">
-            <h1 class="text-2xl font-bold tracking-tighter">MAHIKA TRANS JOGJA</h1>
-            <p class="text-[10px]">Jl. Kebon Agung, Mlati, Sleman, DIY</p>
+    <div id="konten" class="hidden kwitansi-box">
+        <div class="text-center mb-10 border-b-4 border-black pb-4">
+            <h1 class="text-3xl font-black tracking-tighter">MAHIKA TRANS</h1>
+            <p class="text-xs font-bold uppercase tracking-widest">Jasa Transportasi & Shuttle Executive</p>
         </div>
 
-        <div class="receipt-row">
-            <span>Telah diterima dari</span>
-            <div class="dot-line text-lg uppercase" id="t-nama"></div>
+        <div class="baris">
+            <span class="whitespace-nowrap">Telah diterima dari :</span>
+            <div id="d-nama" class="garis-bawah uppercase"></div>
         </div>
 
-        <div class="receipt-row">
-            <span>Uang Sejumlah</span>
-            <div class="dot-line italic" id="t-terbilang"></div>
+        <div class="baris">
+            <span class="whitespace-nowrap">Uang sejumlah :</span>
+            <div id="d-terbilang" class="garis-bawah italic"></div>
         </div>
 
-        <div class="receipt-row">
-            <span>Guna Membayar</span>
-            <div class="dot-line uppercase" id="t-tujuan"></div>
+        <div class="baris">
+            <span class="whitespace-nowrap">Guna membayar :</span>
+            <div id="d-guna" class="garis-bawah uppercase"></div>
         </div>
 
-        <div class="flex mt-10 items-center justify-between">
-            <div class="border-4 border-black p-3 bg-white text-xl font-bold">
-                Rp. <span id="t-nominal"></span> ,-
+        <div class="grid grid-cols-2 gap-4 mt-6 text-sm">
+            <div class="border border-black p-2">
+                <p>Tgl: <span id="d-tgl" class="font-bold"></span></p>
+                <p>Jam: <span id="d-jam" class="font-bold"></span></p>
+            </div>
+            <div class="border border-black p-2">
+                <p>Unit: <span id="d-unit" class="font-bold"></span></p>
+                <p>No Kursi: <span id="d-kursi" class="font-bold"></span></p>
+            </div>
+        </div>
+
+        <div class="mt-12 flex justify-between items-center">
+            <div class="bg-gray-100 border-4 border-black p-4 text-2xl font-bold">
+                Rp. <span id="d-nominal"></span> ,-
             </div>
             
-            <div class="text-center relative">
-                <p class="text-[10px] mb-12">Yogyakarta, <span id="t-tgl"></span></p>
-                <p class="font-bold underline">MAHIKA TRANS</p>
-                <div class="absolute top-4 left-0 border-2 border-red-600 text-red-600 font-bold p-1 rotate-12 opacity-40">LUNAS</div>
+            <div class="text-center">
+                <p class="text-[10px] mb-12">Yogyakarta, <span id="d-tgl2"></span></p>
+                <p class="font-bold underline uppercase">Administrasi</p>
             </div>
         </div>
-        
-        <div class="mt-8 flex justify-center">
-            <img id="t-qr" class="w-24 h-24 border border-black">
-        </div>
-    </div>
 
-    <div id="view-bus" class="hidden w-full max-w-sm style-bus">
-        <div class="bg-yellow-400 p-4 text-blue-900 font-black text-center text-xl italic">
-            MAHIKA TRANS BUS
-        </div>
-        <div class="p-6">
-            <p class="text-xs opacity-70">PASSENGER NAME</p>
-            <h2 id="b-nama" class="text-2xl font-bold mb-4 uppercase"></h2>
-            
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                    <p class="text-[10px] opacity-70">DESTINATION</p>
-                    <p id="b-tujuan" class="font-bold"></p>
-                </div>
-                <div>
-                    <p class="text-[10px] opacity-70">SEAT</p>
-                    <p id="b-kursi" class="text-2xl font-black text-yellow-400"></p>
-                </div>
-            </div>
+        <div class="stempel-lunas">LUNAS</div>
 
-            <div class="border-t border-dashed border-blue-400 pt-4 flex justify-between items-end">
-                <div class="text-[10px]">
-                    <p id="b-tgl"></p>
-                    <p id="b-jam"></p>
-                </div>
-                <img id="b-qr" class="w-20 h-20 p-1 bg-white">
-            </div>
+        <div class="mt-10 flex justify-center border-t border-black pt-6">
+            <img id="d-qr" class="w-24 h-24 border border-black p-1">
         </div>
     </div>
 
@@ -120,24 +91,18 @@
                 if (doc.exists) {
                     const d = doc.data();
                     document.getElementById('loading').style.display = 'none';
+                    document.getElementById('konten').classList.remove('hidden');
 
-                    if (d.layanan === 'travel') {
-                        document.getElementById('view-travel').classList.remove('hidden');
-                        document.getElementById('t-nama').innerText = d.nama;
-                        document.getElementById('t-tujuan').innerText = d.tujuan;
-                        document.getElementById('t-nominal').innerText = Number(d.nominal).toLocaleString('id-ID');
-                        document.getElementById('t-terbilang').innerText = "# " + terbilang(d.nominal) + " Rupiah #";
-                        document.getElementById('t-tgl').innerText = d.tgl;
-                        document.getElementById('t-qr').src = `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${bid}`;
-                    } else {
-                        document.getElementById('view-bus').classList.remove('hidden');
-                        document.getElementById('b-nama').innerText = d.nama;
-                        document.getElementById('b-tujuan').innerText = d.tujuan;
-                        document.getElementById('b-kursi').innerText = d.kursi || 'ANY';
-                        document.getElementById('b-tgl').innerText = d.tgl;
-                        document.getElementById('b-jam').innerText = d.jam;
-                        document.getElementById('b-qr').src = `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${bid}`;
-                    }
+                    document.getElementById('d-nama').innerText = d.nama;
+                    document.getElementById('d-terbilang').innerText = "# " + terbilang(d.nominal) + " Rupiah #";
+                    document.getElementById('d-guna').innerText = "TIKET " + (d.layanan || "PERJALANAN").toUpperCase() + " RUTE " + d.tujuan;
+                    document.getElementById('d-nominal').innerText = Number(d.nominal).toLocaleString('id-ID');
+                    document.getElementById('d-tgl').innerText = d.tgl;
+                    document.getElementById('d-tgl2').innerText = d.tgl;
+                    document.getElementById('d-jam').innerText = d.jam;
+                    document.getElementById('d-unit').innerText = d.armada || '-';
+                    document.getElementById('d-kursi').innerText = d.kursi || '-';
+                    document.getElementById('d-qr').src = `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${bid}`;
                 }
             } catch (e) { console.log(e); }
         }
@@ -151,7 +116,7 @@
             if (n < 1000) return terbilang(Math.floor(n / 100)) + " Ratus " + terbilang(n % 100);
             if (n < 2000) return "Seribu " + terbilang(n - 1000);
             if (n < 1000000) return terbilang(Math.floor(n / 1000)) + " Ribu " + terbilang(n % 1000);
-            return "";
+            return "Besar";
         }
         init();
     </script>
