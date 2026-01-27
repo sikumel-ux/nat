@@ -5,44 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>E-Ticket Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Libre+Barcode+128&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F1F5F9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .bento-card { background: white; border-radius: 2.5rem; box-shadow: 0 25px 50px -12px rgba(6, 80, 132, 0.2); width: 100%; max-width: 380px; overflow: hidden; position: relative; }
-        .line-accent { height: 16px; background: #065084; width: 100%; position: absolute; top: 0; left: 0; }
-        .bg-soft { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #e2e8f0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .barcode { font-family: 'Libre Barcode 128', crossorigin; font-size: 50px; }
+        .bg-mahika { background: #065084; }
+        .dashed-line { border-top: 2px dashed #cbd5e1; position: relative; }
+        .dashed-line::before, .dashed-line::after { content: ''; width: 20px; height: 20px; background: #e2e8f0; border-radius: 50%; position: absolute; top: -11px; }
+        .dashed-line::before { left: -30px; } .dashed-line::after { right: -30px; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="text-blue-900 font-bold animate-pulse">Memuat Tiket...</div>
+    <div id="loading" class="text-blue-900 font-bold animate-pulse">GENERATING TICKET...</div>
 
-    <div id="konten" class="bento-card hidden">
-        <div class="line-accent"></div>
-        <div class="p-8 pt-12">
+    <div id="view-travel" class="hidden w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border-t-[12px] border-blue-900">
+        <div class="p-8">
             <div class="text-center mb-6">
-                <h1 class="text-2xl font-black text-blue-900">MAHIKA TRANS</h1>
-                <p id="sub-header" class="text-[9px] font-extrabold text-amber-500 uppercase tracking-widest mt-1"></p>
+                <h1 class="text-2xl font-black text-blue-900 leading-none">MAHIKA TRANS</h1>
+                <p class="text-[9px] font-bold text-amber-500 uppercase tracking-widest mt-1">Executive Travel & Shuttle</p>
+                <h2 class="mt-6 text-xl font-bold text-slate-800 border-b-2 border-amber-400 inline-block pb-1">KWITANSI PEMBAYARAN</h2>
+            </div>
+            
+            <p class="text-[13px] text-slate-600 text-center leading-relaxed">
+                Telah diterima uang sejumlah dari Bapak/Ibu <strong id="t-nama" class="text-slate-900 uppercase"></strong> untuk pembayaran travel rute <strong id="t-tujuan" class="text-slate-900 uppercase"></strong> sejumlah:
+            </p>
+
+            <div class="bg-blue-50 p-6 rounded-3xl text-center my-6 border border-blue-100">
+                <p id="t-nominal" class="text-3xl font-black text-blue-900"></p>
+                <p id="t-terbilang" class="text-[9px] text-blue-700 italic font-bold uppercase mt-2"></p>
             </div>
 
-            <div id="area-teks" class="text-[13px] text-slate-600 leading-relaxed text-center mb-6"></div>
-
-            <div class="bg-soft p-6 rounded-[2rem] text-center border border-blue-50 mb-6">
-                <p id="d-nominal" class="text-3xl font-black text-blue-900"></p>
-                <div class="w-10 h-[1px] bg-blue-200 mx-auto my-3"></div>
-                <p id="d-terbilang" class="text-[9px] text-blue-700 italic font-bold uppercase"></p>
+            <div class="flex flex-col items-center gap-4">
+                <img id="t-qr" class="w-28 h-28 border-4 border-slate-50 rounded-2xl shadow-inner">
+                <div class="text-[10px] text-center font-bold text-slate-400 uppercase tracking-tighter">
+                    TGL: <span id="t-tgl" class="text-slate-800"></span> | JAM: <span id="t-jam" class="text-slate-800"></span>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="flex justify-center mb-6">
-                <div class="p-2 bg-white rounded-3xl border shadow-inner">
-                    <img id="qrcodeimg" class="w-32 h-32">
+    <div id="view-bus" class="hidden w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div class="bg-mahika p-6 text-white text-center">
+            <p class="text-[10px] font-bold tracking-[0.3em] opacity-70 mb-1">OFFICIAL BOARDING PASS</p>
+            <h1 class="text-2xl font-black italic">MAHIKA TRANS BUS</h1>
+        </div>
+        
+        <div class="p-6">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Passenger Name</p>
+                    <p id="b-nama" class="text-lg font-black text-slate-800 leading-none"></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Seat No.</p>
+                    <p id="b-kursi" class="text-2xl font-black text-blue-900 leading-none"></p>
                 </div>
             </div>
 
-            <div id="info-trip" class="text-[10px] bg-slate-50 p-4 rounded-2xl border border-slate-100 font-bold text-slate-500 space-y-1">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-left">
+                        <p class="text-[9px] font-bold text-slate-400">DEPARTURE</p>
+                        <p id="b-tgl" class="text-xs font-bold text-slate-800"></p>
+                    </div>
+                    <div class="text-blue-900"><i class="fas fa-bus text-xl"></i></div>
+                    <div class="text-right">
+                        <p class="text-[9px] font-bold text-slate-400">TIME</p>
+                        <p id="b-jam" class="text-xs font-bold text-slate-800"></p>
+                    </div>
                 </div>
+                <div class="pt-2 border-t border-slate-200">
+                    <p class="text-[9px] font-bold text-slate-400 text-center">ROUTE</p>
+                    <p id="b-tujuan" class="text-sm font-black text-center text-slate-800 uppercase"></p>
+                </div>
+            </div>
+
+            <div class="dashed-line mb-6"></div>
+
+            <div class="flex flex-col items-center">
+                <p class="barcode text-slate-800">1234567890</p>
+                <p id="b-id" class="text-[8px] font-bold text-slate-400 tracking-[0.5em] -mt-2"></p>
+            </div>
         </div>
     </div>
 
@@ -61,31 +107,31 @@
         let bid = params.get('id');
 
         async function init() {
-            if (!bid) return alert("ID Tiket Hilang!");
+            if (!bid) return;
             try {
                 let doc = await db.collection("bookings").doc(bid).get();
                 if (doc.exists) {
                     const d = doc.data();
                     document.getElementById('loading').classList.add('hidden');
-                    document.getElementById('konten').classList.remove('hidden');
 
-                    // SWITCH LOGIKA TAMPILAN
                     if (d.layanan === 'travel') {
-                        document.getElementById('sub-header').innerText = "Executive Shuttle & Travel";
-                        document.getElementById('area-teks').innerHTML = `Telah diterima uang sejumlah dari Bapak/Ibu <strong class="text-slate-900 uppercase">${d.nama}</strong> untuk pembayaran travel jurusan <strong class="text-slate-900 uppercase">${d.tujuan}</strong> sejumlah:`;
+                        document.getElementById('view-travel').classList.remove('hidden');
+                        document.getElementById('t-nama').innerText = d.nama;
+                        document.getElementById('t-tujuan').innerText = d.tujuan;
+                        document.getElementById('t-nominal').innerText = "Rp " + Number(d.nominal).toLocaleString('id-ID');
+                        document.getElementById('t-terbilang').innerText = "~ " + terbilang(d.nominal) + " Rupiah ~";
+                        document.getElementById('t-tgl').innerText = d.tgl;
+                        document.getElementById('t-jam').innerText = d.jam;
+                        document.getElementById('t-qr').src = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${bid}`;
                     } else {
-                        document.getElementById('sub-header').innerText = "Bus Executive Ticket";
-                        document.getElementById('area-teks').innerHTML = `<span class="font-bold text-lg text-slate-800">E-TICKET BUS</span><br>Nama: ${d.nama.toUpperCase()}<br>Rute: ${d.tujuan.toUpperCase()}`;
+                        document.getElementById('view-bus').classList.remove('hidden');
+                        document.getElementById('b-nama').innerText = d.nama.toUpperCase();
+                        document.getElementById('b-kursi').innerText = d.kursi || 'Any';
+                        document.getElementById('b-tgl').innerText = d.tgl;
+                        document.getElementById('b-jam').innerText = d.jam;
+                        document.getElementById('b-tujuan').innerText = d.tujuan;
+                        document.getElementById('b-id').innerText = bid.toUpperCase();
                     }
-
-                    document.getElementById('d-nominal').innerText = "Rp " + Number(d.nominal).toLocaleString('id-ID');
-                    document.getElementById('d-terbilang').innerText = "~ " + terbilang(d.nominal) + " Rupiah ~";
-                    document.getElementById('info-trip').innerHTML = `
-                        <div class="flex justify-between"><span>TANGGAL</span> <span class="text-slate-800">${d.tgl}</span></div>
-                        <div class="flex justify-between"><span>JAM</span> <span class="text-slate-800">${d.jam}</span></div>
-                        <div class="flex justify-between"><span>ARMADA/KURSI</span> <span class="text-slate-800">${d.armada} / ${d.kursi}</span></div>
-                    `;
-                    document.getElementById('qrcodeimg').src = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${bid}`;
                 }
             } catch (e) { console.log(e); }
         }
