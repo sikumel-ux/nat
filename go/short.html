@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Link Shortener | Mahika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ios-bg: #f2f2f7;
+            --ios-accent: #007aff;
+        }
+        body {
+            font-family: 'SF Pro Display', 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--ios-bg);
+            color: #000;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+        }
+        .ios-input {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .ios-input:focus {
+            background: #fff;
+            ring: 2px solid var(--ios-accent);
+        }
+        .ios-btn {
+            background: var(--ios-accent);
+            transition: transform 0.1s active;
+        }
+        .ios-btn:active {
+            transform: scale(0.96);
+        }
+        .link-item {
+            background: #fff;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center">
+
+    <div class="w-full max-w-md mb-8 pt-4">
+        <h1 class="text-3xl font-black tracking-tight text-slate-900">Link Manager</h1>
+        <p class="text-slate-500 text-sm font-medium">Mahika Trans Shortener</p>
+    </div>
+
+    <div class="w-full max-w-md glass-card p-6 mb-8 shadow-xl">
+        <div class="space-y-4">
+            <div>
+                <label class="text-[11px] font-bold text-slate-400 ml-1 uppercase mb-2 block">Custom Alias</label>
+                <div class="flex items-center ios-input p-3 border border-slate-200">
+                    <span class="text-slate-400 text-sm mr-1">go.mahika.com/</span>
+                    <input type="text" id="alias" class="bg-transparent outline-none w-full text-sm font-semibold" placeholder="promo-januari">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[11px] font-bold text-slate-400 ml-1 uppercase mb-2 block">Destination URL</label>
+                <input type="url" id="originalUrl" class="ios-input p-3 border border-slate-200 w-full outline-none text-sm" placeholder="https://instagram.com/...">
+            </div>
+
+            <button onclick="createShortLink()" class="ios-btn w-full text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-200 flex items-center justify-center gap-2">
+                <i class="fas fa-link"></i> Generate Link
+            </button>
+        </div>
+    </div>
+
+    <div class="w-full max-w-md">
+        <div class="flex justify-between items-center mb-4 px-1">
+            <h3 class="font-bold text-slate-800">Recent Links</h3>
+            <button onclick="loadLinks()" class="text-blue-500 text-sm font-semibold">Refresh</button>
+        </div>
+        <div id="listLinks">
+            </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, setDoc, doc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+            authDomain: "mahika-trans.firebaseapp.com", 
+            projectId: "mahika-trans", 
+            storageBucket: "mahika-trans.firebasestorage.app", 
+            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Fungsi Buat Link
+        window.createShortLink = async () => {
+            const alias = document.getElementById('alias').value.toLowerCase().trim();
+            const original = document.getElementById('originalUrl').value.trim();
+
+            if (!alias || !original) return alert("Isi semua kolom, Bung!");
+
+            try {
+                await setDoc(doc(db, "shortlinks", alias), {
+                    url: original,
+                    createdAt: new Date().toISOString()
+                });
+                alert("Berhasil! Link go.mahikatrans.com/" + alias + " aktif.");
+                location.reload();
+            } catch (e) { alert("Gagal! Mungkin alias sudah dipakai."); }
+        };
+
+        // Fungsi Tampilkan List
+        window.loadLinks = async () => {
+            const listDiv = document.getElementById('listLinks');
+            listDiv.innerHTML = '<p class="text-center text-slate-400 text-xs py-4">Loading data...</p>';
+            
+            const q = query(collection(db, "shortlinks"), orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            
+            listDiv.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                listDiv.innerHTML += `
+                    <div class="link-item flex justify-between items-center animate-fade-in">
+                        <div class="overflow-hidden">
+                            <p class="font-bold text-slate-800">/${doc.id}</p>
+                            <p class="text-[10px] text-slate-400 truncate w-40">${data.url}</p>
+                        </div>
+                        <button onclick="copyLink('${doc.id}')" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-100 hover:text-blue-600">
+                            Copy
+                        </button>
+                    </div>
+                `;
+            });
+        };
+
+        window.copyLink = (alias) => {
+            navigator.clipboard.writeText(`https://go.mahikatrans.com/${alias}`);
+            alert("Link disalin!");
+        };
+
+        loadLinks();
+    </script>
+</body>
+                  </html>
+  
