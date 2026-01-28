@@ -67,8 +67,8 @@
 <div class="form-container">
     <div class="card-input">
         <div class="group-field">
-            <label>Nama Penumpang</label>
-            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+            <label>Nama</label>
+            <input type="text" id="nama" placeholder="Nama">
         </div>
 
         <div class="row-flex">
@@ -77,23 +77,23 @@
                 <input type="tel" id="whatsapp" placeholder="0812xxx">
             </div>
             <div class="group-field half">
-                <label>Nomor Kursi</label>
-                <input type="text" id="kursi" placeholder="1A">
+                <label>No Kursi</label>
+                <input type="text" id="kursi" placeholder="9">
             </div>
         </div>
 
         <div class="group-field">
-            <label>Armada / Bus</label>
-            <input type="text" id="armada" placeholder="Mahika Jaya">
+            <label>Armada</label>
+            <input type="text" id="armada" placeholder="Mahika">
         </div>
 
         <div class="group-field">
-            <label>Kota Tujuan</label>
-            <input type="text" id="tujuan" placeholder="Surabaya">
+            <label>Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Jambi">
         </div>
 
         <div class="group-field">
-            <label>Harga Tiket</label>
+            <label>Harga</label>
             <input type="number" id="harga" placeholder="250000">
         </div>
 
@@ -108,7 +108,7 @@
             </div>
         </div>
 
-        <button id="btnSimpan" class="btn-save">SIMPAN & KIRIM TIKET</button>
+        <button id="btnSimpan" class="btn-save">SIMPAN & KIRIM eTIKET</button>
     </div>
 </div>
 
@@ -187,7 +187,7 @@
             const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
             
             // LINK SHORT URL OTOMATIS (Bisa dibuka di domain.com/KODE)
-            const linkEtiket = "https://go.mahikatrans.com/" + customID;
+            const linkEtiket = "https://go.mahikatrans.my.id/" + customID;
 
             const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
                            `Berikut adalah data pemesanan tiket Anda di *MAHIKA TRANS*.%0A%0A` +
