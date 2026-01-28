@@ -167,8 +167,8 @@
 
         const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
 
-        // LOGIKA SHORT URL: MT- diikuti 4 angka random (contoh: MT-1892)
-        const randomNumber = Math.floor(1000 + Math.random() * 9000);
+        // LOGIKA SHORT URL: MT- diikuti 6 angka random (contoh: MT-189992)
+        const randomNumber = Math.floor(100000 + Math.random() * 900000);
         const customID = "MT-" + randomNumber;
         
         // Barcode disamakan dengan customID agar sinkron
@@ -203,7 +203,7 @@
                            `---------------------------%0A` +
                            `Etiket Anda:%0A${linkEtiket}%0A` +
                            `---------------------------%0A%0A` +
-                           `Harap datang maksimal 30 menit sebelum jam pemberangkatan.%0A%0A` +
+                           `Harap datang 30 menit sebelum jam pemberangkatan.%0A%0A` +
                            `Terimakasih.`;
 
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
