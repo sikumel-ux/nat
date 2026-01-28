@@ -3,173 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Booking | Mahika Trans</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Input Reservasi | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="nav.css">
+
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; margin: 0; padding-bottom: 100px; }
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; --white: #ffffff; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; color: #333; }
         
-        .header-input { 
+        .header-curvy { 
             background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
-            padding: 30px 20px; border-radius: 0 0 30px 30px; color: white;
+            padding: 50px 25px 80px 25px; border-radius: 0 0 50px 50px; 
+            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3); text-align: center;
+        }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; text-transform: uppercase; }
+        .filter-info { font-size: 11px; font-weight: 600; color: white; opacity: 0.8; margin-top: 5px; }
+
+        .form-container { margin-top: -50px; padding: 0 20px; position: relative; z-index: 10; }
+        .card-input { 
+            background: white; border-radius: 30px; padding: 30px 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid var(--gold);
         }
 
-        .form-container { margin-top: 20px; padding: 0 20px; }
-        .input-group { background: white; padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
-        .input-group label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 2px; text-transform: uppercase; }
-        .input-group input { width: 100%; border: none; outline: none; font-size: 14px; font-weight: 600; color: #1e293b; background: transparent; }
+        .group-field { margin-bottom: 18px; }
+        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 6px; margin-left: 5px; }
+        .group-field input { 
+            width: 100%; border: 1.5px solid #eee; padding: 14px; border-radius: 15px; 
+            font-family: 'Poppins'; font-size: 13px; font-weight: 600; box-sizing: border-box; transition: 0.3s; 
+        }
+        .group-field input:focus { border-color: var(--primary-blue); outline: none; background: #fcfcfc; }
 
-        .btn-simpan { 
-            background: var(--primary-blue); color: white; width: 100%; padding: 18px; 
-            border-radius: 20px; font-weight: 700; margin-top: 15px;
-            box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3);
-            border: none; cursor: pointer;
+        .row-flex { display: flex; gap: 15px; width: 100%; }
+        .half { flex: 1; }
+
+        .btn-save { 
+            width: 100%; background: var(--primary-blue); color: var(--white); border: none; 
+            padding: 18px; border-radius: 18px; font-weight: 700; 
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px; 
+            box-shadow: 0 10px 20px rgba(6, 80, 132, 0.3); cursor: pointer; margin-top: 10px;
         }
 
-        /* Nav Bottom */
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); z-index: 100; }
-        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 9px; font-weight: 600; flex: 1; }
-        .nav-bottom a i { font-size: 18px; margin-bottom: 3px; display: block; }
-        .nav-bottom a.active { color: var(--primary-blue); }
+        .modal { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+            z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); 
+        }
+        .modal-content { background: white; width: 100%; max-width: 320px; border-radius: 35px; padding: 40px 25px; text-align: center; }
+        .icon-check { color: var(--primary-blue); font-size: 60px; margin-bottom: 15px; display: block; }
+
+        .btn-modal { display: block; width: 100%; padding: 16px; border-radius: 15px; font-size: 12px; font-weight: 700; text-decoration: none; margin-bottom: 10px; text-transform: uppercase; }
+        .btn-wa { background: #22c55e; color: white; }
+        .btn-manifes { background: var(--bg-darker); color: white; }
+        .btn-reload { background: none; border: none; color: #aaa; font-size: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="header-input text-center">
-    <h1 class="text-xl font-bold italic">MAHIKA TRANS</h1>
-    <p class="text-[10px] opacity-70 tracking-widest uppercase">Form Pemesanan Tiket</p>
+<div class="header-curvy">
+    <h2>INPUT BOOKING</h2>
+    <div class="filter-info">Reservasi Tiket Mahika Trans</div>
 </div>
 
 <div class="form-container">
-    <div class="input-group">
-        <label>Nama Penumpang</label>
-        <input type="text" id="p-nama" placeholder="Contoh: Budi Santoso">
-    </div>
+    <div class="card-input">
+        <div class="group-field">
+            <label>Nama Penumpang</label>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+        </div>
 
-    <div class="grid grid-cols-2 gap-3">
-        <div class="input-group">
-            <label>No. WhatsApp</label>
-            <input type="number" id="p-wa" placeholder="0812345678">
+        <div class="row-flex">
+            <div class="group-field half">
+                <label>No. WhatsApp</label>
+                <input type="tel" id="whatsapp" placeholder="0812xxx">
+            </div>
+            <div class="group-field half">
+                <label>Nomor Kursi</label>
+                <input type="text" id="kursi" placeholder="1A">
+            </div>
         </div>
-        <div class="input-group">
-            <label>Harga (Rp)</label>
-            <input type="number" id="p-harga" placeholder="200000">
-        </div>
-    </div>
 
-    <div class="grid grid-cols-2 gap-3">
-        <div class="input-group">
-            <label>Tanggal</label>
-            <input type="date" id="p-tgl">
+        <div class="group-field">
+            <label>Armada / Bus</label>
+            <input type="text" id="armada" placeholder="Mahika Jaya">
         </div>
-        <div class="input-group">
-            <label>Jam (Manual)</label>
-            <input type="text" id="p-jam" placeholder="Cth: 19:30 WIB">
-        </div>
-    </div>
 
-    <div class="grid grid-cols-2 gap-3">
-        <div class="input-group">
-            <label>Armada</label>
-            <input type="text" id="p-armada" placeholder="Cth: Hiace / Elf">
+        <div class="group-field">
+            <label>Kota Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Surabaya">
         </div>
-        <div class="input-group">
-            <label>Nomor Kursi</label>
-            <input type="text" id="p-kursi" placeholder="Cth: 2A / Depan">
+
+        <div class="group-field">
+            <label>Harga Tiket</label>
+            <input type="number" id="harga" placeholder="250000">
         </div>
-    </div>
 
-    <div class="input-group">
-        <label>Tujuan / Rute</label>
-        <input type="text" id="p-tujuan" placeholder="Cth: Jakarta - Semarang (PP)">
-    </div>
+        <div class="row-flex">
+            <div class="group-field half">
+                <label>Tanggal</label>
+                <input type="date" id="tgl_only">
+            </div>
+            <div class="group-field half">
+                <label>Jam</label>
+                <input type="text" id="jam_only" placeholder="17:30">
+            </div>
+        </div>
 
-    <button id="btnSimpan" class="btn-simpan">
-        <i class="fas fa-paper-plane mr-2"></i> SIMPAN & KIRIM TIKET
-    </button>
+        <button id="btnSimpan" class="btn-save">SIMPAN & KIRIM TIKET</button>
+    </div>
 </div>
 
 <div class="nav-bottom">
     <a href="dash.html"><i class="fas fa-house"></i>Home</a>
-    <a href="input.html" class="active"><i class="fas fa-circle-plus"></i>Input</a>
-    <a href="manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
+    <a href="inputnya.html" class="active"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="manifes.html"><i class="fas fa-list"></i>Manifes</a>
     <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
-    <a href="logout.html" class="text-red-500"><i class="fas fa-power-off"></i>Logout</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="#" id="logoutBtn" class="nav-logout"><i class="fas fa-power-off"></i>Off</a>
+</div>
+
+<div id="modalSukses" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-circle-check icon-check"></i>
+        <h3 style="font-weight: 700; font-size: 20px; margin: 0;">Berhasil!</h3>
+        <p style="font-size: 13px; color: #999; margin-bottom: 25px;">Data tiket sudah masuk sistem.</p>
+        
+        <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa"><i class="fab fa-whatsapp"></i> Kirim WhatsApp</a>
+        <a href="manifes.html" class="btn-modal btn-manifes">Buka Manifes</a>
+        <button onclick="location.reload()" class="btn-reload">INPUT DATA BARU</button>
+    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    const firebaseConfig = { 
-        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
-        authDomain: "mahika-trans.firebaseapp.com", 
-        projectId: "mahika-trans", 
-        storageBucket: "mahika-trans.firebasestorage.app", 
-        messagingSenderId: "1087881066133", 
-        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
     };
-    
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    document.getElementById('btnSimpan').onclick = async () => {
-        const btn = document.getElementById('btnSimpan');
-        const nama = document.getElementById('p-nama').value;
-        const wa = document.getElementById('p-wa').value;
-        const harga = document.getElementById('p-harga').value;
-        const tgl = document.getElementById('p-tgl').value;
-        const jam = document.getElementById('p-jam').value;
-        const armada = document.getElementById('p-armada').value;
-        const kursi = document.getElementById('p-kursi').value;
-        const tujuan = document.getElementById('p-tujuan').value;
+    document.getElementById('tgl_only').valueAsDate = new Date();
 
-        if(!nama || !wa || !tgl || !tujuan) return alert("Harap isi Nama, WA, Tanggal, dan Tujuan!");
+    document.getElementById('btnSimpan').onclick = async function() {
+        const btn = this;
+        const vNama = document.getElementById('nama').value;
+        const vWA = document.getElementById('whatsapp').value;
+        const vKursi = document.getElementById('kursi').value;
+        const vArmada = document.getElementById('armada').value;
+        const vTujuan = document.getElementById('tujuan').value;
+        const vHarga = document.getElementById('harga').value;
+        const vTgl = document.getElementById('tgl_only').value;
+        const vJamRaw = document.getElementById('jam_only').value;
 
+        if(!vNama || !vWA || !vTgl) return alert("Data Nama, WA, & Tanggal wajib diisi!");
+
+        const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
+
+        // LOGIKA SHORT URL: Buat ID Dokumen Pendek (5 Karakter Random)
+        const customID = Math.random().toString(36).substring(2, 7).toUpperCase();
+        const vBarcode = "MT-" + Math.floor(1000 + Math.random() * 9000);
+
+        btn.innerText = "MENYIMPAN...";
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sedang Menyimpan...';
 
         try {
-            // 1. Simpan data lengkap ke Firebase
-            const docRef = await addDoc(collection(db, "bookings"), {
-                nama, wa, harga, tgl, jam, armada, kursi, tujuan,
+            // Simpan ke database menggunakan ID Pendek
+            await setDoc(doc(db, "bookings", customID), {
+                nama: vNama, wa: vWA, kursi: String(vKursi), armada: vArmada,
+                tujuan: vTujuan, nominal: vHarga, tgl: vTgl, jam: vJam + " WIB",
+                barcode: vBarcode,
                 createdAt: serverTimestamp()
             });
 
-            // 2. Format Tanggal Indonesia untuk pesan WA
-            const tglIndo = new Date(tgl).toLocaleDateString('id-ID', {
-                day: '2-digit', month: 'long', year: 'numeric'
-            });
-
-            // 3. Buat URL Etiket
-            const etiketURL = `https://${window.location.hostname}/etiket.html?id=${docRef.id}`;
-
-            // 4. Siapkan Pesan WhatsApp
-            const pesanWA = `*E-TIKET MAHIKA TRANS*\n` +
-                            `--------------------------\n` +
-                            `Nama : ${nama}\n` +
-                            `Tujuan : ${tujuan}\n` +
-                            `Tgl : ${tglIndo}\n` +
-                            `Jam : ${jam}\n` +
-                            `Kursi : ${kursi}\n` +
-                            `--------------------------\n` +
-                            `Link Tiket Anda:\n${etiketURL}\n\n` +
-                            `_Terima kasih telah memesan!_`;
+            const opsi = { day: 'numeric', month: 'long', year: 'numeric' };
+            const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
             
-            let formattedWA = wa.startsWith('0') ? '62' + wa.substring(1) : wa;
-            
-            window.location.href = `https://wa.me/${formattedWA}?text=${encodeURIComponent(pesanWA)}`;
+            // LINK SHORT URL OTOMATIS (Bisa dibuka di domain.com/KODE)
+            const linkEtiket = "https://go.mahikatrans.com/" + customID;
+
+            const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
+                           `Berikut adalah data pemesanan tiket Anda di *MAHIKA TRANS*.%0A%0A` +
+                           `Tanggal: *${tglFormal}*%0A` +
+                           `Jam: *${vJam} WIB*%0A%0A` +
+                           `Nama: ${vNama.toUpperCase()}%0A` +
+                           `Tujuan: ${vTujuan}%0A` +
+                           `Armada: ${vArmada}%0A` +
+                           `No. Kursi: *${vKursi}*%0A%0A` +
+                           `---------------------------%0A` +
+                           `Etiket Anda:%0A${linkEtiket}%0A` +
+                           `---------------------------%0A%0A` +
+                           `Harap datang maksimal 30 menit sebelum jam pemberangkatan.%0A%0A` +
+                           `Terimakasih.`;
+
+            let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
+            formattedWA = formattedWA.replace(/[^0-9]/g, '');
+
+            document.getElementById('linkWA').href = `https://wa.me/${formattedWA}?text=${textWA}`;
+            document.getElementById('modalSukses').style.display = 'flex';
 
         } catch (e) {
-            console.error(e);
-            alert("Gagal menyimpan. Cek koneksi internet!");
+            alert("Error simpan: " + e.message);
+        } finally {
+            btn.innerText = "SIMPAN & KIRIM TIKET";
             btn.disabled = false;
-            btn.innerHTML = 'SIMPAN & KIRIM TIKET';
         }
-    };
+    }
+
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => location.href = "login.html");
+    }
 </script>
 </body>
-    </html>
-    
+</html>
