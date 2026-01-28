@@ -1,147 +1,186 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Ticket Mahika Trans</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Plus+Jakarta+Sans:wght@800&family=Libre+Barcode+128&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <style>
-        body { background: #334155; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        
-        /* --- STYLE TRAVEL (KWITANSI KLASIK) --- */
-        .box-travel { background: #fff; padding: 30px; border: 1px solid #000; box-shadow: 10px 10px 0px #000; font-family: 'Courier Prime', monospace; }
-        .line-dot { border-bottom: 2px dotted #000; flex-grow: 1; padding-left: 10px; font-weight: bold; }
-        .row-nota { display: flex; align-items: flex-end; margin-bottom: 15px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etiket Mahika Trans</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#065084">
+<link rel="icon" href="../m.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="../stylez.css">
+<style>
+    body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
+    
+    #loading-screen { 
+        display: flex; flex-direction: column; align-items: center; 
+        justify-content: center; height: 100vh; color: #065084; 
+    }
 
-        /* --- STYLE BUS (BOARDING PASS SESUAI GAMBARMU) --- */
-        .box-bus { background: #065084; color: white; border-radius: 20px; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .barcode-font { font-family: 'Libre Barcode 128'; font-size: 60px; line-height: 1; }
-    </style>
+    .penyusup-container {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; height: 100vh; text-align: center; padding: 20px;
+    }
+    .penyusup-emoji { font-size: 80px; margin-bottom: 20px; animation: bounce 2s infinite; }
+    .penyusup-title { font-weight: 900; color: #e11d48; font-size: 26px; }
+    .penyusup-text { color: #64748b; margin-top: 10px; font-size: 15px; }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-20px);}
+        60% {transform: translateY(-10px);}
+    }
+
+    .qr-container { text-align: center; padding: 10px 20px; }
+    .qr-container img { 
+        width: 130px; height: 130px; margin: 0 auto; 
+        border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-radius: 12px;
+    }
+
+    .hidden { display: none !important; }
+</style>
 </head>
+
 <body>
 
-    <div id="loading" class="text-white animate-pulse font-bold">LOADING TICKET...</div>
+<audio id="audioError" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
 
-    <div id="view-travel" class="hidden w-full max-w-md box-travel">
-        <div class="text-center border-b-2 border-black pb-4 mb-6">
-            <h1 class="text-2xl font-bold">MAHIKA TRANS</h1>
-            <p class="text-[10px] uppercase">Bukti Pembayaran Travel Executive</p>
+<div id="loading-screen">
+    <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+    <p style="margin-top:15px; font-weight: 600;">Memvalidasi Tiket...</p>
+</div>
+
+<div id="main-content" class="etiket-container hidden">
+    <div class="etiket-header">
+        <div class="header">
+            <img src="../logo.png" alt="Mahika Trans" class="logo">
+        </div>
+        <p class="kode-booking" id="kodeBooking">-</p>
+    </div>
+
+    <div class="info-grid">
+        <div class="kolom">
+            <p><i class="fas fa-user"></i> <span id="nama"></span></p>
+            <p><i class="fas fa-phone"></i> <span id="no_hp"></span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada"></span></p> 
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
         </div>
 
-        <div class="row-nota">
-            <span class="text-sm">Telah diterima dari :</span>
-            <div id="t-nama" class="line-dot uppercase"></div>
-        </div>
-        <div class="row-nota">
-            <span class="text-sm">Uang sejumlah :</span>
-            <div id="t-terbilang" class="line-dot italic"></div>
-        </div>
-        <div class="row-nota">
-            <span class="text-sm">Guna membayar :</span>
-            <div id="t-guna" class="line-dot uppercase"></div>
-        </div>
-
-        <div class="mt-8 flex justify-between items-center">
-            <div class="border-2 border-black p-2 font-bold text-xl bg-gray-100">
-                Rp. <span id="t-nominal"></span> ,-
-            </div>
-            <div class="text-center text-[10px]">
-                <p>Yogyakarta, <span id="t-tgl"></span></p>
-                <div class="h-12"></div>
-                <p class="font-bold underline">KASIR</p>
-            </div>
+        <div class="kolom">
+            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
+            <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
+            <p><i class="fas fa-clock"></i> <span id="jam"></span></p>
+            <p><i class="fa-solid fa-rupiah-sign"></i><span id="harga"></span></p>
         </div>
     </div>
 
-    <div id="view-bus" class="hidden w-full max-w-md box-bus">
-        <div class="bg-yellow-400 p-4 text-blue-900 flex justify-between items-center">
-            <span class="font-black italic text-xl uppercase">Mahika Trans Bus</span>
-            <span class="bg-blue-900 text-white text-[9px] px-2 py-1 font-bold rounded">BOARDING PASS</span>
-        </div>
-        <div class="p-6">
-            <div class="flex justify-between mb-6">
-                <div>
-                    <p class="text-[10px] opacity-60 uppercase">Passenger Name</p>
-                    <h2 id="b-nama" class="text-xl font-bold uppercase"></h2>
-                </div>
-                <div class="text-right">
-                    <p class="text-[10px] opacity-60 uppercase">Seat</p>
-                    <p id="b-kursi" class="text-3xl font-black text-yellow-400"></p>
-                </div>
-            </div>
-            <div class="border-t border-blue-400/30 pt-4 flex justify-between">
-                <div>
-                    <p class="text-[10px] opacity-60 uppercase">Route</p>
-                    <p id="b-tujuan" class="font-bold text-sm uppercase"></p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[10px] opacity-60 uppercase">Departure</p>
-                    <p id="b-tgl" class="font-bold text-sm"></p>
-                </div>
-            </div>
-            <div class="mt-10 flex flex-col items-center border-t border-dashed border-blue-400 pt-6">
-                <p class="barcode-font text-white">MAHIKA-BUS-2026</p>
-                <p id="b-id" class="text-[8px] tracking-[4px] opacity-50 uppercase"></p>
-            </div>
-        </div>
+    <div class="tear-line"></div>
+
+    <div class="qr-container">
+        <img id="qrImg" alt="QR Code Booking">
+        <p class="thanks" style="font-size: 10px; margin-top: 10px; color: #666; line-height: 1.4;">Terimakasih atas kepercayaan Anda menggunakan jasa layanan kami.</p>
     </div>
 
-    <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
-            authDomain: "mahika-trans.firebaseapp.com", 
-            projectId: "mahika-trans", 
-            storageBucket: "mahika-trans.firebasestorage.app", 
-            appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    <div class="keterangan" style="margin-top: 5px;">
+        <p><strong>Perhatian:</strong></p>
+        <p>1. Tiket yang sudah dipesan tidak dapat dibatalkan</p>
+        <p>2. Harap datang maksimal 30 menit sebelum jadwal pemberangkatan</p>
+        <p>3. Anak usia 3 tahun atau tinggi badan 90cm wajib membeli tiket</p>
+    </div>
+</div>
 
-        const params = new URLSearchParams(window.location.search);
-        let bid = params.get('id');
+<div id="penyusup-screen" class="hidden">
+    <div class="penyusup-container">
+        <div class="penyusup-emoji">🚫</div>
+        <h1 class="penyusup-title">BELI TIKET DULU, BRO!</h1>
+        <p class="penyusup-text">Tiket tidak valid atau kode booking salah.<br>Silahkan hubungi admin Mahika Trans.</p>
+    </div>
+</div>
 
-        async function init() {
-            if (!bid) return;
-            try {
-                let doc = await db.collection("bookings").doc(bid).get();
-                if (doc.exists) {
-                    const d = doc.data();
-                    document.getElementById('loading').style.display = 'none';
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-                    if (d.layanan === 'travel') {
-                        // TAMPILKAN TRAVEL
-                        document.getElementById('view-travel').classList.remove('hidden');
-                        document.getElementById('t-nama').innerText = d.nama;
-                        document.getElementById('t-nominal').innerText = Number(d.nominal).toLocaleString('id-ID');
-                        document.getElementById('t-terbilang').innerText = terbilang(d.nominal) + " Rupiah";
-                        document.getElementById('t-guna').innerText = "TIKET TRAVEL RUTE " + d.tujuan;
-                        document.getElementById('t-tgl').innerText = d.tgl;
-                    } else {
-                        // TAMPILKAN BUS
-                        document.getElementById('view-bus').classList.remove('hidden');
-                        document.getElementById('b-nama').innerText = d.nama;
-                        document.getElementById('b-tujuan').innerText = d.tujuan;
-                        document.getElementById('b-kursi').innerText = d.kursi || 'ANY';
-                        document.getElementById('b-tgl').innerText = d.tgl + " | " + d.jam;
-                        document.getElementById('b-id').innerText = bid.toUpperCase();
-                    }
-                }
-            } catch (e) { console.log(e); }
+const firebaseConfig = { 
+    apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+    authDomain: "mahika-trans.firebaseapp.com", 
+    projectId: "mahika-trans", 
+    storageBucket: "mahika-trans.firebasestorage.app", 
+    appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// --- LOGIKA SHORT URL: BISA BACA ?id= ATAU LANGSUNG /KODE ---
+const params = new URLSearchParams(window.location.search);
+let ticketID = params.get("id");
+
+if (!ticketID) {
+    // Ambil kode dari path URL (misal: /ABCDE)
+    const path = window.location.pathname.split("/").pop();
+    if (path && path !== "" && path !== "index.html" && path !== "go") {
+        ticketID = path;
+    }
+}
+// ------------------------------------------------------------
+
+function tampilkanPenyusup() {
+    document.getElementById("loading-screen").classList.add("hidden");
+    document.getElementById("penyusup-screen").classList.remove("hidden");
+    const sound = document.getElementById("audioError");
+    sound.play().catch(e => console.log("Audio play blocked"));
+}
+
+if(!ticketID) {
+    tampilkanPenyusup();
+} else {
+    try {
+        const docRef = doc(db, "bookings", ticketID);
+        const docSnap = await getDoc(docRef);
+
+        if(docSnap.exists()){
+            const data = docSnap.data();
+            
+            document.getElementById("loading-screen").classList.add("hidden");
+            document.getElementById("main-content").classList.remove("hidden");
+            
+            // Masukkan data
+            document.getElementById("kodeBooking").innerText = ticketID.toUpperCase();
+            document.getElementById("nama").innerText = data.nama || "-";
+            document.getElementById("no_hp").innerText = data.wa || "-";
+            document.getElementById("armada").innerText = data.armada || "-";
+            document.getElementById("tujuan").innerText = data.tujuan || "-";
+            document.getElementById("no_kursi").innerText = data.kursi || "-";
+            
+            // Fix Jam
+            const jamBersih = data.jam ? data.jam.replace(/WIB/gi, "").trim() : "--:--";
+            document.getElementById("jam").innerText = jamBersih + " WIB";
+            
+            // Harga (Cek field 'nominal' atau 'harga')
+            const hargaNominal = (data.nominal || data.harga) ? Number(data.nominal || data.harga).toLocaleString("id-ID") : "0";
+            document.getElementById("harga").innerText = hargaNominal;
+            
+            // Format Tanggal
+            if(data.tgl) {
+                const dateParts = data.tgl.split("-");
+                const dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                const opsi = { day: "2-digit", month: "short", year: "numeric" };
+                document.getElementById("tgl").innerText = dateObj.toLocaleDateString("id-ID", opsi);
+            }
+
+            // QR Code menggunakan URL saat ini
+            document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.href)}`;
+
+        } else {
+            tampilkanPenyusup();
         }
-
-        function terbilang(n) {
-            const b = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
-            if (n < 12) return b[n];
-            if (n < 20) return terbilang(n - 10) + " Belas";
-            if (n < 100) return terbilang(Math.floor(n / 10)) + " Puluh " + terbilang(n % 10);
-            if (n < 1000) return terbilang(Math.floor(n / 100)) + " Ratus " + terbilang(n % 100);
-            if (n < 1000000) return terbilang(Math.floor(n / 1000)) + " Ribu " + terbilang(n % 1000);
-            return "";
-        }
-        init();
-    </script>
+    } catch (e) {
+        tampilkanPenyusup();
+    }
+}
+</script>
 </body>
 </html>
