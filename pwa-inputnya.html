@@ -10,7 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="nav.css">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; --white-gading: #fffdf5; }
+        :root { 
+            --primary-blue: #065084; 
+            --bg-darker: #043a60; 
+            --gold: #FFD700; 
+            --white-gading: #fffdf5; 
+        }
         body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; color: #333; overflow-x: hidden; }
         
         /* HEADER & FORM */
@@ -23,16 +28,22 @@
         .group-field input { width: 100%; border: 1.5px solid #eee; padding: 14px; border-radius: 15px; font-family: 'Poppins'; font-size: 13px; box-sizing: border-box; }
         .row-flex { display: flex; gap: 15px; }
         .half { flex: 1; }
-        .btn-save { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 18px; font-weight: 700; cursor: pointer; }
+        .btn-save { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 18px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-save:active { transform: scale(0.95); background: var(--bg-darker); }
 
-        /* MODAL SUKSES */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 100%; max-width: 300px; border-radius: 35px; padding: 40px 25px; text-align: center; }
-        .icon-check { color: var(--primary-blue); font-size: 70px; margin-bottom: 15px; }
-        .btn-modal { display: block; width: 100%; padding: 16px; border-radius: 15px; font-size: 12px; font-weight: 700; text-decoration: none; margin-bottom: 10px; text-transform: uppercase; }
-        .btn-wa { background: #22c55e; color: white; }
+        /* MODAL BERHASIL - TEMA MAHIKA */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(4, 58, 96, 0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
+        .modal-content { 
+            background: white; width: 100%; max-width: 300px; border-radius: 40px; 
+            padding: 40px 25px; text-align: center; position: relative;
+            border-bottom: 8px solid var(--gold);
+        }
+        .icon-check { color: var(--gold); font-size: 80px; margin-bottom: 15px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1)); }
+        .btn-modal { display: block; width: 100%; padding: 16px; border-radius: 15px; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 12px; text-transform: uppercase; box-sizing: border-box; }
+        .btn-wa { background: var(--primary-blue); color: white; box-shadow: 0 5px 15px rgba(6, 80, 132, 0.3); }
+        .btn-manifes { background: #f0f4f8; color: #666; }
 
-        /* ERROR SCREEN (KODE TIDAK VALID) */
+        /* ERROR SCREEN */
         #error-screen { 
             position: fixed; inset: 0; background: var(--primary-blue); 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
@@ -41,7 +52,6 @@
         .bus-shake { font-size: 100px; color: var(--gold); animation: busGoyang 1s infinite alternate ease-in-out; margin-bottom: 20px; }
         @keyframes busGoyang { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
         
-        /* PARTIKEL */
         .particle { position: absolute; background: rgba(255,255,255,0.2); border-radius: 50%; pointer-events: none; animation: float 10s infinite linear; }
         @keyframes float { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
 
@@ -49,7 +59,6 @@
             background: var(--white-gading); color: var(--primary-blue); 
             padding: 15px 30px; border-radius: 50px; text-decoration: none; 
             font-weight: 700; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -76,24 +85,29 @@
     </div>
 </div>
 
+<div id="modalSukses" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-certificate icon-check"></i>
+        <h3 style="font-weight:700; margin:0; color: var(--primary-blue);">BERHASIL!</h3>
+        <p style="font-size:12px; color:#777; margin-bottom:25px;">Data reservasi telah tersimpan.</p>
+        
+        <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa">
+            <i class="fab fa-whatsapp"></i> KIRIM KE PENUMPANG
+        </a>
+        <a href="pwa-manifes.html" class="btn-modal btn-manifes">BUKA MANIFES</a>
+        
+        <button onclick="location.reload()" style="background:none; border:none; color:var(--primary-blue); font-size:11px; font-weight:600; cursor:pointer; margin-top:10px; text-transform:uppercase;">Input Data Baru</button>
+    </div>
+</div>
+
 <div id="error-screen">
     <div id="particles-container"></div>
     <i class="fas fa-bus bus-shake"></i>
     <h2 style="font-weight: 700; margin: 0 20px;">MAAF, KODE BOOKING TIDAK VALID</h2>
-    <p style="opacity: 0.8; margin-top: 10px;">Silahkan hubungi admin untuk konfirmasi.</p>
+    <p style="opacity: 0.8; margin-top: 10px;">Silahkan hubungi admin Mahika Trans.</p>
     <a href="https://wa.me/628123456789" class="btn-wa-error">
         <i class="fab fa-whatsapp"></i> HUBUNGI ADMIN
     </a>
-</div>
-
-<div id="modalSukses" class="modal">
-    <div class="modal-content">
-        <i class="fas fa-circle-check icon-check"></i>
-        <h3 style="font-weight:700; margin:0;">Berhasil!</h3>
-        <p style="font-size:12px; color:#999; margin-bottom:25px;">Tiket berhasil disimpan.</p>
-        <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa">Kirim WhatsApp</a>
-        <button onclick="location.reload()" style="background:none; border:none; color:#aaa; font-size:10px; cursor:pointer;">INPUT BARU</button>
-    </div>
 </div>
 
 <script type="module">
@@ -111,17 +125,16 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- LOGIKA CEK TIKET (ERROR PAGE) ---
+    // --- LOGIKA PATH URL ---
     const path = window.location.pathname.split("/").pop().toUpperCase();
-    if (path !== "" && path !== "INDEX.HTML" && path !== "PWA-INPUTNYA.HTML") {
-        const ticketID = path.replace("MT-", ""); // Bersihkan MT- untuk cek di DB
-        
+    if (path.startsWith("MT-")) {
+        const ticketID = path.replace("MT-", "");
         const docRef = doc(db, "bookings", ticketID);
         getDoc(docRef).then((snap) => {
             if (!snap.exists()) {
                 tampilkanError();
             } else {
-                // Sini logic kalau mau redirect ke halaman etiket asli
+                // Redirect ke halaman etiket utama dengan ID
                 window.location.href = "https://mahikatrans.my.id/etiket/?id=MT-" + ticketID;
             }
         });
@@ -130,19 +143,19 @@
     function tampilkanError() {
         document.getElementById('app-content').style.display = 'none';
         document.getElementById('error-screen').style.display = 'flex';
-        // Buat Partikel
         const container = document.getElementById('particles-container');
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 25; i++) {
             let p = document.createElement('div');
             p.className = 'particle';
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.width = p.style.height = Math.random() * 5 + 3 + 'px';
+            p.style.width = p.style.height = Math.random() * 4 + 2 + 'px';
+            p.style.animationDuration = (Math.random() * 5 + 5) + 's';
             p.style.animationDelay = Math.random() * 5 + 's';
             container.appendChild(p);
         }
     }
 
-    // --- LOGIKA SIMPAN BOOKING ---
+    // --- SIMPAN DATA ---
     document.getElementById('tgl_only').valueAsDate = new Date();
 
     document.getElementById('btnSimpan').onclick = async function() {
@@ -156,12 +169,11 @@
         const vTglRaw = document.getElementById('tgl_only').value;
         const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA) return alert("Nama dan WA wajib isi!");
+        if(!vNama || !vWA) return alert("Lengkapi Nama & WA!");
 
-        btn.innerText = "MENYIMPAN...";
+        btn.innerText = "SEDANG MENYIMPAN...";
         btn.disabled = true;
 
-        // Generate 6 Angka Random
         const randomID = Math.floor(100000 + Math.random() * 900000).toString();
         const bookingID = "MT-" + randomID;
 
@@ -172,7 +184,6 @@
                 createdAt: serverTimestamp()
             });
 
-            // Link rapi sesuai permintaan
             const linkEtiket = `https://go.mahikatrans.my.id/${bookingID}`;
 
             const textWA = `Halo, *${vNama}*..%0ABerikut adalah data pemesanan tiket Anda.%0A%0A` +
@@ -184,7 +195,7 @@
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
             document.getElementById('linkWA').href = `https://wa.me/${formattedWA}?text=${textWA}`;
             document.getElementById('modalSukses').style.display = 'flex';
-        } catch (e) { alert("Gagal: " + e.message); }
+        } catch (e) { alert("Error: " + e.message); }
         finally { btn.innerText = "SIMPAN & KIRIM TIKET"; btn.disabled = false; }
     }
 </script>
