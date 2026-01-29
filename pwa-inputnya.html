@@ -15,7 +15,7 @@
             --bg-darker: #043a60; 
             --gold: #FFD700; 
         }
-        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; color: #333; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 120px; color: #333; }
         
         .header-curvy { background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); padding: 50px 25px 80px 25px; border-radius: 0 0 50px 50px; text-align: center; }
         .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; text-transform: uppercase; }
@@ -64,6 +64,15 @@
     </div>
 </div>
 
+<div class="nav-bottom">
+    <a href="pwa-dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="pwa-inputnya.html" class="active"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="pwa-komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="#" id="logoutBtn" class="nav-logout"><i class="fas fa-power-off"></i>Off</a>
+</div>
+
 <div id="modalSukses" class="modal">
     <div class="modal-content">
         <i class="fas fa-certificate icon-check"></i>
@@ -78,6 +87,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
@@ -89,6 +99,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     document.getElementById('tgl_only').valueAsDate = new Date();
 
@@ -103,15 +114,16 @@
         const vTglRaw = document.getElementById('tgl_only').value;
         const vJamRaw = document.getElementById('jam_only').value;
 
-        if(!vNama || !vWA) return alert("Nama & WhatsApp wajib diisi!");
+        if(!vNama || !vWA) return alert("Nama & WA wajib diisi!");
 
         btn.innerText = "MENYIMPAN...";
         btn.disabled = true;
 
+        // Generate ID Angka Random (untuk Database)
         const randomID = Math.floor(100000 + Math.random() * 900000).toString();
+        // Label Link (untuk Penumpang)
         const bookingID = "MT-" + randomID;
 
-        // Format Tanggal Indo (DD-MM-YYYY)
         const d = new Date(vTglRaw);
         const vTglIndo = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
 
@@ -122,9 +134,9 @@
                 createdAt: serverTimestamp()
             });
 
+            // Link ke subdomain baru sesuai permintaan
             const linkEtiket = `https://go.mahikatrans.my.id/${bookingID}`;
 
-            // Teks WhatsApp Sesuai Permintaan
             const textWA = `Halo, *${vNama}*..%0A` +
                            `Berikut adalah data pemesanan tiket Anda di Mahika Trans.%0A%0A` +
                            `Tanggal: *${vTglIndo}*%0A` +
@@ -137,7 +149,7 @@
                            `----------------------------------------%0A` +
                            `${linkEtiket}%0A` +
                            `----------------------------------------%0A%0A` +
-                           `Harap datang 30 sebelum jam keberangkatan.%0A%0A` +
+                           `Harap datang 30 menit sebelum jam keberangkatan.%0A%0A` +
                            `Terimakasih.`;
 
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
@@ -146,6 +158,13 @@
         } catch (e) { alert("Error: " + e.message); }
         finally { btn.innerText = "SIMPAN & KIRIM TIKET"; btn.disabled = false; }
     }
+
+    // Fungsi Logout
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => location.href = "login.html");
+    }
 </script>
+
 </body>
 </html>
