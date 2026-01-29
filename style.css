@@ -1,0 +1,155 @@
+/* =========================
+   GLOBAL
+========================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: 
+        url('https://www.transparenttextures.com/patterns/inspiration-geometry.png'),
+        #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* =========================
+   CONTAINER UTAMA
+========================= */
+.etiket-container {
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh;
+    background: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* =========================
+   HEADER & KODE BOOKING
+========================= */
+.etiket-header {
+    background: linear-gradient(135deg, #0066AE, #005b99);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+.logo {
+    width: 180px;
+    height: auto;
+}
+
+.kode-booking {
+    position: relative;
+    top: 40px;
+    margin: auto;
+    width: 85%;
+    padding: 12px 10px;
+    background: #fff;
+    color: #004a80;
+    font-weight: 800;
+    font-size: 18px;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    z-index: 10;
+    border: 1px solid #eee;
+}
+
+/* =========================
+   INFO GRID (DIPERBAIKI)
+========================= */
+.info-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px; /* Jarak untuk kode booking */
+    padding: 10px 0;
+}
+
+.kolom { width: 48%; }
+.kolom p {
+    font-size: 11px;
+    padding: 10px;
+    background: #fdfdfd;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    border: 1px solid #f0f0f0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.kolom i { margin-right: 8px; color: #0066AE; width: 15px; text-align: center; }
+
+/* =========================
+   TAMBAHAN: LOADING & ERROR UI
+========================= */
+.hidden { display: none !important; }
+
+#loading-screen {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100vh; width: 100%; position: absolute; top: 0; left: 0; background: #fff; z-index: 100;
+}
+
+#error-screen {
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    height: 100vh; width: 100%; padding: 40px; text-align: center; box-sizing: border-box;
+    background: radial-gradient(circle, #0066AE, #003a63); color: white;
+}
+
+.bus-shake {
+    font-size: 80px; color: #FFD700; margin-bottom: 20px;
+    animation: shake 0.6s infinite alternate ease-in-out;
+}
+@keyframes shake { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+
+.btn-admin {
+    margin-top: 30px; padding: 15px 30px; border: 2px solid #FFD700;
+    color: #FFD700; text-decoration: none; border-radius: 50px;
+    font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 10px;
+}
+
+/* =========================
+   BARCODE & FOOTER
+========================= */
+.keterangan {
+    font-size: 10px; background: #f8f8f8; padding: 12px;
+    border-radius: 10px; margin-top: 10px; color: #555; line-height: 1.4;
+}
+
+.tear-line {
+    width: 100%; height: 2px; margin: 20px 0;
+    border-top: 2px dashed #ccc;
+}
+
+.barcode-container {
+    width: 100%; display: flex; justify-content: center; padding-bottom: 30px;
+}
+
+.barcode {
+    width: 100%; text-align: center; padding: 20px;
+    background: #fff; border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.barcode img { width: 140px; height: 140px; border: 5px solid #f9f9f9; border-radius: 10px; }
+
+.thanks { text-align: center; font-size: 11px; font-weight: bold; margin-top: 15px; color: #333; }
+  
