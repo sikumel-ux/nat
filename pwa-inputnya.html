@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etiket Mahika Trans</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#065084">
+    <link rel="icon" href="../m.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://mahikatrans.my.id/stylez.css">
+    <style>
+        :root { --biru-mahika: #065084; --merah-error: #e11d48; }
+        body { padding-bottom: 50px; margin: 0; background: #f4f7f9; font-family: 'Poppins', sans-serif; }
+        
+        /* Layar Loading & Error */
+        #loading-screen, #error-screen { 
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; height: 100vh; text-align: center; padding: 30px;
+        }
+
+        /* Tema Biru Mahika untuk Error Screen */
+        #error-screen { background-color: white; display: none; }
+        
+        .bus-shake { 
+            font-size: 80px; color: var(--biru-mahika); 
+            margin-bottom: 20px; animation: busMove 1.5s infinite ease-in-out; 
+        }
+
+        @keyframes busMove {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-5px) rotate(-2deg); }
+            75% { transform: translateX(5px) rotate(2deg); }
+        }
+
+        .btn-admin-wa {
+            margin-top: 25px; padding: 14px 30px; background: var(--biru-mahika); 
+            color: white; text-decoration: none; border-radius: 12px; 
+            font-weight: 600; display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 4px 15px rgba(6, 80, 132, 0.3);
+        }
+
+        .hidden { display: none !important; }
+        .qr-container img { border-radius: 10px; border: 3px solid #eee; }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--biru-mahika);"></i>
+    <p style="margin-top:15px; font-weight: 600; color: var(--biru-mahika);">Memvalidasi Tiket...</p>
+</div>
+
+<div id="error-screen">
+    <i class="fas fa-bus bus-shake"></i>
+    <h2 style="font-weight: 900; color: var(--biru-mahika); margin: 0;">KODE BOOKING SALAH</h2>
+    <p style="color: #64748b; font-size: 15px; margin-top: 10px; max-width: 300px;">
+        Tiket tidak ditemukan. Silahkan hubungi Admin <b>Mahika Trans</b> untuk bantuan.
+    </p>
+    <a href="https://wa.me/628123456789" class="btn-admin-wa">
+        <i class="fab fa-whatsapp" style="font-size: 22px;"></i> HUBUNGI ADMIN
+    </a>
+</div>
+
+<div id="main-content" class="etiket-container hidden">
+    <div class="etiket-header">
+        <div class="header">
+            <img src="../logo.png" alt="Mahika Trans" class="logo">
+        </div>
+        <p class="kode-booking" id="kodeBooking">-</p>
+    </div>
+
+    <div class="info-grid">
+        <div class="kolom">
+            <p><i class="fas fa-user"></i> <span id="nama"></span></p>
+            <p><i class="fas fa-phone"></i> <span id="no_hp"></span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada"></span></p> 
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan"></span></p>
+        </div>
+        <div class="kolom">
+            <p><i class="fas fa-chair"></i> <span id="no_kursi"></span></p>
+            <p><i class="fas fa-calendar-alt"></i> <span id="tgl"></span></p>
+            <p><i class="fas fa-clock"></i> <span id="jam"></span></p>
+            <p><i class="fa-solid fa-rupiah-sign"></i> <span id="harga"></span></p>
+        </div>
+    </div>
+
+    <div class="tear-line"></div>
+
+    <div class="qr-container" style="text-align: center; padding: 20px;">
+        <img id="qrImg" width="150" height="150" alt="QR Code">
+        <p class="thanks" style="font-size: 11px; margin-top: 15px; color: #777;">Terimakasih telah memilih Mahika Trans sebagai mitra perjalanan Anda.</p>
+    </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = { 
+    apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+    authDomain: "mahika-trans.firebaseapp.com", 
+    projectId: "mahika-trans", 
+    storageBucket: "mahika-trans.firebasestorage.app", 
+    appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// LOGIKA DETEKSI PATH /MT-123456
+function getTicketID() {
+    const path = window.location.pathname.split("/").pop();
+    // Jika ada di path (misal: /MT-667788)
+    if (path && path.startsWith("MT-")) return path.toUpperCase();
+    
+    // Fallback jika masih pakai ?id=MT-xxxx
+    const params = new URLSearchParams(window.location.search);
+    const idParam = params.get("id");
+    if (idParam && idParam.startsWith("MT-")) return idParam.toUpperCase();
+    
+    return null;
+}
+
+const ticketID = getTicketID();
+
+function tampilkanError() {
+    document.getElementById("loading-screen").classList.add("hidden");
+    document.getElementById("error-screen").style.display = "flex";
+}
+
+async function loadData() {
+    if (!ticketID) {
+        tampilkanError();
+        return;
+    }
+
+    try {
+        const docRef = doc(db, "bookings", ticketID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            
+            document.getElementById("loading-screen").classList.add("hidden");
+            document.getElementById("main-content").classList.remove("hidden");
+            
+            // Isi Data
+            document.getElementById("kodeBooking").innerText = ticketID;
+            document.getElementById("nama").innerText = data.nama || "-";
+            document.getElementById("no_hp").innerText = data.wa || "-";
+            document.getElementById("armada").innerText = data.armada || "-";
+            document.getElementById("tujuan").innerText = data.tujuan || "-";
+            document.getElementById("no_kursi").innerText = data.kursi || "-";
+            document.getElementById("jam").innerText = (data.jam || "--:--").replace(/WIB/gi, "") + " WIB";
+            
+            const hargaVal = data.nominal || data.harga || 0;
+            document.getElementById("harga").innerText = Number(hargaVal).toLocaleString("id-ID");
+
+            if (data.tgl) {
+                const [y, m, d] = data.tgl.split("-");
+                const tglObj = new Date(y, m - 1, d);
+                document.getElementById("tgl").innerText = tglObj.toLocaleDateString("id-ID", { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+
+            // QR Code menunjuk ke URL lengkap
+            document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.href)}`;
+            
+        } else {
+            tampilkanError();
+        }
+    } catch (e) {
+        console.error(e);
+        tampilkanError();
+    }
+}
+
+loadData();
+</script>
+</body>
+</html>
