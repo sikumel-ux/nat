@@ -6,8 +6,6 @@
     <title>Input Reservasi | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="nav.css">
-
     <style>
         :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; --white: #ffffff; }
         body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; color: #333; }
@@ -48,13 +46,19 @@
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
             z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); 
         }
-        .modal-content { background: white; width: 100%; max-width: 320px; border-radius: 35px; padding: 40px 25px; text-align: center; }
+        .modal-content { 
+            background: white; width: 100%; max-width: 320px; border-radius: 35px; 
+            padding: 40px 25px; text-align: center; border: 2px solid var(--gold);
+        }
         .icon-check { color: var(--primary-blue); font-size: 60px; margin-bottom: 15px; display: block; }
 
         .btn-modal { display: block; width: 100%; padding: 16px; border-radius: 15px; font-size: 12px; font-weight: 700; text-decoration: none; margin-bottom: 10px; text-transform: uppercase; }
         .btn-wa { background: #22c55e; color: white; }
         .btn-manifes { background: var(--bg-darker); color: white; }
         .btn-reload { background: none; border: none; color: #aaa; font-size: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        
+        /* Nav Bottom Placeholder (asumsi CSS nav.css sudah ada) */
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: white; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -112,19 +116,10 @@
     </div>
 </div>
 
-<div class="nav-bottom">
-    <a href="pwa-dash.html"><i class="fas fa-house"></i>Home</a>
-    <a href="pwa-inputnya.html" class="active"><i class="fas fa-plus-circle"></i>Booking</a>
-    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
-    <a href="pwa-komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
-    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
-    <a href="#" id="logoutBtn" class="nav-logout"><i class="fas fa-power-off"></i>Off</a>
-</div>
-
 <div id="modalSukses" class="modal">
     <div class="modal-content">
         <i class="fas fa-circle-check icon-check"></i>
-        <h3 style="font-weight: 700; font-size: 20px; margin: 0;">Berhasil!</h3>
+        <h3 style="font-weight: 700; font-size: 20px; margin: 0; color: var(--primary-blue);">BERHASIL!</h3>
         <p style="font-size: 13px; color: #999; margin-bottom: 25px;">Data tiket sudah masuk sistem.</p>
         
         <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa"><i class="fab fa-whatsapp"></i> Kirim WhatsApp</a>
@@ -136,7 +131,6 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
@@ -148,8 +142,8 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
 
+    // Set tanggal hari ini otomatis
     document.getElementById('tgl_only').valueAsDate = new Date();
 
     document.getElementById('btnSimpan').onclick = async function() {
@@ -165,29 +159,36 @@
 
         if(!vNama || !vWA || !vTgl) return alert("Data Nama, WA, & Tanggal wajib diisi!");
 
+        // Bersihkan input jam
         const vJam = vJamRaw.toUpperCase().replace("WIB", "").trim();
 
-        // LOGIKA SHORT URL: Buat ID Dokumen Pendek (5 Karakter Random)
-        const customID = Math.random().toString(36).substring(2, 7).toUpperCase();
-        const vBarcode = "MT-" + Math.floor(100000 + Math.random() * 900000);
+        // GENERATE KODE: MT- + 6 Angka Random
+        const randomNum = Math.floor(100000 + Math.random() * 900000);
+        const ticketID = "MT-" + randomNum;
 
         btn.innerText = "MENYIMPAN...";
         btn.disabled = true;
 
         try {
-            // Simpan ke database menggunakan ID Pendek
-            await setDoc(doc(db, "bookings", customID), {
-                nama: vNama, wa: vWA, kursi: String(vKursi), armada: vArmada,
-                tujuan: vTujuan, nominal: vHarga, tgl: vTgl, jam: vJam + " WIB",
-                barcode: vBarcode,
+            // Simpan ke Firestore
+            await setDoc(doc(db, "bookings", ticketID), {
+                nama: vNama, 
+                wa: vWA, 
+                kursi: String(vKursi), 
+                armada: vArmada,
+                tujuan: vTujuan, 
+                nominal: vHarga, 
+                tgl: vTgl, 
+                jam: vJam + " WIB",
                 createdAt: serverTimestamp()
             });
 
+            // Format tanggal untuk pesan WA
             const opsi = { day: 'numeric', month: 'long', year: 'numeric' };
             const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
             
-            // LINK SHORT URL OTOMATIS (Bisa dibuka di domain.com/KODE)
-            const linkEtiket = "https://go.mahikatrans.my.id/" + customID;
+            // Link bersih sesuai permintaan
+            const linkEtiket = "https://go.mahikatrans.my.id/" + ticketID;
 
             const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
                            `Berikut adalah data pemesanan tiket Anda di *MAHIKA TRANS*.%0A%0A` +
@@ -200,7 +201,7 @@
                            `---------------------------%0A` +
                            `Etiket Anda:%0A${linkEtiket}%0A` +
                            `---------------------------%0A%0A` +
-                           `Harap datang maksimal 30 menit sebelum jam pemberangkatan.%0A%0A` +
+                           `Harap datang maksimal 30 menit sebelum jadwal pemberangkatan.%0A%0A` +
                            `Terimakasih.`;
 
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
@@ -215,11 +216,6 @@
             btn.innerText = "SIMPAN & KIRIM TIKET";
             btn.disabled = false;
         }
-    }
-
-    document.getElementById('logoutBtn').onclick = (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => location.href = "login.html");
     }
 </script>
 </body>
