@@ -68,7 +68,7 @@
     <div class="card-input">
         <div class="group-field">
             <label>Nama Penumpang</label>
-            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+            <input type="text" id="nama" placeholder="Nama">
         </div>
 
         <div class="row-flex">
@@ -78,22 +78,22 @@
             </div>
             <div class="group-field half">
                 <label>Nomor Kursi</label>
-                <input type="text" id="kursi" placeholder="1A">
+                <input type="text" id="kursi" placeholder="1">
             </div>
         </div>
 
         <div class="group-field">
-            <label>Armada / Bus</label>
+            <label>Armada</label>
             <input type="text" id="armada" placeholder="Mahika Jaya">
         </div>
 
         <div class="group-field">
-            <label>Kota Tujuan</label>
-            <input type="text" id="tujuan" placeholder="Surabaya">
+            <label>Tujuan</label>
+            <input type="text" id="tujuan" placeholder="Bubulak">
         </div>
 
         <div class="group-field">
-            <label>Harga Tiket</label>
+            <label>Harga</label>
             <input type="number" id="harga" placeholder="250000">
         </div>
 
@@ -113,10 +113,10 @@
 </div>
 
 <div class="nav-bottom">
-    <a href="dash.html"><i class="fas fa-house"></i>Home</a>
-    <a href="inputnya.html" class="active"><i class="fas fa-plus-circle"></i>Booking</a>
-    <a href="manifes.html"><i class="fas fa-list"></i>Manifes</a>
-    <a href="komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="pwa-dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="pwa-inputnya.html" class="active"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="pwa-komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
     <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
     <a href="#" id="logoutBtn" class="nav-logout"><i class="fas fa-power-off"></i>Off</a>
 </div>
@@ -128,7 +128,7 @@
         <p style="font-size: 13px; color: #999; margin-bottom: 25px;">Data tiket sudah masuk sistem.</p>
         
         <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa"><i class="fab fa-whatsapp"></i> Kirim WhatsApp</a>
-        <a href="manifes.html" class="btn-modal btn-manifes">Buka Manifes</a>
+        <a href="pwa-manifes.html" class="btn-modal btn-manifes">Buka Manifes</a>
         <button onclick="location.reload()" class="btn-reload">INPUT DATA BARU</button>
     </div>
 </div>
@@ -169,7 +169,7 @@
 
         // LOGIKA SHORT URL: Buat ID Dokumen Pendek (5 Karakter Random)
         const customID = Math.random().toString(36).substring(2, 7).toUpperCase();
-        const vBarcode = "MT-" + Math.floor(1000 + Math.random() * 9000);
+        const vBarcode = "MT-" + Math.floor(100000 + Math.random() * 900000);
 
         btn.innerText = "MENYIMPAN...";
         btn.disabled = true;
@@ -187,7 +187,7 @@
             const tglFormal = new Date(vTgl).toLocaleDateString('id-ID', opsi);
             
             // LINK SHORT URL OTOMATIS (Bisa dibuka di domain.com/KODE)
-            const linkEtiket = "https://go.mahikatrans.com/" + customID;
+            const linkEtiket = "https://go.mahikatrans.my.id/" + customID;
 
             const textWA = `Halo, *${vNama.toUpperCase()}*..%0A` +
                            `Berikut adalah data pemesanan tiket Anda di *MAHIKA TRANS*.%0A%0A` +
