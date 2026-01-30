@@ -1,0 +1,190 @@
+/* =========================
+   GLOBAL
+========================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: 
+        url('https://www.transparenttextures.com/patterns/inspiration-geometry.png'),
+        #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.etiket-container {
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh;
+    background: #fff;
+    /* Atas di-set 0 supaya header bisa mentok */
+    padding: 0 20px 20px 20px; 
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    overflow-x: hidden; /* Mencegah scroll horizontal akibat margin negatif */
+}
+
+/* =========================
+   HEADER (MENTOK ATAS & SAMPING)
+========================= */
+.etiket-header {
+    background: linear-gradient(135deg, #0066AE, #005b99);
+    color: #fff;
+    padding: 40px 20px 50px 20px; /* Padding dalam header */
+    text-align: center;
+    
+    /* Trik Margin Negatif agar mentok ke pinggir container */
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: 0;
+    
+    /* Curve hanya di bagian bawah */
+    border-radius: 0 0 30px 30px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.header { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 50px; 
+}
+
+.logo { 
+    width: 75%; 
+    height: auto; 
+}
+
+/* =========================
+   KODE BOOKING (MELAYANG)
+========================= */
+.kode-booking {
+    position: absolute; /* Pakai absolute supaya posisi kontrolnya lebih presisi */
+    bottom: -25px; /* Setengah keluar dari header biru */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%;
+    padding: 12px 20px;
+    background: #fff;
+    color: #004a80;
+    font-weight: 900;
+    font-size: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    z-index: 10;
+    border: 1px solid #eee;
+}
+
+/* =========================
+   INFO GRID
+========================= */
+.info-grid { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-top: 50px; /* Jarak setelah kode booking melayang */
+    flex-grow: 0; 
+}
+
+.kolom { 
+    width: 48%; 
+}
+
+.kolom p {
+    font-size: 13px; 
+    padding: 10px; 
+    background: #fff; 
+    border-radius: 8px; 
+    margin-bottom: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
+    display: flex; 
+    align-items: center; 
+    border: 1px solid #f0f0f0;
+}
+
+.kolom i { 
+    margin-right: 10px; 
+    color: #0066AE; 
+    width: 18px; 
+    text-align: center; 
+    font-size: 14px;
+}
+
+/* =========================
+   TEAR LINE & QR
+========================= */
+.tear-line { 
+    width: 100%; 
+    height: 10px; 
+    margin: 15px 0; 
+    background: repeating-linear-gradient(90deg, transparent, transparent 8px, #ccc 8px, #ccc 10px); 
+}
+
+.barcode-container { 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    margin-top: 5px; 
+}
+
+.barcode-img { 
+    width: 150px; 
+    height: 150px; 
+    padding: 12px; 
+    background: #fff; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #eee;
+}
+
+.thanks { 
+    text-align: center; 
+    font-size: 11px; 
+    font-weight: 600; 
+    margin-top: 15px; 
+    color: #333; 
+    padding: 0 10px;
+}
+
+/* =========================
+   KETERANGAN & FOOTER
+========================= */
+.keterangan { 
+    font-size: 11px; 
+    background: #f9f9f9; 
+    padding: 15px; 
+    border-radius: 10px; 
+    margin-top: 15px; 
+    border-left: 4px solid #0066AE;
+    color: #555;
+}
+
+.footer-system { 
+    margin-top: auto; 
+    padding: 25px 0 15px 0; 
+    text-align: center; 
+}
+
+/* =========================
+   LOADING & ERROR SCREEN
+========================= */
+#loading-screen { position: fixed; inset: 0; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; color: #0066AE; }
+#penyusup-screen { position: fixed; inset: 0; background: #0066AE; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #fffdf5; z-index: 3000; overflow: hidden; padding: 20px; }
+.bus-goyang { font-size: 80px; color: #FFD700; animation: goyang 0.8s infinite alternate ease-in-out; margin-bottom: 20px; }
+
+@keyframes goyang { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+
+.particle { position: absolute; background: rgba(255,255,255,0.15); border-radius: 50%; pointer-events: none; animation: fly linear infinite; }
+@keyframes fly { from { transform: translateY(110vh); } to { transform: translateY(-10vh); } }
+
+.btn-error { width: 100%; max-width: 250px; padding: 14px; border-radius: 50px; text-decoration: none; font-weight: 700; margin-top: 10px; display: block; }
+.btn-wa { background: #FFD700; color: #0066AE; }
+.btn-web { background: transparent; color: white; border: 1.5px solid white; }
+
+.hidden { display: none !important; }
