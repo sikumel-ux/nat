@@ -36,6 +36,7 @@
             width: 50px; height: 50px; background: #f1f5f9; color: var(--primary-blue); 
             border-radius: 15px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-right: 15px; 
+            cursor: pointer;
         }
         .tgl-box b { font-size: 16px; line-height: 1; }
 
@@ -45,17 +46,16 @@
         
         .seat-badge { background: var(--bg-darker); color: var(--gold); padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 800; margin-right: 10px; }
 
-        /* Tombol Aksi */
         .actions { display: flex; align-items: center; gap: 12px; }
         
         .btn-share { 
             color: var(--primary-blue); font-size: 18px; text-decoration: none; 
-            transition: 0.3s; opacity: 0.8;
+            transition: 0.3s; opacity: 0.6;
         }
         .btn-share:hover { opacity: 1; transform: scale(1.1); }
 
         .btn-delete {
-            color: #ff4d4d; padding: 5px; font-size: 17px; opacity: 0.3; transition: 0.3s;
+            color: #ff4d4d; padding: 5px; font-size: 17px; opacity: 0.2; transition: 0.3s;
             background: none; border: none; cursor: pointer;
         }
         .btn-delete:hover { opacity: 1; }
@@ -79,7 +79,7 @@
 </div>
 
 <div class="manifes-container">
-    <div id="loading" class="text-center p-10 text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><br>Sinkronisasi Firebase...</div>
+    <div id="loading" class="text-center p-10 text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><br>Sinkronisasi...</div>
     <div id="listManifes"></div>
 </div>
 
@@ -111,13 +111,12 @@
     const auth = getAuth(app);
 
     window.hapusData = async function(id, nama) {
-        if (confirm(`Yakin mau hapus data manifest atas nama: ${nama}?`)) {
+        if (confirm(`Hapus data ${nama}?`)) {
             try {
                 await deleteDoc(doc(db, "bookings", id));
-                alert("Data berhasil dihapus!");
                 location.reload(); 
             } catch (e) {
-                alert("Gagal hapus: " + e.message);
+                alert("Gagal: " + e.message);
             }
         }
     }
@@ -139,7 +138,7 @@
             listDiv.innerHTML = "";
 
             if (snap.empty) {
-                listDiv.innerHTML = "<div class='text-center text-gray-400 mt-10'>Belum ada jadwal keberangkatan.</div>";
+                listDiv.innerHTML = "<div class='text-center text-gray-400 mt-10'>Tidak ada jadwal.</div>";
                 return;
             }
 
@@ -149,21 +148,24 @@
                 const tglRapi = dObj.getDate();
                 const blnRapi = dObj.toLocaleDateString('id-ID', { month: 'short' });
 
-                // Link ke go.mahikatrans sesuai instruksi
-                const shareUrl = `https://go.mahikatrans.com/?id=${documentDoc.id}`;
-                const waMessage = encodeURIComponent(`Halo ${d.nama},\nBerikut adalah link E-Tiket keberangkatan Mahika Trans Anda:\n\n${shareUrl}\n\nTerima kasih.`);
+                // Link Utama ke domain go.mahikatrans
+                const externalLink = `https://go.mahikatrans.com/?id=${documentDoc.id}`;
+                const waMessage = encodeURIComponent(`Halo ${d.nama},\nBerikut adalah link E-Tiket Mahika Trans Anda:\n\n${externalLink}`);
 
                 listDiv.innerHTML += `
                     <div class="card-manifes">
-                        <div class="tgl-box" onclick="window.location.href='etiket.html?id=${documentDoc.id}'">
+                        <div class="tgl-box" onclick="window.open('${externalLink}', '_blank')">
                             <b>${tglRapi}</b>${blnRapi}
                         </div>
-                        <div class="info-pax" onclick="window.location.href='etiket.html?id=${documentDoc.id}'">
+                        
+                        <div class="info-pax" onclick="window.open('${externalLink}', '_blank')">
                             <b>${d.nama}</b>
                             <span>${d.jam} • ${d.armada}</span><br>
                             <span class="text-blue-500 font-bold"><i class="fas fa-map-marker-alt mr-1"></i>${d.tujuan}</span>
                         </div>
+
                         <div class="seat-badge">${d.kursi}</div>
+
                         <div class="actions">
                             <a href="https://wa.me/?text=${waMessage}" target="_blank" class="btn-share">
                                 <i class="fab fa-whatsapp"></i>
@@ -178,22 +180,13 @@
 
         } catch (e) {
             console.error(e);
-            listDiv.innerHTML = "<div class='text-center text-red-500 mt-10'>Gagal load data. Pastikan Index Firestore aktif.</div>";
+            listDiv.innerHTML = "<div class='text-center text-red-500 mt-10'>Gagal sinkron data.</div>";
         }
     }
 
     document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => location.href = "login.html");
     loadManifes();
 </script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('PWA Ready!', reg))
-        .catch(err => console.log('PWA Failed', err));
-    });
-  }
-</script>
-    
 </body>
-</html>
+    </html>
+    
