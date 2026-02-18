@@ -6,6 +6,7 @@
 body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', sans-serif; }
 .bg-deep { background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%); }
 
+/* Header Curve */
 .header-solid {
     background: #053a6f;
     border-radius: 0 0 50px 50px;
@@ -17,6 +18,7 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
 .glass-search { background: rgba(5, 58, 111, 0.95); backdrop-filter: blur(20px); pointer-events: auto; }
 .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); }
 
+/* Profile Panel Solid */
 .panel-deep {
     background: #053a6f !important;
     height: 85vh;
@@ -24,6 +26,27 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
     border-radius: 40px 40px 0 0;
 }
 
+/* Animations */
+.marquee-content {
+    display: flex; white-space: nowrap; width: max-content;
+    animation: marquee 30s linear infinite;
+}
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.gallery-track {
+    width: max-content;
+    animation: autoSlide 35s linear infinite;
+}
+.gallery-track:hover { animation-play-state: paused; }
+@keyframes autoSlide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-200px * 8 - 1rem * 8)); }
+}
+
+/* Speech Bubble */
 .speech-bubble::after {
     content: ''; position: absolute; bottom: -10px; left: 30px;
     width: 0; height: 0;
@@ -31,10 +54,8 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
     border-top: 10px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Utilities */
 .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 15px; text-align: center; }
-.scroll-hide::-webkit-scrollbar { display: none; }
-.scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
 .info-fade { display: none; }
 .info-fade.active { display: block; animation: fadeIn 0.5s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
