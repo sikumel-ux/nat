@@ -11,6 +11,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Toggle Profile
 window.toggleProfile = function() {
     const panel = document.getElementById('company-profile');
     const isHidden = panel.classList.contains('translate-y-full');
@@ -19,6 +20,7 @@ window.toggleProfile = function() {
     document.body.style.overflow = isHidden ? 'hidden' : 'auto';
 };
 
+// Search System
 document.getElementById('btnSearch').onclick = async function() {
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const busList = document.getElementById('bus-list');
@@ -28,7 +30,7 @@ document.getElementById('btnSearch').onclick = async function() {
     if(!keyword) return;
     welcomeCard.classList.add('hidden');
     resultContainer.classList.remove('hidden');
-    busList.innerHTML = `<p class="text-center text-yellow-400 animate-pulse text-[10px] py-10 uppercase">Mencari Rute...</p>`;
+    busList.innerHTML = `<p class="text-center text-yellow-400 animate-pulse text-[10px] py-10 uppercase tracking-widest">Mencari Rute...</p>`;
 
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
@@ -53,6 +55,7 @@ document.getElementById('btnSearch').onclick = async function() {
     } catch (e) { console.error(e); }
 };
 
+// Info Loop
 let currentInfo = 0;
 const infoItems = document.querySelectorAll('.info-fade');
 setInterval(() => {
@@ -62,4 +65,3 @@ setInterval(() => {
         infoItems[currentInfo].classList.add('active');
     }
 }, 4000);
-                     
