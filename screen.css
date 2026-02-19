@@ -5,33 +5,23 @@
 
 body { margin: 0; padding: 0; }
 
-/* KUNCI LENGKUNGAN PINTEREST */
+/* INI KUNCI LENGKUNGAN CEKUNG (CONCAVE) PINTEREST */
 .main-poster {
-    border-bottom-left-radius: 100px; /* Melengkungkan background biru */
-    position: relative;
+    /* Membuat bentuk background biru melengkung ke dalam di pojok kiri bawah */
+    clip-path: path("M0,0 L450,0 L450,1000 L0,1000 L0,1000 C0,1000 0,850 0,850 C100,850 100,750 0,750 L0,0 Z");
+    /* Fallback sederhana jika path terlalu kompleks untuk browser tertentu */
+    mask-image: radial-gradient(circle 100px at 0% 100%, transparent 99%, black 100%);
+    -webkit-mask-image: radial-gradient(circle 110px at 0% 80%, transparent 99%, black 100%);
 }
 
-/* Trik Negative Space: Biar lengkungannya ga kelihatan 'numpuk' tapi menyatu */
-.main-poster::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; /* nutup gap */
-    left: 0;
-    width: 100px;
-    height: 100px;
-    background: transparent;
-    /* Membuat lengkungan 'inverted' kalau diperlukan, 
-       tapi dengan border-bottom-left-radius di atas sudah cukup 
-       selama container di bawahnya berwarna putih. */
-}
-
-#search-modal { background: rgba(5, 58, 111, 0.98); }
-
-/* List Item */
+/* Hasil Search minimalis */
 .bus-item {
     border-left: 3px solid var(--gold);
     padding-left: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 .bus-item h3 { color: white; font-weight: 800; font-size: 14px; text-transform: uppercase; margin: 0; }
-.bus-item p { color: var(--gold); font-size: 11px; }
+.bus-item p { color: var(--gold); font-size: 11px; margin-top: 2px; }
+
+.animate-fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
