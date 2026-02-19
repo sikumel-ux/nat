@@ -11,6 +11,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Toggle Profile
 window.toggleProfile = function() {
     const panel = document.getElementById('company-profile');
     const isHidden = panel.classList.contains('translate-y-full');
@@ -19,6 +20,7 @@ window.toggleProfile = function() {
     document.body.style.overflow = isHidden ? 'hidden' : 'auto';
 };
 
+// Search
 document.getElementById('btnSearch').onclick = async function() {
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const busList = document.getElementById('bus-list');
@@ -44,17 +46,28 @@ document.getElementById('btnSearch').onclick = async function() {
     } catch (e) { console.error(e); }
 };
 
-// Interval Logics
-setInterval(() => {
-    const items = document.querySelectorAll('.testi-item');
-    let activeIdx = Array.from(items).findIndex(i => i.classList.contains('active'));
-    items[activeIdx].classList.remove('active');
-    items[(activeIdx + 1) % items.length].classList.add('active');
-}, 5000);
+// Logika Testimoni & Promo (STABIL)
+let indexTesti = 0;
+const listTesti = document.querySelectorAll('.testi-item');
 
-setInterval(() => {
-    const promos = document.querySelectorAll('.info-fade');
-    let activeIdx = Array.from(promos).findIndex(p => p.classList.contains('active'));
-    promos[activeIdx].classList.remove('active');
-    promos[(activeIdx + 1) % promos.length].classList.add('active');
-}, 4000);
+function rotateTestimoni() {
+    if (listTesti.length > 0) {
+        listTesti.forEach(t => t.classList.remove('active'));
+        indexTesti = (indexTesti + 1) % listTesti.length;
+        listTesti[indexTesti].classList.add('active');
+    }
+}
+setInterval(rotateTestimoni, 5000);
+
+let indexPromo = 0;
+const listPromo = document.querySelectorAll('.info-fade');
+
+function rotatePromo() {
+    if (listPromo.length > 0) {
+        listPromo.forEach(p => p.classList.remove('active'));
+        indexPromo = (indexPromo + 1) % listPromo.length;
+        listPromo[indexPromo].classList.add('active');
+    }
+}
+setInterval(rotatePromo, 4000);
+            
