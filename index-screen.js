@@ -11,48 +11,36 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Toggle Profile
 window.toggleProfile = function() {
-    const panel = document.getElementById('company-profile');
-    const isHidden = panel.classList.contains('translate-y-full');
-    panel.classList.toggle('translate-y-full', !isHidden);
-    panel.classList.toggle('translate-y-0', isHidden);
+    const p = document.getElementById('company-profile');
+    p.classList.toggle('translate-y-full');
 };
 
-// Fungsi Cari
 document.getElementById('btnSearch').onclick = async function() {
-    const keyword = document.getElementById('search-input').value.trim().toLowerCase();
-    const busList = document.getElementById('bus-list');
-    
-    if(!keyword) return;
+    const key = document.getElementById('search-input').value.trim().toLowerCase();
+    const list = document.getElementById('bus-list');
+    if(!key) return;
 
-    busList.innerHTML = `<p class="text-center text-white/50 py-10 text-[10px]">MENCARI DATA...</p>`;
+    list.innerHTML = `<p class="text-center text-gray-400 py-10 text-xs">Mencari rute...</p>`;
 
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
         let html = "";
-        
         snap.forEach(doc => {
             const d = doc.data();
-            if(d.tujuan?.toLowerCase().includes(keyword)) {
-                // Tampilan Persis Gambar: NAMA • TUJUAN | JAM
+            if(d.tujuan?.toLowerCase().includes(key)) {
                 html += `
-                <div class="bus-item animate-in fade-in duration-500">
+                <div class="bus-item animate-in">
                     <div class="flex flex-col">
-                        <h3 class="text-[10px] font-bold uppercase tracking-wider text-white/90">
+                        <span class="text-[10px] font-bold opacity-80 uppercase tracking-tighter">
                             ${d.armada} • TUJUAN ${d.tujuan}
-                        </h3>
-                        <p class="text-sm font-semibold text-white/60 mt-1">${d.jam} WIB</p>
+                        </span>
+                        <span class="text-sm font-bold">${d.jam} WIB</span>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-white/30"></i>
+                    <i class="fa-solid fa-chevron-right opacity-30 text-xs"></i>
                 </div>`;
             }
         });
-
-        busList.innerHTML = html || `<p class="text-center py-10 text-white/20 text-xs">RUTE TIDAK DITEMUKAN</p>`;
-    } catch (e) {
-        console.error(e);
-        busList.innerHTML = `<p class="text-center py-10 text-red-400 text-xs">Gagal memuat data.</p>`;
-    }
+        list.innerHTML = html || `<p class="text-center py-10 text-gray-400 text-xs">Rute tidak ditemukan.</p>`;
+    } catch (e) { console.error(e); }
 };
-  
