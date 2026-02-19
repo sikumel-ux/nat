@@ -9,54 +9,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="screen.css">
 </head>
-<body class="bg-gray-100 font-['Plus_Jakarta_Sans']">
+<body class="bg-gray-300">
 
-    <div class="max-w-md mx-auto bg-[#053a6f] h-screen relative shadow-2xl overflow-hidden flex flex-col">
+    <div class="max-w-md mx-auto h-screen relative shadow-2xl overflow-hidden flex flex-col bg-white">
         
-        <main class="flex-1 px-10 pt-24 relative z-10 text-white">
+        <div class="relative bg-[#053a6f] flex-1 px-10 pt-24 pb-40 main-poster">
             <i class="fa-solid fa-quote-left text-5xl mb-6 text-white/80"></i>
             
-            <h1 class="text-3xl font-bold leading-tight mb-2">
-                Selamat Datang di <br> 
-                <span class="text-yellow-400">Mahika Trans</span>
-            </h1>
-            <p class="text-sm opacity-70 leading-relaxed max-w-[240px]">
-                Solusi perjalanan aman dan nyaman. Pilih rute favoritmu dan berangkat sekarang.
-            </p>
+            <div class="text-white">
+                <h1 class="text-3xl font-bold leading-tight mb-2">
+                    Selamat Datang di <br> 
+                    <span class="text-yellow-400">Mahika Trans</span>
+                </h1>
+                <p class="text-sm opacity-70 leading-relaxed max-w-[240px]">
+                    Solusi perjalanan aman dan nyaman. Pilih rute favoritmu dan berangkat sekarang.
+                </p>
+            </div>
 
             <div class="w-12 h-1 bg-white/20 my-8"></div>
 
-            <div class="absolute bottom-44 right-10 text-right">
-                <button onclick="openSearch()" class="group text-right">
+            <div class="absolute bottom-20 right-10 text-right">
+                <button onclick="openSearch()" class="group">
                     <p class="text-[10px] font-extrabold tracking-widest uppercase text-yellow-400 group-hover:text-white transition-all">Cari Jadwal</p>
-                    <p class="text-[8px] opacity-40 uppercase tracking-tighter">by Mahika Trans</p>
+                    <p class="text-[8px] text-white opacity-40 uppercase tracking-tighter">by Mahika Trans</p>
                 </button>
             </div>
-        </main>
+        </div>
 
-        <div class="white-curve"></div>
-
-        <nav class="bg-white/95 backdrop-blur-md mx-5 mb-5 rounded-[25px] p-3 shadow-xl flex justify-between items-center relative z-20">
-            <div class="bg-gray-100 px-5 py-2 rounded-xl flex items-center justify-center">
-                <span class="text-[#053a6f] font-black text-sm tracking-tighter uppercase">Mahika</span>
-            </div>
-
-            <div class="flex items-center gap-5 pr-2">
-                <i class="fa-solid fa-mobile-screen-button text-gray-300 text-lg"></i>
-                <i class="fa-solid fa-comment-dots text-gray-300 text-lg"></i>
-                <i class="fa-solid fa-user text-gray-300 text-lg cursor-pointer" onclick="toggleProfile()"></i>
-                <div class="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-[#053a6f] shadow-lg shadow-yellow-500/30">
-                    <i class="fa-solid fa-play ml-1"></i>
+        <div class="bg-white h-32 flex items-end pb-6 px-5">
+            <nav class="bg-gray-100 w-full rounded-[25px] p-3 shadow-sm flex justify-between items-center">
+                <div class="bg-white px-5 py-2 rounded-xl flex items-center justify-center shadow-sm">
+                    <span class="text-[#053a6f] font-black text-xs tracking-tighter uppercase">Mahika</span>
                 </div>
-            </div>
-        </nav>
 
-        <div id="search-modal" class="fixed inset-0 bg-[#053a6f]/fb z-[100] hidden flex-col p-10 animate-fade-in">
-            <button onclick="closeSearch()" class="absolute top-10 right-10 text-white text-2xl"><i class="fa-solid fa-xmark"></i></button>
-            <h2 class="text-yellow-400 font-black text-2xl mb-6 uppercase tracking-tighter">Hasil Cari</h2>
+                <div class="flex items-center gap-5 pr-2">
+                    <i class="fa-solid fa-mobile-screen-button text-gray-400 text-lg"></i>
+                    <i class="fa-solid fa-comment-dots text-gray-400 text-lg"></i>
+                    <i class="fa-solid fa-user text-gray-400 text-lg cursor-pointer"></i>
+                    <div class="w-9 h-9 bg-yellow-400 rounded-full flex items-center justify-center text-[#053a6f]">
+                        <i class="fa-solid fa-play text-xs ml-0.5"></i>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div id="search-modal" class="fixed inset-0 bg-[#053a6f]/fb z-[100] hidden flex-col p-10 backdrop-blur-md">
+            <button onclick="closeSearch()" class="self-end text-white text-2xl mb-10"><i class="fa-solid fa-xmark"></i></button>
             <div class="flex bg-white rounded-xl overflow-hidden mb-8 shadow-2xl">
-                <input type="text" id="search-input" placeholder="Mau ke mana?" class="w-full p-4 outline-none text-gray-800 font-bold text-sm">
-                <button id="btnSearch" class="bg-yellow-400 px-6 text-[#053a6f] font-black uppercase text-[10px]">CARI</button>
+                <input type="text" id="search-input" placeholder="Tujuan?" class="w-full p-4 outline-none text-gray-800 font-bold">
+                <button id="btnSearch" class="bg-yellow-400 px-6 text-[#053a6f] font-black uppercase text-[10px]">GO</button>
             </div>
             <div id="bus-list" class="space-y-4 overflow-y-auto"></div>
         </div>
@@ -64,4 +65,5 @@
 
     <script type="module" src="screen.js"></script>
 </body>
-</html>
+                </html>
+                
