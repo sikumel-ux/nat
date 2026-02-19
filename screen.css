@@ -3,41 +3,43 @@
     --gold: #facc15;
 }
 
-body { font-family: 'Plus Jakarta Sans', sans-serif; }
+body { margin: 0; padding: 0; }
 
-/* Background Biru Solid sesuai permintaan ganti orange */
+/* Background utama Biru */
 .bg-deep-blue { background-color: var(--deep-blue); }
 
-/* Lengkungan Putih di Kiri Bawah (Identik Gambar) */
+/* LENGKUNGAN IDENTIK PINTEREST */
 .white-curve {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 180px;
+    height: 180px; /* Tinggi area putih di bawah */
     background: white;
-    border-top-left-radius: 130px; /* Radius tajam di kiri bawah */
+    border-top-left-radius: 125px; /* Ini kunci lengkungan kiri bawahnya */
     z-index: 5;
 }
 
-/* Panel Profile */
-.panel-deep { 
-    background: var(--deep-blue); 
-    border-radius: 40px 40px 0 0; 
-    box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+/* Modal Search Overlay */
+#search-modal {
+    background: rgba(5, 58, 111, 0.98);
+    backdrop-filter: blur(10px);
 }
 
-/* Hasil Search Minimalis */
+/* Style Item Hasil Search */
 .bus-item {
     border-left: 3px solid var(--gold);
-    padding-left: 15px;
-    margin-bottom: 20px;
+    padding: 5px 0 5px 15px;
+    margin-bottom: 25px;
+    animation: slideUp 0.4s ease forwards;
 }
-.bus-item h3 { color: white; font-weight: 800; font-size: 14px; text-transform: uppercase; }
-.bus-item p { color: var(--gold); font-size: 11px; }
+.bus-item h3 { color: white; font-weight: 800; font-size: 14px; text-transform: uppercase; margin: 0; }
+.bus-item p { color: var(--gold); font-size: 11px; margin-top: 2px; }
 
-/* Animasi */
-.animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-main::-webkit-scrollbar { width: 0; }
