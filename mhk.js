@@ -20,34 +20,25 @@ window.toggleProfile = function() {
     document.body.style.overflow = isHidden ? 'hidden' : 'auto';
 };
 
-// Search System
+// Search
 document.getElementById('btnSearch').onclick = async function() {
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const busList = document.getElementById('bus-list');
-    const resultContainer = document.getElementById('result-container');
-    const welcomeCard = document.getElementById('welcome-card');
-
     if(!keyword) return;
-    welcomeCard.classList.add('hidden');
-    resultContainer.classList.remove('hidden');
-    busList.innerHTML = `<p class="text-center text-yellow-400 animate-pulse text-[10px] py-10 uppercase tracking-widest">Mencari Rute...</p>`;
+
+    document.getElementById('welcome-card').classList.add('hidden');
+    document.getElementById('result-container').classList.remove('hidden');
+    busList.innerHTML = `<p class="text-center text-yellow-400 animate-pulse py-10 text-[10px] uppercase">Mencari Rute...</p>`;
 
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
         let html = "";
         snap.forEach(doc => {
-            const data = doc.data();
-            if(data.tujuan?.toLowerCase().includes(keyword)) {
-                html += `
-                <div class="glass-card p-6 rounded-[30px] flex justify-between items-center border-l-4 border-yellow-400">
-                    <div>
-                        <h3 class="font-black text-white uppercase text-sm">${data.armada}</h3>
-                        <p class="text-[9px] font-bold text-yellow-400 uppercase tracking-widest">${keyword}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xl font-black text-white">${data.jam}</p>
-                        <p class="text-[8px] font-bold text-yellow-400">WIB</p>
-                    </div>
+            const d = doc.data();
+            if(d.tujuan?.toLowerCase().includes(keyword)) {
+                html += `<div class="glass-card p-6 rounded-[30px] flex justify-between items-center border-l-4 border-yellow-400">
+                    <div><h3 class="font-black text-sm uppercase">${d.armada}</h3><p class="text-[9px] text-yellow-400 uppercase">${keyword}</p></div>
+                    <div class="text-right"><p class="text-xl font-black">${d.jam}</p><p class="text-[8px] font-bold text-yellow-400">WIB</p></div>
                 </div>`;
             }
         });
@@ -55,13 +46,24 @@ document.getElementById('btnSearch').onclick = async function() {
     } catch (e) { console.error(e); }
 };
 
-// Info Loop
-let currentInfo = 0;
-const infoItems = document.querySelectorAll('.info-fade');
+// Auto Switch Testimoni & Promo
+let currentTesti = 0;
+let currentPromo = 0;
+
 setInterval(() => {
-    if(infoItems.length) {
-        infoItems[currentInfo].classList.remove('active');
-        currentInfo = (currentInfo + 1) % infoItems.length;
-        infoItems[currentInfo].classList.add('active');
+    const testies = document.querySelectorAll('.testi-item');
+    if(testies.length) {
+        testies[currentTesti].classList.remove('active');
+        currentTesti = (currentTesti + 1) % testies.length;
+        testies[currentTesti].classList.add('active');
+    }
+}, 5000);
+
+setInterval(() => {
+    const promos = document.querySelectorAll('.info-fade');
+    if(promos.length) {
+        promos[currentPromo].classList.remove('active');
+        currentPromo = (currentPromo + 1) % promos.length;
+        promos[currentPromo].classList.add('active');
     }
 }, 4000);
