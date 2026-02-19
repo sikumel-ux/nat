@@ -18,7 +18,7 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
     overflow: hidden; /* Mencegah konten keluar jalur */
 }
 
-.marquee-content { display: flex; white-space: nowrap; animation: marquee 15s linear infinite; }
+.marquee-content { display: flex; white-space: nowrap; animation: marquee 20s linear infinite; }
 @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
 .gallery-track { width: max-content; animation: autoSlide 20s linear infinite; }
