@@ -1,50 +1,43 @@
 :root {
     --deep-blue: #053a6f;
-    --gold: #f5b74d;
+    --gold: #facc15;
 }
 
 body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-/* White Curve di Bottom Left (Identik Gambar Pinterest) */
+/* Background Biru Solid sesuai permintaan ganti orange */
+.bg-deep-blue { background-color: var(--deep-blue); }
+
+/* Lengkungan Putih di Kiri Bawah (Identik Gambar) */
 .white-curve {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 150px;
+    height: 180px;
     background: white;
-    border-top-left-radius: 120px; /* Lengkungan tajam di kiri */
+    border-top-left-radius: 130px; /* Radius tajam di kiri bawah */
     z-index: 5;
 }
 
-/* List Item Gaya Teks (Minimalis) */
+/* Panel Profile */
+.panel-deep { 
+    background: var(--deep-blue); 
+    border-radius: 40px 40px 0 0; 
+    box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+}
+
+/* Hasil Search Minimalis */
 .bus-item {
-    position: relative;
-    padding-left: 20px;
-    border-left: 2px solid var(--gold);
-    animation: slideIn 0.5s ease forwards;
+    border-left: 3px solid var(--gold);
+    padding-left: 15px;
+    margin-bottom: 20px;
 }
+.bus-item h3 { color: white; font-weight: 800; font-size: 14px; text-transform: uppercase; }
+.bus-item p { color: var(--gold); font-size: 11px; }
 
-.bus-item h3 {
-    color: white;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0;
-}
+/* Animasi */
+.animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.bus-item p {
-    color: var(--gold);
-    font-size: 11px;
-    font-weight: 600;
-    margin-top: 4px;
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-/* Custom Scrollbar */
 main::-webkit-scrollbar { width: 0; }
