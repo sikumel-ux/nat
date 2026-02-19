@@ -11,7 +11,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Toggle Profile
 window.toggleProfile = function() {
     const panel = document.getElementById('company-profile');
     const isHidden = panel.classList.contains('translate-y-full');
@@ -20,7 +19,6 @@ window.toggleProfile = function() {
     document.body.style.overflow = isHidden ? 'hidden' : 'auto';
 };
 
-// Search
 document.getElementById('btnSearch').onclick = async function() {
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const busList = document.getElementById('bus-list');
@@ -46,24 +44,17 @@ document.getElementById('btnSearch').onclick = async function() {
     } catch (e) { console.error(e); }
 };
 
-// Auto Switch Testimoni & Promo
-let currentTesti = 0;
-let currentPromo = 0;
-
+// Interval Logics
 setInterval(() => {
-    const testies = document.querySelectorAll('.testi-item');
-    if(testies.length) {
-        testies[currentTesti].classList.remove('active');
-        currentTesti = (currentTesti + 1) % testies.length;
-        testies[currentTesti].classList.add('active');
-    }
+    const items = document.querySelectorAll('.testi-item');
+    let activeIdx = Array.from(items).findIndex(i => i.classList.contains('active'));
+    items[activeIdx].classList.remove('active');
+    items[(activeIdx + 1) % items.length].classList.add('active');
 }, 5000);
 
 setInterval(() => {
     const promos = document.querySelectorAll('.info-fade');
-    if(promos.length) {
-        promos[currentPromo].classList.remove('active');
-        currentPromo = (currentPromo + 1) % promos.length;
-        promos[currentPromo].classList.add('active');
-    }
+    let activeIdx = Array.from(promos).findIndex(p => p.classList.contains('active'));
+    promos[activeIdx].classList.remove('active');
+    promos[(activeIdx + 1) % promos.length].classList.add('active');
 }, 4000);
