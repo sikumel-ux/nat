@@ -18,16 +18,22 @@ document.getElementById('btnSearch').onclick = async function() {
     const key = document.getElementById('search-input').value.trim().toLowerCase();
     const list = document.getElementById('bus-list');
     if(!key) return;
-    list.innerHTML = `<p class="text-white/30 text-center py-10">Mencari...</p>`;
+    
+    list.innerHTML = `<p class="text-white/30 text-center py-10 uppercase text-[10px] tracking-widest">Mencari...</p>`;
+    
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
         let html = "";
         snap.forEach(doc => {
             const d = doc.data();
             if(d.tujuan?.toLowerCase().includes(key)) {
-                html += `<div class="bus-item"><h3>${d.armada} • ${d.tujuan}</h3><p>${d.jam} WIB</p></div>`;
+                html += `
+                <div class="bus-item">
+                    <h3>${d.armada} • ${d.tujuan}</h3>
+                    <p>${d.jam} WIB</p>
+                </div>`;
             }
         });
-        list.innerHTML = html || `<p class="text-white/30 text-center py-10">Kosong.</p>`;
+        list.innerHTML = html || `<p class="text-white/30 text-center py-10">Rute tidak tersedia.</p>`;
     } catch (e) { console.error(e); }
 };
