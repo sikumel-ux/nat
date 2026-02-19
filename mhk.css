@@ -7,7 +7,16 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
 .glass-search { background: rgba(5, 58, 111, 0.95); backdrop-filter: blur(20px); pointer-events: auto; }
 .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); }
 
-.panel-deep { background: #053a6f !important; height: 85vh; border-top: 4px solid var(--mahika-yellow); border-radius: 40px 40px 0 0; }
+/* --- FIXED PANEL PROFILE (Lengkungan Anti Potong) --- */
+.panel-deep { 
+    background: #053a6f !important; 
+    height: 85vh; 
+    border-top: 4px solid var(--mahika-yellow); 
+    border-top-left-radius: 40px; 
+    border-top-right-radius: 40px;
+    box-shadow: 0 -15px 40px rgba(0,0,0,0.5);
+    overflow: hidden; /* Mencegah konten keluar jalur */
+}
 
 .marquee-content { display: flex; white-space: nowrap; animation: marquee 30s linear infinite; }
 @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -15,19 +24,21 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
 .gallery-track { width: max-content; animation: autoSlide 35s linear infinite; }
 @keyframes autoSlide { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-200px * 4)); } }
 
-/* --- FIXED TESTIMONI SYSTEM --- */
-.testi-container { position: relative; min-height: 200px; width: 100%; }
+/* --- TESTIMONI WITH FOTO --- */
+.testi-container { position: relative; min-height: 190px; width: 100%; }
 .testi-item {
     opacity: 0; visibility: hidden;
-    transform: translateY(15px) scale(0.98);
-    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(10px);
+    transition: all 0.6s ease-in-out;
     position: absolute; top: 0; left: 0; width: 100%;
 }
 .testi-item.active { 
     opacity: 1; visibility: visible; 
-    transform: translateY(0) scale(1); 
-    position: relative; z-index: 10; 
+    transform: translateY(0); 
+    position: relative; 
+    z-index: 50; 
 }
+.testi-item img { object-fit: cover; }
 
 .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 30px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(255, 255, 255, 0.08); }
 .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 15px; text-align: center; }
