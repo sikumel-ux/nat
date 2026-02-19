@@ -3,75 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Trans | Booking</title>
+    <title>Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="screen.css">
 </head>
-<body class="bg-[#f2f5f8] font-['Plus_Jakarta_Sans']">
+<body class="bg-gray-200">
 
-    <div class="max-w-md mx-auto bg-white min-h-screen relative shadow-2xl flex flex-col">
+    <div class="max-w-md mx-auto bg-[#053a6f] min-h-screen relative shadow-2xl flex flex-col overflow-hidden">
         
-        <div class="relative bg-deep pt-12 px-8 pb-4">
-            <div class="flex bg-white rounded-xl overflow-hidden shadow-xl relative z-20">
+        <div class="pt-10 px-8">
+            <div class="flex bg-white rounded-xl overflow-hidden shadow-lg">
                 <div class="flex items-center pl-4 text-yellow-500">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
-                <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="w-full p-4 outline-none text-sm font-medium">
+                <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="w-full p-4 outline-none text-sm font-medium text-gray-700">
                 <button id="btnSearch" class="bg-[#f5b74d] text-[#053a6f] font-black px-6 uppercase text-[10px] tracking-widest">CARI</button>
-            </div>
-
-            <h2 class="text-[#f5b74d] font-extrabold text-2xl mt-12 relative z-20">Hasil Pencarian:</h2>
-
-            <div class="absolute bottom-0 left-0 w-full leading-[0] translate-y-[99%]">
-                <svg viewBox="0 0 500 80" preserveAspectRatio="none" class="w-full h-[80px]">
-                    <path d="M0,0 L500,0 L500,20 C400,60 100,60 0,20 Z" fill="#053a6f"></path>
-                </svg>
             </div>
         </div>
 
-        <main class="flex-1 px-8 pt-20 overflow-y-auto pb-28">
-            <div id="bus-list" class="space-y-3">
-                <div class="bus-item">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold opacity-80 uppercase tracking-tighter">MURNI JAYA • TUJUAN JAKARTA</span>
-                        <span class="text-sm font-bold">21:00 WIB</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right opacity-30 text-xs"></i>
-                </div>
-                <div class="bus-item">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold opacity-80 uppercase tracking-tighter">MURNI JAYA • TUJUAN JAKARTA</span>
-                        <span class="text-sm font-bold">21:00 WIB</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right opacity-30 text-xs"></i>
+        <main class="flex-1 px-10 pt-16 relative z-10">
+            <h2 class="text-[#f5b74d] font-extrabold text-2xl mb-8">Hasil Pencarian:</h2>
+            
+            <div id="bus-list" class="space-y-6">
+                <div class="text-white/20 text-center py-20">
+                    <i class="fa-solid fa-bus-simple text-5xl mb-4"></i>
+                    <p class="text-[10px] uppercase tracking-[0.3em]">Cari jadwal perjalanan</p>
                 </div>
             </div>
         </main>
 
-        <nav class="fixed bottom-0 max-w-md w-full bg-white border-t border-gray-100 px-6 py-4 flex justify-between items-center z-[100]">
-            <div class="flex flex-col leading-none">
-                <span class="text-[#053a6f] font-extrabold text-xl tracking-tighter">mahika</span>
-                <span class="text-[#053a6f] font-medium text-[12px] -mt-1 ml-4">trans</span>
+        <div class="white-curve"></div>
+
+        <nav class="bg-white mx-5 mb-5 rounded-[25px] p-3 shadow-xl flex justify-between items-center relative z-20">
+            <div class="bg-gray-100 px-4 py-2 rounded-xl flex flex-col leading-tight">
+                <span class="text-[#053a6f] font-black text-sm tracking-tighter uppercase">Mahika</span>
+                <span class="text-[#053a6f] font-bold text-[8px] tracking-widest uppercase opacity-60">Trans</span>
             </div>
-            <div class="flex items-center gap-6">
-                <i class="fa-solid fa-bus text-[#f5b74d] text-xl cursor-pointer"></i>
-                <i class="fa-solid fa-house text-gray-300 text-xl cursor-pointer"></i>
-                <i class="fa-solid fa-user text-gray-300 text-xl cursor-pointer" onclick="toggleProfile()"></i>
-                <i class="fa-solid fa-bars text-gray-300 text-xl cursor-pointer"></i>
+
+            <div class="flex items-center gap-5 pr-2">
+                <i class="fa-solid fa-mobile-screen-button text-gray-400 text-lg"></i>
+                <i class="fa-solid fa-comment-dots text-gray-400 text-lg"></i>
+                <i class="fa-solid fa-camera text-gray-400 text-lg"></i>
+                <div class="w-10 h-10 bg-[#f5b74d] rounded-full flex items-center justify-center text-[#053a6f] shadow-lg shadow-orange-500/30">
+                    <i class="fa-solid fa-play ml-1"></i>
+                </div>
             </div>
         </nav>
-    </div>
 
-    <div id="company-profile" class="fixed inset-x-0 bottom-0 translate-y-full transition-transform duration-700 panel-deep z-[2000]">
-        <div class="py-6 flex justify-center" onclick="toggleProfile()">
-            <div class="w-16 h-1 bg-white/20 rounded-full"></div>
-        </div>
-        <div class="px-8 pb-10 text-white text-center">
-            <h2 class="text-xl font-bold mb-4">Profile Mahika Trans</h2>
-            <p class="text-xs opacity-70">Layanan reservasi tiket terpercaya sejak 2024.</p>
-        </div>
     </div>
 
     <script type="module" src="screen.js"></script>
