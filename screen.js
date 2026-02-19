@@ -11,18 +11,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Modal Search Controls
+window.openSearch = () => document.getElementById('search-modal').classList.remove('hidden');
+window.closeSearch = () => document.getElementById('search-modal').classList.add('hidden');
+
+// Profile Control
+window.toggleProfile = () => {
+    const p = document.getElementById('company-profile');
+    p.classList.toggle('translate-y-full');
+};
+
+// Search Logic
 document.getElementById('btnSearch').onclick = async function() {
     const key = document.getElementById('search-input').value.trim().toLowerCase();
     const list = document.getElementById('bus-list');
-    
     if(!key) return;
 
-    list.innerHTML = `<p class="text-white opacity-40 text-center text-[10px] py-10 tracking-widest">MENGAMBIL DATA...</p>`;
+    list.innerHTML = `<p class="text-white/30 text-xs py-10 tracking-[0.3em]">MENCARI...</p>`;
 
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
         let html = "";
-        
         snap.forEach(doc => {
             const d = doc.data();
             if(d.tujuan?.toLowerCase().includes(key)) {
@@ -33,9 +42,6 @@ document.getElementById('btnSearch').onclick = async function() {
                 </div>`;
             }
         });
-
-        list.innerHTML = html || `<p class="text-white opacity-40 text-center text-[10px] py-10">RUTE TIDAK DITEMUKAN</p>`;
-    } catch (e) {
-        console.error(e);
-    }
+        list.innerHTML = html || `<p class="text-white/30 text-xs py-10">TIDAK DITEMUKAN</p>`;
+    } catch (e) { console.error(e); }
 };
