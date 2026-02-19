@@ -1,7 +1,8 @@
 :root { --deep-blue: #053a6f; --mahika-yellow: #facc15; }
-body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', sans-serif; }
+body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
 .bg-deep { background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%); }
 
+/* Header Solid Curve */
 .header-solid {
     background: #053a6f; border-radius: 0 0 50px 50px;
     border-bottom: 4px solid var(--mahika-yellow);
@@ -11,22 +12,30 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
 .glass-search { background: rgba(5, 58, 111, 0.95); backdrop-filter: blur(20px); pointer-events: auto; }
 .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); }
 
+/* Panel Profile */
 .panel-deep { background: #053a6f !important; height: 85vh; border-top: 4px solid var(--mahika-yellow); border-radius: 40px 40px 0 0; }
 
+/* Marquee Bus Animation */
 .marquee-content { display: flex; white-space: nowrap; animation: marquee 30s linear infinite; }
 @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
+/* Gallery Auto Slide */
 .gallery-track { width: max-content; animation: autoSlide 35s linear infinite; }
 .gallery-track:hover { animation-play-state: paused; }
 @keyframes autoSlide { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-200px * 8 - 1rem * 8)); } }
 
-/* Fix Testimoni */
-.testi-container { min-height: 160px; }
+/* FIXED TESTIMONI FADE IN/OUT */
+.testi-container { position: relative; min-height: 180px; width: 100%; }
 .testi-item {
-    opacity: 0; transform: scale(0.9); transition: all 1s ease-in-out;
-    pointer-events: none; position: absolute; width: 100%; top: 0; left: 0;
+    opacity: 0; transform: translateY(10px) scale(0.95);
+    transition: all 0.8s ease-in-out;
+    position: absolute; width: 100%; top: 0; left: 0;
+    visibility: hidden; z-index: 10;
 }
-.testi-item.active { opacity: 1; transform: scale(1); pointer-events: auto; position: relative; }
+.testi-item.active { 
+    opacity: 1; transform: translateY(0) scale(1); 
+    visibility: visible; position: relative; z-index: 20; 
+}
 
 .speech-bubble::after {
     content: ''; position: absolute; bottom: -10px; left: 30px;
@@ -34,7 +43,9 @@ body { background-color: var(--deep-blue); font-family: 'Plus Jakarta Sans', san
     border-right: 10px solid transparent; border-top: 10px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Utils */
 .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 15px; text-align: center; }
 .info-fade { display: none; }
 .info-fade.active { display: block; animation: fadeIn 0.5s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
