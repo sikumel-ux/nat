@@ -11,7 +11,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Toggle Profile
 window.toggleProfile = function() {
     const panel = document.getElementById('company-profile');
     const isHidden = panel.classList.contains('translate-y-full');
@@ -20,16 +19,14 @@ window.toggleProfile = function() {
     document.body.style.overflow = isHidden ? 'hidden' : 'auto';
 };
 
-// Search
+// Search Rute
 document.getElementById('btnSearch').onclick = async function() {
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const busList = document.getElementById('bus-list');
     if(!keyword) return;
-
     document.getElementById('welcome-card').classList.add('hidden');
     document.getElementById('result-container').classList.remove('hidden');
-    busList.innerHTML = `<p class="text-center text-yellow-400 animate-pulse py-10 text-[10px] uppercase">Mencari Rute...</p>`;
-
+    busList.innerHTML = `<p class="text-center text-yellow-400 py-10 text-[10px]">MENCARI RUTE...</p>`;
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
         let html = "";
@@ -42,32 +39,29 @@ document.getElementById('btnSearch').onclick = async function() {
                 </div>`;
             }
         });
-        busList.innerHTML = html || `<p class="text-center py-10 opacity-30 text-[10px]">RUTE TIDAK DITEMUKAN</p>`;
+        busList.innerHTML = html || `<p class="text-center py-10 opacity-30 text-[10px]">TIDAK ADA JADWAL</p>`;
     } catch (e) { console.error(e); }
 };
 
-// Logika Testimoni & Promo (STABIL)
-let indexTesti = 0;
-const listTesti = document.querySelectorAll('.testi-item');
-
-function rotateTestimoni() {
-    if (listTesti.length > 0) {
-        listTesti.forEach(t => t.classList.remove('active'));
-        indexTesti = (indexTesti + 1) % listTesti.length;
-        listTesti[indexTesti].classList.add('active');
+// Automations (Testimoni & Promo)
+let tIdx = 0;
+const tItems = document.querySelectorAll('.testi-item');
+function slideTesti() {
+    if(tItems.length > 0) {
+        tItems.forEach(i => i.classList.remove('active'));
+        tIdx = (tIdx + 1) % tItems.length;
+        tItems[tIdx].classList.add('active');
     }
 }
-setInterval(rotateTestimoni, 5000);
+setInterval(slideTesti, 5000);
 
-let indexPromo = 0;
-const listPromo = document.querySelectorAll('.info-fade');
-
-function rotatePromo() {
-    if (listPromo.length > 0) {
-        listPromo.forEach(p => p.classList.remove('active'));
-        indexPromo = (indexPromo + 1) % listPromo.length;
-        listPromo[indexPromo].classList.add('active');
+let pIdx = 0;
+const pItems = document.querySelectorAll('.info-fade');
+function slidePromo() {
+    if(pItems.length > 0) {
+        pItems.forEach(i => i.classList.remove('active'));
+        pIdx = (pIdx + 1) % pItems.length;
+        pItems[pIdx].classList.add('active');
     }
 }
-setInterval(rotatePromo, 4000);
-            
+setInterval(slidePromo, 4000);
