@@ -37,24 +37,33 @@
             <h2 class="text-lg font-bold mb-2">Selamat Datang!</h2>
             <p class="text-[11px] text-white/50 leading-relaxed">Pesan tiket rute favoritmu dengan mudah & aman melalui layanan resmi Mahika Trans.</p>
         </div>
-<div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="glass-card p-4 rounded-3xl border border-white/10 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
-                <i class="fa-solid fa-bus text-yellow-400 text-xl"></i>
-                <span class="text-[9px] font-black uppercase tracking-widest text-white/70">Bus Malam</span>
+
+        <div class="mb-10">
+            <div class="flex justify-between items-center mb-4 px-2">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-yellow-400">Layanan Kami</h3>
+                <span class="text-[8px] text-white/30 uppercase font-bold tracking-widest">Geser <i class="fa-solid fa-arrow-right ml-1"></i></span>
             </div>
-            <div class="glass-card p-4 rounded-3xl border border-white/10 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
-                <i class="fa-solid fa-van-shuttle text-yellow-400 text-xl"></i>
-                <span class="text-[9px] font-black uppercase tracking-widest text-white/70">Travel</span>
+            
+            <div class="flex overflow-x-auto gap-3 pb-4 no-scrollbar">
+                <div class="min-w-[110px] glass-card p-5 rounded-[30px] border border-white/10 flex flex-col items-center gap-2 active:scale-95 transition-all">
+                    <i class="fa-solid fa-bus text-yellow-400 text-xl"></i>
+                    <span class="text-[9px] font-black uppercase tracking-tighter text-white/80">Bus Malam</span>
+                </div>
+                <div class="min-w-[110px] glass-card p-5 rounded-[30px] border border-white/10 flex flex-col items-center gap-2 active:scale-95 transition-all">
+                    <i class="fa-solid fa-van-shuttle text-yellow-400 text-xl"></i>
+                    <span class="text-[9px] font-black uppercase tracking-tighter text-white/80">Travel</span>
+                </div>
+                <div class="min-w-[110px] glass-card p-5 rounded-[30px] border border-white/10 flex flex-col items-center gap-2 active:scale-95 transition-all">
+                    <i class="fa-solid fa-ship text-yellow-400 text-xl"></i>
+                    <span class="text-[9px] font-black uppercase tracking-tighter text-white/80">Kapal Laut</span>
+                </div>
+                <div class="min-w-[110px] glass-card p-5 rounded-[30px] border border-white/10 flex flex-col items-center gap-2 active:scale-95 transition-all">
+                    <i class="fa-solid fa-plane text-yellow-400 text-xl"></i>
+                    <span class="text-[9px] font-black uppercase tracking-tighter text-white/80">Pesawat</span>
+                </div>
             </div>
-            <div class="glass-card p-4 rounded-3xl border border-white/10 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
-                <i class="fa-solid fa-ship text-yellow-400 text-xl"></i>
-                <span class="text-[9px] font-black uppercase tracking-widest text-white/70">Kapal Laut</span>
-            </div>
-            <div class="glass-card p-4 rounded-3xl border border-white/10 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
-                <i class="fa-solid fa-plane text-yellow-400 text-xl"></i>
-                <span class="text-[9px] font-black uppercase tracking-widest text-white/70">Pesawat</span>
-            </div>
-</div>
+        </div>
+
         <div class="glass-card py-3 rounded-2xl mb-12 overflow-hidden border border-white/5">
             <div class="marquee-content text-[10px] font-black text-white/40 uppercase flex items-center">
                 <span>MURNI JAYA</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
@@ -63,11 +72,6 @@
                 <span>CAHAYA TRANS</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
                 <span>GUNUNG HARTA</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
                 <span>PANDAWA 87</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
-                <span>PUTRA REMAJA</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
-                <span>HANDOYO</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
-                <span>RAMAYANA</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
-                <span>SAN</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
-                <span>PUTRI RIAU AGUNG</span> <i class="fa-solid fa-bus-simple mx-6 text-yellow-400/30"></i>
             </div>
         </div>
 
@@ -81,97 +85,18 @@
         </div>
     </main>
 
-    <div id="company-profile" class="fixed inset-x-0 bottom-0 translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.23, 1, 0.32, 1)] panel-deep z-[2000] overflow-hidden">
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 translate-y-full transition-transform duration-700 panel-deep z-[2000]">
         <div class="sticky top-0 py-6 flex justify-center z-[2001] bg-[#053a6f]" onclick="toggleProfile()">
             <div class="w-16 h-1.5 bg-white/20 rounded-full"></div>
         </div>
-        
-        <div class="px-8 pb-12 h-full overflow-y-auto overflow-x-hidden">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-extrabold tracking-tighter"><span class="text-yellow-400">MAHIKA</span> <span class="text-white">Trans</span></h2>
-                <div class="glass-card mt-4 p-6 rounded-[30px] text-[11px] text-white/70 text-justify border border-white/5 shadow-inner">
-                    Mahika Trans adalah pusat reservasi tiket transportasi resmi Yogyakarta yang dipercaya ribuan pelanggan. Kami memberikan kemudahan akses tiket tanpa antre.
-                </div>
-            </div>
-
-            <h3 class="section-title text-yellow-400">Gallery Armada</h3>
-            <div class="gallery-container overflow-hidden mb-8">
-                <div class="gallery-track flex gap-4">
-                    <div class="min-w-[200px] h-32 glass-card rounded-2xl overflow-hidden border border-white/10"><img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300" class="w-full h-full object-cover"></div>
-                    <div class="min-w-[200px] h-32 glass-card rounded-2xl overflow-hidden border border-white/10"><img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=300" class="w-full h-full object-cover"></div>
-                    <div class="min-w-[200px] h-32 glass-card rounded-2xl overflow-hidden border border-white/10"><img src="https://images.unsplash.com/photo-1544673405-ace2b220746b?w=300" class="w-full h-full object-cover"></div>
-                    <div class="min-w-[200px] h-32 glass-card rounded-2xl overflow-hidden border border-white/10"><img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300" class="w-full h-full object-cover"></div>
-                </div>
-            </div>
-
-            <h3 class="section-title text-yellow-400">Google Customer Reviews</h3>
-            <div class="testi-container mb-12">
-                
-                <div class="testi-item active">
-                    <div class="relative glass-card p-5 rounded-[25px] border border-white/10 mb-4 speech-bubble">
-                        <div class="flex justify-between items-center mb-2">
-                            <div class="flex gap-1 text-yellow-400 text-[9px]"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <i class="fa-brands fa-google text-white/20 text-xs"></i>
-                        </div>
-                        <p class="italic text-[11px] text-white/80 leading-relaxed">"Admin fast respon, rute lengkap banget. Sangat terpercaya untuk booking tiket bus malam!"</p>
-                    </div>
-                    <div class="flex items-center gap-3 px-4">
-                        <img src="https://i.pravatar.cc/100?u=1" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover shadow-lg">
-                        <div>
-                            <p class="text-[10px] font-bold text-white uppercase tracking-tight">Ridho Saputra</p>
-                            <p class="text-[8px] text-white/40"><i class="fa-solid fa-circle-check text-blue-400"></i> Local Guide • Google Review</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testi-item">
-                    <div class="relative glass-card p-5 rounded-[25px] border border-white/10 mb-4 speech-bubble">
-                        <div class="flex justify-between items-center mb-2">
-                            <div class="flex gap-1 text-yellow-400 text-[9px]"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <i class="fa-brands fa-google text-white/20 text-xs"></i>
-                        </div>
-                        <p class="italic text-[11px] text-white/80 leading-relaxed">"Sangat membantu pas mau pulang kampung dadakan. Tiket langsung dapet via WA."</p>
-                    </div>
-                    <div class="flex items-center gap-3 px-4">
-                        <img src="https://i.pravatar.cc/100?u=2" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover shadow-lg">
-                        <div>
-                            <p class="text-[10px] font-bold text-white uppercase tracking-tight">Siti Aminah</p>
-                            <p class="text-[8px] text-white/40"><i class="fa-solid fa-circle-check text-blue-400"></i> Terverifikasi • Google Review</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testi-item">
-                    <div class="relative glass-card p-5 rounded-[25px] border border-white/10 mb-4 speech-bubble">
-                        <div class="flex justify-between items-center mb-2">
-                            <div class="flex gap-1 text-yellow-400 text-[9px]"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <i class="fa-brands fa-google text-white/20 text-xs"></i>
-                        </div>
-                        <p class="italic text-[11px] text-white/80 leading-relaxed">"Armadanya nyaman dan kru bus sangat sopan. Terima kasih Mahika Trans!"</p>
-                    </div>
-                    <div class="flex items-center gap-3 px-4">
-                        <img src="https://i.pravatar.cc/100?u=3" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover shadow-lg">
-                        <div>
-                            <p class="text-[10px] font-bold text-white uppercase tracking-tight">Budi Santoso</p>
-                            <p class="text-[8px] text-white/40"><i class="fa-solid fa-circle-check text-blue-400"></i> Local Guide • Google Review</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <h3 class="section-title text-yellow-400">Lokasi</h3>
-            <div class="glass-card p-2 rounded-[30px] h-52 mb-8 overflow-hidden border border-white/10">
-                <iframe src="https://www.google.com/maps/embed/v1/place?q=Mahika%20trans&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8" class="w-full h-full rounded-[22px] grayscale invert opacity-40 border-0" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-
-            <a href="https://wa.me/6281211407667" class="w-full py-5 bg-yellow-400 text-[#053a6f] flex items-center justify-center gap-3 rounded-2xl font-black text-[11px] uppercase shadow-2xl active:scale-95 transition-all mb-8">
-                <i class="fa-brands fa-whatsapp text-lg"></i> Informasi & Reservasi 
+        <div class="px-8 pb-12 h-full overflow-y-auto">
+             <h2 class="text-3xl font-extrabold tracking-tighter text-center mb-8"><span class="text-yellow-400">MAHIKA</span> Trans</h2>
+             <a href="https://wa.me/6281211407667" class="w-full py-5 bg-yellow-400 text-[#053a6f] flex items-center justify-center gap-3 rounded-2xl font-black text-[11px] uppercase shadow-2xl">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Reservasi Sekarang
             </a>
         </div>
     </div>
 
     <script type="module" src="mhk.js"></script>
 </body>
-    </html>
-    
+</html>
