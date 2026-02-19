@@ -11,36 +11,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.toggleProfile = function() {
-    const p = document.getElementById('company-profile');
-    p.classList.toggle('translate-y-full');
-};
-
 document.getElementById('btnSearch').onclick = async function() {
     const key = document.getElementById('search-input').value.trim().toLowerCase();
     const list = document.getElementById('bus-list');
+    
     if(!key) return;
 
-    list.innerHTML = `<p class="text-center text-gray-400 py-10 text-xs">Mencari rute...</p>`;
+    list.innerHTML = `<p class="text-white opacity-40 text-center text-[10px] py-10 tracking-widest">MENGAMBIL DATA...</p>`;
 
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
         let html = "";
+        
         snap.forEach(doc => {
             const d = doc.data();
             if(d.tujuan?.toLowerCase().includes(key)) {
                 html += `
-                <div class="bus-item animate-in">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold opacity-80 uppercase tracking-tighter">
-                            ${d.armada} • TUJUAN ${d.tujuan}
-                        </span>
-                        <span class="text-sm font-bold">${d.jam} WIB</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right opacity-30 text-xs"></i>
+                <div class="bus-item">
+                    <h3>${d.armada} • ${d.tujuan}</h3>
+                    <p>${d.jam} WIB</p>
                 </div>`;
             }
         });
-        list.innerHTML = html || `<p class="text-center py-10 text-gray-400 text-xs">Rute tidak ditemukan.</p>`;
-    } catch (e) { console.error(e); }
+
+        list.innerHTML = html || `<p class="text-white opacity-40 text-center text-[10px] py-10">RUTE TIDAK DITEMUKAN</p>`;
+    } catch (e) {
+        console.error(e);
+    }
 };
