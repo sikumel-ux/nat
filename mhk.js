@@ -43,25 +43,23 @@ document.getElementById('btnSearch').onclick = async function() {
     } catch (e) { console.error(e); }
 };
 
-// Automations (Testimoni & Promo)
+// Auto Rotator
 let tIdx = 0;
 const tItems = document.querySelectorAll('.testi-item');
-function slideTesti() {
+setInterval(() => {
     if(tItems.length > 0) {
         tItems.forEach(i => i.classList.remove('active'));
         tIdx = (tIdx + 1) % tItems.length;
         tItems[tIdx].classList.add('active');
     }
-}
-setInterval(slideTesti, 5000);
+}, 5000);
 
 let pIdx = 0;
 const pItems = document.querySelectorAll('.info-fade');
-function slidePromo() {
+setInterval(() => {
     if(pItems.length > 0) {
         pItems.forEach(i => i.classList.remove('active'));
         pIdx = (pIdx + 1) % pItems.length;
         pItems[pIdx].classList.add('active');
     }
-}
-setInterval(slidePromo, 4000);
+}, 4000);
