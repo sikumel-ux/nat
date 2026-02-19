@@ -11,23 +11,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Modal Search Controls
+// Search Modal Functions
 window.openSearch = () => document.getElementById('search-modal').classList.remove('hidden');
 window.closeSearch = () => document.getElementById('search-modal').classList.add('hidden');
 
-// Profile Control
+// Profile (Optional trigger from Nav)
 window.toggleProfile = () => {
-    const p = document.getElementById('company-profile');
-    p.classList.toggle('translate-y-full');
+    alert("Halaman Profile Mahika Trans");
 };
 
-// Search Logic
+// Search Process
 document.getElementById('btnSearch').onclick = async function() {
     const key = document.getElementById('search-input').value.trim().toLowerCase();
     const list = document.getElementById('bus-list');
     if(!key) return;
 
-    list.innerHTML = `<p class="text-white/30 text-xs py-10 tracking-[0.3em]">MENCARI...</p>`;
+    list.innerHTML = `<p class="text-white/30 text-[10px] py-10 tracking-widest text-center uppercase">Mencari...</p>`;
 
     try {
         const snap = await getDocs(collection(db, "direktori_rute"));
@@ -42,6 +41,7 @@ document.getElementById('btnSearch').onclick = async function() {
                 </div>`;
             }
         });
-        list.innerHTML = html || `<p class="text-white/30 text-xs py-10">TIDAK DITEMUKAN</p>`;
+        list.innerHTML = html || `<p class="text-white/30 text-xs py-10 text-center">Rute tidak ditemukan.</p>`;
     } catch (e) { console.error(e); }
 };
+            
