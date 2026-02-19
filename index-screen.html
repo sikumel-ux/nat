@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Trans | Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index-screen.css">
+</head>
+<body class="bg-gray-100 font-['Plus_Jakarta_Sans']">
+
+    <div class="max-w-md mx-auto bg-white min-h-screen relative shadow-2xl overflow-hidden flex flex-col">
+        
+        <div class="bg-deep pb-20 pt-12 px-8 rounded-b-[50px] relative shadow-lg">
+            <div class="flex bg-white rounded-xl overflow-hidden shadow-md mt-4">
+                <div class="flex items-center pl-4 text-yellow-500">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <input type="text" id="search-input" placeholder="Mau kemana hari ini?" class="w-full p-4 outline-none text-sm font-medium text-gray-700">
+                <button id="btnSearch" class="bg-yellow-500 text-[#053a6f] font-bold px-6 uppercase text-xs tracking-wider active:bg-yellow-600 transition-colors">CARI</button>
+            </div>
+
+            <h2 id="result-title" class="text-yellow-400 font-extrabold text-2xl mt-10">Hasil Pencarian:</h2>
+        </div>
+
+        <main class="flex-1 px-8 -mt-6 z-10 overflow-y-auto pb-24">
+            <div id="bus-list" class="space-y-3">
+                <div class="text-center py-10 opacity-20">
+                    <i class="fa-solid fa-bus text-4xl mb-2"></i>
+                    <p class="text-xs font-bold uppercase tracking-widest">Ketik rute tujuanmu</p>
+                </div>
+            </div>
+        </main>
+
+        <nav class="absolute bottom-0 w-full bg-white border-t border-gray-100 px-6 py-4 flex justify-between items-center z-50">
+            <div class="flex flex-col leading-none">
+                <span class="text-[#053a6f] font-extrabold text-lg tracking-tighter">MAHIKA</span>
+                <span class="text-yellow-500 font-light text-[10px] tracking-widest uppercase ml-auto">Trans</span>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <button class="text-yellow-500 text-xl"><i class="fa-solid fa-bus"></i></button>
+                <button class="text-yellow-500/40 text-xl hover:text-yellow-500 transition-colors"><i class="fa-solid fa-house"></i></button>
+                <button class="text-yellow-500/40 text-xl hover:text-yellow-500 transition-colors" onclick="toggleProfile()"><i class="fa-solid fa-user"></i></button>
+                <button class="text-yellow-500/40 text-xl hover:text-yellow-500 transition-colors"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </nav>
+
+    </div>
+
+    <div id="company-profile" class="fixed inset-x-0 bottom-0 translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] panel-deep z-[2000] overflow-hidden">
+        <div class="sticky top-0 py-6 flex justify-center z-[2001] bg-[#053a6f]" onclick="toggleProfile()">
+            <div class="w-16 h-1.5 bg-white/20 rounded-full"></div>
+        </div>
+        <div class="px-8 pb-12 h-full overflow-y-auto">
+             <h3 class="section-title text-yellow-400">Tentang Kami</h3>
+             </div>
+    </div>
+
+    <script type="module" src="index-screen.js"></script>
+</body>
+                      </html>
+                      
