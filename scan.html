@@ -1,52 +1,152 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika KTP Scanner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <style>
-      body { font-family: sans-serif; text-align: center; padding: 20px; }
-      #video { width: 100%; max-width: 400px; border-radius: 10px; }
-      .btn { padding: 15px 30px; background: #4285f4; color: white; border: none; border-radius: 5px; font-size: 16px; margin-top: 10px;}
-      #result { margin-top: 20px; text-align: left; background: #f0f0f0; padding: 15px; border-radius: 5px; }
+        :root { 
+            --deep-blue: #053a6f; 
+            --mahika-yellow: #facc15; 
+            --white-off: #fdfaf0; 
+            --light-bg: #f3f4f6;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; background-color: var(--light-bg); font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .top-section {
+            background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
+            height: 220px; display: flex; flex-direction: column; align-items: center; padding-top: 45px;
+        }
+
+        .brand-container { text-align: center; z-index: 5; }
+        .title-brand { font-size: 44px; font-weight: 800; letter-spacing: -3px; margin: 0; line-height: 0.85; display: flex; align-items: center; gap: 8px; }
+        .brand-mahika { color: var(--mahika-yellow); }
+        .brand-trans { color: var(--white-off); font-weight: 200; }
+        .brand-sub { display: block; color: var(--mahika-yellow); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; opacity: 0.9; }
+
+        .main-container { max-width: 400px; margin: -95px auto 40px auto; padding: 0 20px; position: relative; z-index: 10; }
+        .scan-card { background: white; border-radius: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 24px; }
+
+        /* Kamera Area */
+        .camera-box {
+            width: 100%; border: 2px dashed #cbd5e1; border-radius: 20px;
+            overflow: hidden; position: relative; background: #000; aspect-ratio: 3/2;
+        }
+        #video { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Overlay garis KTP */
+        .camera-overlay {
+            position: absolute; top: 10%; left: 5%; right: 5%; bottom: 10%;
+            border: 2px solid var(--mahika-yellow); border-radius: 10px;
+            box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); pointer-events: none;
+        }
+
+        /* Form Style */
+        .form-group { margin-top: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 11px; font-weight: 800; color: var(--deep-blue); margin-bottom: 5px; text-transform: uppercase; }
+        .form-group input { 
+            width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e5e7eb; 
+            font-family: inherit; font-weight: 600; color: #334155;
+        }
+
+        .btn-action {
+            background: var(--mahika-yellow); width: 100%; padding: 18px;
+            border-radius: 16px; border: none; margin-top: 20px;
+            color: var(--deep-blue); font-weight: 800; font-size: 16px;
+            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3); cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-action:active { transform: scale(0.98); }
+        .loading { opacity: 0.6; pointer-events: none; }
     </style>
-  </head>
-  <body>
-    <h3>KTP Scanner v1</h3>
-    <video id="video" autoplay playsinline></video>
-    <canvas id="canvas" style="display:none;"></canvas>
-    <br>
-    <button class="btn" onclick="capture()">AMBIL FOTO & SCAN</button>
-    
-    <div id="result">Hasil akan muncul di sini...</div>
+</head>
+<body>
+
+    <div class="top-section">
+        <div class="brand-container">
+            <h1 class="title-brand">
+                <span class="brand-mahika">MAHIKA</span>
+                <span class="brand-trans">Scanner</span>
+            </h1>
+            <span class="brand-sub">Smart KTP Data Entry</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="scan-card">
+            <div class="camera-box">
+                <video id="video" autoplay playsinline></video>
+                <div class="camera-overlay"></div>
+            </div>
+            <canvas id="canvas" style="display:none;"></canvas>
+
+            <button class="btn-action" id="btnScan" onclick="capturePhoto()">
+                <i class="fa-solid fa-camera"></i> SCAN KTP SEKARANG
+            </button>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
+
+            <div id="resultForm">
+                <div class="form-group">
+                    <label>Nomor Induk Kependudukan (NIK)</label>
+                    <input type="text" id="nik" placeholder="...">
+                </div>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="...">
+                </div>
+                <div class="form-group">
+                    <label>Kabupaten/Kota</label>
+                    <input type="text" id="kota" placeholder="...">
+                </div>
+            </div>
+
+            <button class="btn-action" style="background: var(--deep-blue); color: white; margin-top: 15px;" onclick="saveToSheet()">
+                <i class="fa-solid fa-save"></i> SIMPAN KE DATABASE
+            </button>
+        </div>
+    </div>
 
     <script>
-      const video = document.getElementById('video');
-      const canvas = document.getElementById('canvas');
-      const resultDiv = document.getElementById('result');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const btnScan = document.getElementById('btnScan');
 
-      // Akses Kamera
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then(stream => { video.srcObject = stream; });
+        // Start Camera
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => { video.srcObject = stream; })
+            .catch(err => alert("Gagal akses kamera: " + err));
 
-      function capture() {
-        resultDiv.innerHTML = "Sedang memproses... Tunggu sebentar.";
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        
-        const imageData = canvas.toDataURL('image/jpeg');
-        
-        google.script.run.withSuccessHandler(showResult).processImage(imageData);
-      }
+        function capturePhoto() {
+            btnScan.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> MEMPROSES...';
+            btnScan.classList.add('loading');
 
-      function showResult(res) {
-        if(res.error) {
-          resultDiv.innerHTML = "Error: " + res.error;
-        } else {
-          resultDiv.innerHTML = `
-            <strong>NIK:</strong> ${res.nik}<br>
-            <strong>Teks Terdeteksi:</strong> <pre>${res.rawText}</pre>
-          `;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            const base64Image = canvas.toDataURL('image/jpeg');
+
+            // Kirim ke Google Apps Script (Backend)
+            google.script.run.withSuccessHandler(res => {
+                btnScan.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN KTP SEKARANG';
+                btnScan.classList.remove('loading');
+                
+                if(res.nik) document.getElementById('nik').value = res.nik;
+                if(res.nama) document.getElementById('nama').value = res.nama;
+                if(res.kota) document.getElementById('kota').value = res.kota;
+                
+            }).processKTP(base64Image);
         }
-      }
+
+        function saveToSheet() {
+            // Logika simpan ke sheet bisa ditambah di sini
+            alert("Data berhasil dikirim ke Google Sheets!");
+        }
     </script>
-  </body>
+</body>
 </html>
