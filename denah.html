@@ -31,34 +31,22 @@
 
         /* Header Logo */
         .header {
-            padding: 40px 20px 80px 20px;
+            padding: 40px 20px 60px 20px;
             text-align: center;
         }
 
-        .logo-text {
-            color: var(--mahika-yellow);
-            font-weight: 800;
-            font-size: 22px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        .header img {
+            max-width: 150px; /* Sesuaikan ukuran logo */
+            height: auto;
         }
 
-        /* Card Tiket */
+        /* Card Denah */
         .ticket-card {
             background: var(--card-white);
-            margin: -50px 20px 20px 20px;
+            margin: -30px 20px 20px 20px;
             border-radius: 24px;
             padding: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-
-        .card-title {
-            text-align: center;
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--deep-blue);
-            margin-bottom: 25px;
-            letter-spacing: 0.5px;
         }
 
         /* Container Denah */
@@ -132,17 +120,14 @@
             text-transform: uppercase;
         }
 
-        /* Tombol */
+        /* Tombol Polos */
         .btn-action {
             background: var(--mahika-yellow);
-            color: var(--deep-blue);
             width: calc(100% - 40px);
             margin: 10px 20px;
-            padding: 18px;
+            padding: 22px; /* Lebih tebal karena tidak ada teks */
             border: none;
             border-radius: 16px;
-            font-weight: 800;
-            font-size: 16px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
             transition: transform 0.1s;
@@ -155,12 +140,10 @@
 
 <div class="bg-deep">
     <div class="header">
-        <div class="logo-text">LOGO.PNG</div>
+        <img src="/logo.png" alt="Logo">
     </div>
 
     <div class="ticket-card">
-        <h2 class="card-title">EKSEKUTIF 32 SEAT</h2>
-        
         <div class="bus-container">
             <div class="steering-section">
                 <div class="steering-wheel"></div>
@@ -201,7 +184,7 @@
         </div>
     </div>
 
-    <button class="btn-action">PILIH KURSI SEKARANG</button>
+    <button class="btn-action"></button>
 </div>
 
 </body>
