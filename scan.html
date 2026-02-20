@@ -7,58 +7,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --deep-blue: #053a6f; 
-            --mahika-yellow: #facc15; 
-            --white-off: #fdfaf0; 
-            --light-bg: #f3f4f6;
-        }
-
+        :root { --deep-blue: #053a6f; --mahika-yellow: #facc15; --white-off: #fdfaf0; --light-bg: #f3f4f6; }
         * { box-sizing: border-box; }
         body { margin: 0; background-color: var(--light-bg); font-family: 'Plus Jakarta Sans', sans-serif; }
-
+        
         .top-section {
             background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
             height: 220px; display: flex; flex-direction: column; align-items: center; padding-top: 45px;
         }
-
-        .brand-container { text-align: center; z-index: 5; }
-        .title-brand { font-size: 40px; font-weight: 800; letter-spacing: -2px; margin: 0; display: flex; align-items: center; gap: 8px; }
+        .title-brand { font-size: 38px; font-weight: 800; letter-spacing: -2px; margin: 0; display: flex; gap: 8px; }
         .brand-mahika { color: var(--mahika-yellow); }
         .brand-trans { color: var(--white-off); font-weight: 200; }
-        .brand-sub { display: block; color: var(--mahika-yellow); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; opacity: 0.9; }
+        .brand-sub { display: block; color: var(--mahika-yellow); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
 
         .main-container { max-width: 400px; margin: -95px auto 40px auto; padding: 0 20px; position: relative; z-index: 10; }
-        .scan-card { background: white; border-radius: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 24px; }
+        .scan-card { background: white; border-radius: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); padding: 24px; }
 
-        /* Camera Box */
-        .camera-box {
-            width: 100%; border-radius: 20px; overflow: hidden; position: relative; 
-            background: #000; aspect-ratio: 3/2; border: 2px solid #e5e7eb;
-        }
+        .camera-box { width: 100%; border-radius: 20px; overflow: hidden; position: relative; background: #000; aspect-ratio: 3/2; border: 2px solid #eee; }
         #video { width: 100%; height: 100%; object-fit: cover; }
-        .overlay {
-            position: absolute; top: 15%; left: 10%; right: 10%; bottom: 15%;
-            border: 2px solid var(--mahika-yellow); border-radius: 10px;
-            box-shadow: 0 0 0 1000px rgba(0,0,0,0.4); pointer-events: none;
-        }
+        .overlay { position: absolute; top: 15%; left: 10%; right: 10%; bottom: 15%; border: 2px solid var(--mahika-yellow); border-radius: 10px; box-shadow: 0 0 0 1000px rgba(0,0,0,0.4); pointer-events: none; }
 
-        /* Form Controls */
-        .form-group { margin-top: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 10px; font-weight: 800; color: var(--deep-blue); margin-bottom: 4px; text-transform: uppercase; opacity: 0.7; }
-        .form-group input { 
-            width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #f1f5f9; 
-            background: #fafafa; font-family: inherit; font-weight: 600; color: var(--deep-blue);
-        }
-        .form-group input:focus { outline: none; border-color: var(--mahika-yellow); background: white; }
-
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
         .btn-action {
-            background: var(--mahika-yellow); width: 100%; padding: 18px;
-            border-radius: 16px; border: none; margin-top: 20px;
-            color: var(--deep-blue); font-weight: 800; font-size: 15px;
-            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3); cursor: pointer; transition: 0.2s;
+            flex: 1; background: var(--mahika-yellow); padding: 15px; border-radius: 14px; border: none;
+            color: var(--deep-blue); font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);
         }
-        .btn-action:active { transform: scale(0.96); }
+        .btn-secondary { background: #e2e8f0; box-shadow: none; }
+        .btn-action:active { transform: scale(0.95); }
+
+        .form-group { margin-top: 15px; }
+        .form-group label { display: block; font-size: 9px; font-weight: 800; color: var(--deep-blue); margin-bottom: 4px; text-transform: uppercase; opacity: 0.6; }
+        .form-group input { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #f1f5f9; background: #fafafa; font-family: inherit; font-weight: 600; color: var(--deep-blue); }
+        
         .loading { opacity: 0.5; pointer-events: none; }
     </style>
 </head>
@@ -70,49 +50,32 @@
                 <span class="brand-mahika">MAHIKA</span>
                 <span class="brand-trans">Scanner</span>
             </h1>
-            <span class="brand-sub">KTP Auto-Entry System</span>
+            <span class="brand-sub">Reservation Intelligence System</span>
         </div>
     </div>
 
     <div class="main-container">
         <div class="scan-card">
-            <div class="camera-box">
-                <video id="video" autoplay playsinline></video>
-                <div class="overlay"></div>
+            <div class="camera-box"><video id="video" autoplay playsinline></video><div class="overlay"></div></div>
+
+            <div class="btn-group">
+                <button class="btn-action" id="btnCap" onclick="takeSnapshot()"><i class="fa-solid fa-camera"></i> SCAN</button>
+                <button class="btn-action btn-secondary" onclick="document.getElementById('fileIn').click()"><i class="fa-solid fa-image"></i> GALLERY</button>
+            </div>
+            
+            <input type="file" id="fileIn" accept="image/*" style="display:none" onchange="fromGallery(this)">
+
+            <div style="margin-top: 20px;">
+                <div class="form-group"><label>NIK</label><input type="text" id="nik"></div>
+                <div class="form-group"><label>Nama</label><input type="text" id="nama"></div>
+                <div style="display:flex; gap:10px">
+                    <div class="form-group" style="flex:2"><label>Tgl Lahir</label><input type="text" id="tgl"></div>
+                    <div class="form-group" style="flex:1"><label>Umur</label><input type="text" id="umur" readonly></div>
+                </div>
+                <div class="form-group"><label>Kabupaten/Kota</label><input type="text" id="kota"></div>
             </div>
 
-            <button class="btn-action" id="btnScan" onclick="takeSnapshot()">
-                <i class="fa-solid fa-expand"></i> AMBIL FOTO KTP
-            </button>
-
-            <div style="margin-top: 25px;">
-                <div class="form-group">
-                    <label>NIK (16 Digit)</label>
-                    <input type="text" id="nik" placeholder="...">
-                </div>
-                <div class="form-group">
-                    <label>Nama Lengkap</label>
-                    <input type="text" id="nama" placeholder="...">
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <div class="form-group" style="flex: 2;">
-                        <label>Tgl Lahir</label>
-                        <input type="text" id="tgl_lahir" placeholder="DD-MM-YYYY">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Umur</label>
-                        <input type="text" id="umur" readonly style="background: #f1f5f9;">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Kabupaten / Kota</label>
-                    <input type="text" id="kota" placeholder="...">
-                </div>
-            </div>
-
-            <button class="btn-action" style="background: var(--deep-blue); color: white;" onclick="submitData()">
-                CONFIRM & SAVE DATA
-            </button>
+            <button class="btn-action" style="background:var(--deep-blue); color:white; margin-top:20px; width:100%" onclick="alert('Data Tersimpan!')">CONFIRM DATA</button>
         </div>
     </div>
 
@@ -121,48 +84,43 @@
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const btnScan = document.getElementById('btnScan');
+        const btnCap = document.getElementById('btnCap');
 
-        // Aktifkan Kamera Belakang
-        navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment", width: { ideal: 1280 } } 
-        }).then(stream => { video.srcObject = stream; });
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(s => video.srcObject = s);
 
         function takeSnapshot() {
-            btnScan.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> MEMPROSES OCR...';
-            btnScan.classList.add('loading');
-
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            const base64 = canvas.toDataURL('image/jpeg', 0.8);
-
-            // Panggil fungsi Backend
-            google.script.run.withSuccessHandler(res => {
-                btnScan.innerHTML = '<i class="fa-solid fa-expand"></i> AMBIL FOTO KTP';
-                btnScan.classList.remove('loading');
-                
-                if (res.error) {
-                    alert(res.error);
-                    return;
-                }
-
-                // Isi form otomatis
-                document.getElementById('nik').value = res.nik || "";
-                document.getElementById('nama').value = res.nama || "";
-                document.getElementById('tgl_lahir').value = res.tgl_lahir || "";
-                document.getElementById('umur').value = res.umur || "";
-                document.getElementById('kota').value = res.kota || "";
-
-            }).processKTP(base64);
+            processStart();
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            sendToBackend(canvas.toDataURL('image/jpeg'));
         }
 
-        function submitData() {
-            const nama = document.getElementById('nama').value;
-            if(!nama) { alert("Scan KTP dulu, bro!"); return; }
-            alert("Data " + nama + " berhasil disimpan!");
+        function fromGallery(input) {
+            if (input.files && input.files[0]) {
+                processStart();
+                const reader = new FileReader();
+                reader.onload = e => sendToBackend(e.target.result);
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function processStart() {
+            btnCap.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> WAIT..';
+            document.querySelector('.scan-card').classList.add('loading');
+        }
+
+        function sendToBackend(base64) {
+            google.script.run.withSuccessHandler(res => {
+                btnCap.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN';
+                document.querySelector('.scan-card').classList.remove('loading');
+                if(res.error) return alert(res.error);
+                
+                document.getElementById('nik').value = res.nik || "";
+                document.getElementById('nama').value = res.nama || "";
+                document.getElementById('tgl').value = res.tgl_lahir || "";
+                document.getElementById('umur').value = res.umur || "";
+                document.getElementById('kota').value = res.kota || "";
+            }).processKTP(base64);
         }
     </script>
 </body>
