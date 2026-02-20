@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Seat Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --deep-blue: #053a6f; 
+            --mahika-yellow: #facc15; 
+            --light-bg: #f3f4f6;
+        }
+
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; 
+            background-color: var(--light-bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Bagian Atas Biru */
+        .top-section {
+            background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+        }
+
+        .top-section img {
+            height: 45px;
+            object-fit: contain;
+        }
+
+        /* Container untuk Card agar melayang di tengah */
+        .main-container {
+            max-width: 400px;
+            margin: -100px auto 40px auto; /* Menarik card ke atas (overlap biru) */
+            padding: 0 20px;
+        }
+
+        /* INI KARTU UTAMANYA */
+        .seat-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            padding: 24px;
+            position: relative;
+        }
+
+        /* Design Denah di dalam Card */
+        .bus-frame {
+            border: 2px solid #f1f5f9;
+            border-radius: 20px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .driver-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .steer {
+            width: 32px; height: 32px;
+            border: 4px solid var(--deep-blue);
+            border-radius: 50%;
+            position: relative;
+            opacity: 0.7;
+        }
+        .steer::after {
+            content: ""; position: absolute; width: 14px; height: 4px; 
+            background: var(--deep-blue); top: 10px; left: 5px;
+        }
+
+        /* Grid Kursi */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 30px 1fr 1fr;
+            gap: 12px 8px;
+        }
+
+        .seat {
+            aspect-ratio: 1/1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: var(--deep-blue);
+            cursor: pointer;
+        }
+
+        .aisle { grid-column: 3; }
+
+        /* Row Belakang & Toilet Gede */
+        .back-row {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 30px 1fr 1fr;
+            gap: 12px 8px;
+        }
+
+        .toilet {
+            grid-column: 1 / span 3; /* Gede: Makan 2 kursi + 1 lorong */
+            background: #e5e7eb;
+            border: 2px solid #d1d5db;
+            color: #64748b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            min-height: 50px;
+        }
+
+        /* Tombol Mahika di bawah Card */
+        .btn-bottom {
+            background: var(--mahika-yellow);
+            color: var(--deep-blue);
+            width: 100%;
+            border: none;
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-section">
+        <img src="/logo.png" alt="Mahika">
+    </div>
+
+    <div class="main-container">
+        <div class="seat-card">
+            <div class="bus-frame">
+                <div class="driver-row">
+                    <div class="steer"></div>
+                </div>
+
+                <div class="grid-layout">
+                    <div class="seat">1</div><div class="seat">2</div><div class="aisle"></div><div class="seat">3</div><div class="seat">4</div>
+                    <div class="seat">5</div><div class="seat">6</div><div class="aisle"></div><div class="seat">7</div><div class="seat">8</div>
+                    <div class="seat">9</div><div class="seat">10</div><div class="aisle"></div><div class="seat">11</div><div class="seat">12</div>
+                    <div class="seat">13</div><div class="seat">14</div><div class="aisle"></div><div class="seat">15</div><div class="seat">16</div>
+                    <div class="seat">17</div><div class="seat">18</div><div class="aisle"></div><div class="seat">19</div><div class="seat">20</div>
+                </div>
+
+                <div class="back-row">
+                    <div class="toilet">TOILET</div>
+                    <div class="seat">31</div>
+                    <div class="seat">32</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-bottom">LANJUTKAN PEMESANAN</button>
+    </div>
+
+</body>
+</html>
