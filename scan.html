@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body { font-family: sans-serif; text-align: center; padding: 20px; }
+      #video { width: 100%; max-width: 400px; border-radius: 10px; }
+      .btn { padding: 15px 30px; background: #4285f4; color: white; border: none; border-radius: 5px; font-size: 16px; margin-top: 10px;}
+      #result { margin-top: 20px; text-align: left; background: #f0f0f0; padding: 15px; border-radius: 5px; }
+    </style>
+  </head>
+  <body>
+    <h3>KTP Scanner v1</h3>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <br>
+    <button class="btn" onclick="capture()">AMBIL FOTO & SCAN</button>
+    
+    <div id="result">Hasil akan muncul di sini...</div>
+
+    <script>
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('canvas');
+      const resultDiv = document.getElementById('result');
+
+      // Akses Kamera
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(stream => { video.srcObject = stream; });
+
+      function capture() {
+        resultDiv.innerHTML = "Sedang memproses... Tunggu sebentar.";
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        
+        const imageData = canvas.toDataURL('image/jpeg');
+        
+        google.script.run.withSuccessHandler(showResult).processImage(imageData);
+      }
+
+      function showResult(res) {
+        if(res.error) {
+          resultDiv.innerHTML = "Error: " + res.error;
+        } else {
+          resultDiv.innerHTML = `
+            <strong>NIK:</strong> ${res.nik}<br>
+            <strong>Teks Terdeteksi:</strong> <pre>${res.rawText}</pre>
+          `;
+        }
+      }
+    </script>
+  </body>
+</html>
