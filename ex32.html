@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahika Seat Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --deep-blue: #053a6f; 
+            --mahika-yellow: #facc15; 
+            --white-off: #fdfaf0; 
+            --light-bg: #f3f4f6;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            margin: 0; 
+            background-color: var(--light-bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .top-section {
+            background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
+            height: 220px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 45px;
+        }
+
+        .brand-container { 
+            text-align: center; 
+            z-index: 5;
+        }
+        
+        .title-brand {
+            font-size: 44px; 
+            font-weight: 800; 
+            letter-spacing: -3px; 
+            margin: 0;
+            line-height: 0.85; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-mahika { color: var(--mahika-yellow); }
+        .brand-trans { color: var(--white-off); font-weight: 200; }
+
+        .brand-sub { 
+            display: block; 
+            color: var(--mahika-yellow); 
+            font-size: 10px; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            max-width: 400px;
+            margin: -95px auto 40px auto; 
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .seat-card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            padding: 24px;
+        }
+
+        .bus-frame {
+            border: 1.5px solid #f1f5f9;
+            border-radius: 20px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        /* Update Section Driver */
+        .driver-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: fit-content;
+            margin-left: auto; /* Posisikan di kanan */
+            margin-bottom: 20px;
+            padding-right: 5px;
+        }
+
+        .driver-section i {
+            font-size: 32px;
+            color: var(--deep-blue);
+            opacity: 0.8;
+        }
+
+        .driver-label {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--deep-blue);
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 30px 1fr 1fr;
+            gap: 10px 8px;
+        }
+
+        .seat {
+            aspect-ratio: 1/1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            border: 1.5px solid #e5e7eb;
+            background: white;
+            color: var(--deep-blue);
+        }
+
+        .aisle { grid-column: 3; }
+
+        .back-section {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 30px 1fr 1fr;
+            gap: 10px 8px;
+        }
+
+        .box-large {
+            background: #f1f5f9;
+            border: 1.5px solid #e2e8f0;
+            color: #64748b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            min-height: 48px;
+            text-transform: uppercase;
+        }
+
+        .pintu { 
+            grid-column: 1 / span 2; 
+            background: #fffbeb; 
+            border-color: #fde68a; 
+            color: #92400e; 
+        }
+
+        .toilet { 
+            grid-column: 1 / span 3; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-section">
+        <div class="brand-container">
+            <h1 class="title-brand">
+                <span class="brand-mahika">MAHIKA</span>
+                <span class="brand-trans">Trans</span>
+            </h1>
+            <span class="brand-sub">Official Reservation Partner</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="seat-card">
+            <div class="bus-frame">
+                <div class="driver-section">
+                    <i class="fa-solid fa-circle-dot"></i> <div class="driver-label">DRIVER</div>
+                </div>
+
+                <div class="grid-layout">
+                    <div class="seat">1</div><div class="seat">2</div><div class="aisle"></div><div class="seat">3</div><div class="seat">4</div>
+                    <div class="seat">5</div><div class="seat">6</div><div class="aisle"></div><div class="seat">7</div><div class="seat">8</div>
+                    <div class="seat">9</div><div class="seat">10</div><div class="aisle"></div><div class="seat">11</div><div class="seat">12</div>
+                    <div class="seat">13</div><div class="seat">14</div><div class="aisle"></div><div class="seat">15</div><div class="seat">16</div>
+                    <div class="seat">17</div><div class="seat">18</div><div class="aisle"></div><div class="seat">19</div><div class="seat">20</div>
+                    <div class="seat">21</div><div class="seat">22</div><div class="aisle"></div><div class="seat">23</div><div class="seat">24</div>
+                    <div class="seat">25</div><div class="seat">26</div><div class="aisle"></div><div class="seat">27</div><div class="seat">28</div>
+                </div>
+
+                <div class="back-section">
+                    <div class="box-large pintu">PINTU</div>
+                    <div class="aisle"></div>
+                    <div class="seat">29</div><div class="seat">30</div>
+                </div>
+
+                <div class="back-section">
+                    <div class="box-large toilet">TOILET</div>
+                    <div class="seat">31</div><div class="seat">32</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
