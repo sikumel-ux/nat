@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilih Kursi Bus - Card UI</title>
+    <title>Denah Kursi Bus Minimalis</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #2563eb;
-            --bg-light: #f3f4f6;
-            --booked: #ef4444;
-            --available: #ecfdf5;
-            --available-border: #10b981;
-            --selected: #3b82f6;
+            --text-dark: #1e3a8a;
+            --border-color: #e5e7eb;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -21,30 +18,30 @@
         .phone-screen {
             width: 100%;
             max-width: 375px;
-            background: var(--bg-light);
+            background: #f3f4f6;
             border-radius: 30px;
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.1);
         }
 
-        /* Header Biru - Pakai Logo */
+        /* Header Logo */
         .header {
             background-color: var(--primary-blue);
-            padding: 30px 20px 70px 20px;
+            padding: 25px 20px 60px 20px;
             text-align: center;
         }
 
         .logo-placeholder {
             color: white;
-            font-weight: 800;
-            font-size: 20px;
+            font-weight: 700;
+            font-size: 18px;
             letter-spacing: 1px;
         }
 
-        /* Card Melayang */
+        /* Card Tiket */
         .ticket-card {
             background: white;
-            margin: -40px 15px 20px 15px;
+            margin: -35px 15px 20px 15px;
             border-radius: 20px;
             padding: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
@@ -52,71 +49,68 @@
 
         .card-title {
             text-align: center;
-            font-size: 14px;
-            font-weight: 700;
-            color: #1e3a8a;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-dark);
             margin-bottom: 20px;
-            text-transform: uppercase;
         }
 
-        /* Area Bus dalam Card */
+        /* Area Denah Bus */
         .bus-layout {
-            border: 2px solid #f0f0f0;
-            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             padding: 15px;
-            background: #fafafa;
         }
 
         .steering-section {
             display: flex;
             justify-content: flex-end; /* Sopir Kanan */
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .steering-wheel {
-            width: 30px; height: 30px;
-            border: 3px solid #666;
+            width: 32px; height: 32px;
+            border: 3px solid #4b5563;
             border-radius: 50%;
             position: relative;
         }
+        .steering-wheel::after {
+            content: ""; position: absolute; width: 15px; height: 3px; background: #4b5563; top: 12px; left: 5px;
+        }
 
-        /* Grid Kursi 2-lorong-2 */
+        /* Grid Kursi sesuai Gambar (1-2-3-4, dst) */
         .grid-seats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr) 30px repeat(2, 1fr);
+            grid-template-columns: 1fr 1fr 30px 1fr 1fr;
             gap: 10px 8px;
         }
 
         .seat {
             aspect-ratio: 1/1;
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
+            border: 1.5px solid #d1d5db;
+            background: #f9fafb;
+            color: #374151;
             cursor: pointer;
-            border: 1px solid var(--available-border);
-            background: var(--available);
-            color: #065f46;
         }
 
+        /* State untuk Booked (sesuai gambar: merah/booked) */
         .seat.booked {
-            background: #fee2e2;
-            border-color: var(--booked);
-            color: var(--booked);
-            cursor: not-allowed;
-        }
-
-        .seat.selected {
-            background: var(--selected);
-            border-color: #1e40af;
+            background: #f87171;
+            border-color: #dc2626;
             color: white;
+            font-size: 9px;
+            font-weight: 400;
         }
 
         .aisle { grid-column: 3; }
 
-        /* Row Paling Belakang */
+        /* Row Belakang */
         .back-row {
             margin-top: 10px;
             display: grid;
@@ -126,35 +120,23 @@
 
         .toilet {
             grid-column: 1 / span 2;
-            background: #dbeafe;
-            border: 1px solid #3b82f6;
-            color: #1e40af;
-            border-radius: 6px;
+            background: #e5e7eb;
+            border: 1.5px solid #9ca3af;
+            color: #374151;
+            border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 700;
+            font-size: 12px; font-weight: 700;
         }
-
-        /* Legend di bawah Card */
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 10px;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .legend-item { display: flex; align-items: center; gap: 4px; }
-        .dot { width: 10px; height: 10px; border-radius: 2px; }
 
         .btn-confirm {
             background: var(--primary-blue);
             color: white;
             width: calc(100% - 30px);
-            margin: 10px 15px 25px 15px;
-            padding: 15px;
+            margin: 0 15px 25px 15px;
+            padding: 16px;
             border: none;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
         }
     </style>
@@ -167,7 +149,7 @@
     </div>
 
     <div class="ticket-card">
-        <h2 class="card-title">Pilih Kursi - Eksekutif</h2>
+        <h2 class="card-title">EKSEKUTIF 32 SEAT</h2>
         
         <div class="bus-layout">
             <div class="steering-section">
@@ -175,49 +157,54 @@
             </div>
 
             <div class="grid-seats">
-                <div class="seat" onclick="selectSeat(this)">1</div>
-                <div class="seat" onclick="selectSeat(this)">2</div>
+                <div class="seat">1</div>
+                <div class="seat">2</div>
                 <div class="aisle"></div>
-                <div class="seat" onclick="selectSeat(this)">3</div>
-                <div class="seat" onclick="selectSeat(this)">4</div>
-                <div class="seat" onclick="selectSeat(this)">5</div>
-                <div class="seat" onclick="selectSeat(this)">6</div>
+                <div class="seat">3</div>
+                <div class="seat">4</div>
+
+                <div class="seat">5</div>
+                <div class="seat">6</div>
                 <div class="aisle"></div>
-                <div class="seat booked">X</div>
-                <div class="seat" onclick="selectSeat(this)">12</div>
-                <div class="seat" onclick="selectSeat(this)">9</div>
-                <div class="seat" onclick="selectSeat(this)">10</div>
+                <div class="seat booked">booked</div>
+                <div class="seat">12</div>
+
+                <div class="seat">9</div>
+                <div class="seat">10</div>
                 <div class="aisle"></div>
-                <div class="seat" onclick="selectSeat(this)">15</div>
-                <div class="seat" onclick="selectSeat(this)">16</div>
+                <div class="seat">15</div>
+                <div class="seat">16</div>
+
+                <div class="seat">17</div>
+                <div class="seat">18</div>
+                <div class="aisle"></div>
+                <div class="seat">19</div>
+                <div class="seat">20</div>
+
+                <div class="seat">21</div>
+                <div class="seat">22</div>
+                <div class="aisle"></div>
+                <div class="seat">23</div>
+                <div class="seat">24</div>
+
+                <div class="seat">25</div>
+                <div class="seat">26</div>
+                <div class="aisle"></div>
+                <div class="seat">27</div>
+                <div class="seat">38</div>
             </div>
 
             <div class="back-row">
                 <div class="toilet">TOILET</div>
                 <div class="aisle"></div>
-                <div class="seat booked">31</div>
-                <div class="seat booked">32</div>
+                <div class="seat booked" style="font-size: 14px; font-weight: 700;">31</div>
+                <div class="seat booked" style="font-size: 14px; font-weight: 700;">32</div>
             </div>
-        </div>
-
-        <div class="legend">
-            <div class="legend-item"><div class="dot" style="background: var(--available); border: 1px solid var(--available-border);"></div> Tersedia</div>
-            <div class="legend-item"><div class="dot" style="background: var(--booked);"></div> Terisi</div>
-            <div class="legend-item"><div class="dot" style="background: var(--selected);"></div> Dipilih</div>
         </div>
     </div>
 
-    <button class="btn-confirm">Konfirmasi Kursi</button>
+    <button class="btn-confirm">PILIH KURSI</button>
 </div>
 
-<script>
-    function selectSeat(el) {
-        if (!el.classList.contains('booked')) {
-            el.classList.toggle('selected');
-        }
-    }
-</script>
-
 </body>
-    </html>
-    
+</html>
