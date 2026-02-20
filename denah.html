@@ -106,23 +106,32 @@
 
         .aisle { grid-column: 3; }
 
-        .back-row {
-            margin-top: 12px;
-            display: grid;
-            grid-template-columns: 2fr 30px 1fr 1fr;
-            gap: 8px;
-        }
+        /* Baris paling belakang */
+.back-row {
+    margin-top: 15px;
+    display: grid;
+    /* Kita samakan templatenya dengan grid kursi atas biar sinkron */
+    grid-template-columns: 1fr 1fr 30px 1fr 1fr; 
+    gap: 12px 8px;
+}
 
-        .toilet {
-            grid-column: 1 / span 2;
-            background: #f8fafc;
-            border: 2px solid #edf2f7;
-            color: #94a3b8;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: 800;
-            text-transform: uppercase;
-        }
+.toilet {
+    /* Dia mulai dari kolom 1 dan memanjang sampai kolom 3 (lewat lorong) */
+    grid-column: 1 / span 3; 
+    background: #f1f5f9;
+    border: 2px solid #edf2f7;
+    color: #94a3b8;
+    border-radius: 12px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 13px; 
+    font-weight: 800;
+    text-transform: uppercase;
+    /* Tambahkan height biar tingginya sama atau lebih dari kursi */
+    min-height: 50px; 
+}
+
 
         /* Tombol Mahika */
         .btn-action {
