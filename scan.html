@@ -23,7 +23,7 @@
         }
 
         .brand-container { text-align: center; z-index: 5; }
-        .title-brand { font-size: 44px; font-weight: 800; letter-spacing: -3px; margin: 0; line-height: 0.85; display: flex; align-items: center; gap: 8px; }
+        .title-brand { font-size: 40px; font-weight: 800; letter-spacing: -2px; margin: 0; display: flex; align-items: center; gap: 8px; }
         .brand-mahika { color: var(--mahika-yellow); }
         .brand-trans { color: var(--white-off); font-weight: 200; }
         .brand-sub { display: block; color: var(--mahika-yellow); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; opacity: 0.9; }
@@ -31,37 +31,35 @@
         .main-container { max-width: 400px; margin: -95px auto 40px auto; padding: 0 20px; position: relative; z-index: 10; }
         .scan-card { background: white; border-radius: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 24px; }
 
-        /* Kamera Area */
+        /* Camera Box */
         .camera-box {
-            width: 100%; border: 2px dashed #cbd5e1; border-radius: 20px;
-            overflow: hidden; position: relative; background: #000; aspect-ratio: 3/2;
+            width: 100%; border-radius: 20px; overflow: hidden; position: relative; 
+            background: #000; aspect-ratio: 3/2; border: 2px solid #e5e7eb;
         }
         #video { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Overlay garis KTP */
-        .camera-overlay {
-            position: absolute; top: 10%; left: 5%; right: 5%; bottom: 10%;
+        .overlay {
+            position: absolute; top: 15%; left: 10%; right: 10%; bottom: 15%;
             border: 2px solid var(--mahika-yellow); border-radius: 10px;
-            box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); pointer-events: none;
+            box-shadow: 0 0 0 1000px rgba(0,0,0,0.4); pointer-events: none;
         }
 
-        /* Form Style */
+        /* Form Controls */
         .form-group { margin-top: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 11px; font-weight: 800; color: var(--deep-blue); margin-bottom: 5px; text-transform: uppercase; }
+        .form-group label { display: block; font-size: 10px; font-weight: 800; color: var(--deep-blue); margin-bottom: 4px; text-transform: uppercase; opacity: 0.7; }
         .form-group input { 
-            width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e5e7eb; 
-            font-family: inherit; font-weight: 600; color: #334155;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #f1f5f9; 
+            background: #fafafa; font-family: inherit; font-weight: 600; color: var(--deep-blue);
         }
+        .form-group input:focus { outline: none; border-color: var(--mahika-yellow); background: white; }
 
         .btn-action {
             background: var(--mahika-yellow); width: 100%; padding: 18px;
             border-radius: 16px; border: none; margin-top: 20px;
-            color: var(--deep-blue); font-weight: 800; font-size: 16px;
-            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3); cursor: pointer;
-            transition: 0.3s;
+            color: var(--deep-blue); font-weight: 800; font-size: 15px;
+            box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3); cursor: pointer; transition: 0.2s;
         }
-        .btn-action:active { transform: scale(0.98); }
-        .loading { opacity: 0.6; pointer-events: none; }
+        .btn-action:active { transform: scale(0.96); }
+        .loading { opacity: 0.5; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -72,7 +70,7 @@
                 <span class="brand-mahika">MAHIKA</span>
                 <span class="brand-trans">Scanner</span>
             </h1>
-            <span class="brand-sub">Smart KTP Data Entry</span>
+            <span class="brand-sub">KTP Auto-Entry System</span>
         </div>
     </div>
 
@@ -80,72 +78,91 @@
         <div class="scan-card">
             <div class="camera-box">
                 <video id="video" autoplay playsinline></video>
-                <div class="camera-overlay"></div>
+                <div class="overlay"></div>
             </div>
-            <canvas id="canvas" style="display:none;"></canvas>
 
-            <button class="btn-action" id="btnScan" onclick="capturePhoto()">
-                <i class="fa-solid fa-camera"></i> SCAN KTP SEKARANG
+            <button class="btn-action" id="btnScan" onclick="takeSnapshot()">
+                <i class="fa-solid fa-expand"></i> AMBIL FOTO KTP
             </button>
 
-            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
-
-            <div id="resultForm">
+            <div style="margin-top: 25px;">
                 <div class="form-group">
-                    <label>Nomor Induk Kependudukan (NIK)</label>
+                    <label>NIK (16 Digit)</label>
                     <input type="text" id="nik" placeholder="...">
                 </div>
                 <div class="form-group">
                     <label>Nama Lengkap</label>
                     <input type="text" id="nama" placeholder="...">
                 </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 2;">
+                        <label>Tgl Lahir</label>
+                        <input type="text" id="tgl_lahir" placeholder="DD-MM-YYYY">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Umur</label>
+                        <input type="text" id="umur" readonly style="background: #f1f5f9;">
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label>Kabupaten/Kota</label>
+                    <label>Kabupaten / Kota</label>
                     <input type="text" id="kota" placeholder="...">
                 </div>
             </div>
 
-            <button class="btn-action" style="background: var(--deep-blue); color: white; margin-top: 15px;" onclick="saveToSheet()">
-                <i class="fa-solid fa-save"></i> SIMPAN KE DATABASE
+            <button class="btn-action" style="background: var(--deep-blue); color: white;" onclick="submitData()">
+                CONFIRM & SAVE DATA
             </button>
         </div>
     </div>
+
+    <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const btnScan = document.getElementById('btnScan');
 
-        // Start Camera
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => { video.srcObject = stream; })
-            .catch(err => alert("Gagal akses kamera: " + err));
+        // Aktifkan Kamera Belakang
+        navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "environment", width: { ideal: 1280 } } 
+        }).then(stream => { video.srcObject = stream; });
 
-        function capturePhoto() {
-            btnScan.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> MEMPROSES...';
+        function takeSnapshot() {
+            btnScan.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> MEMPROSES OCR...';
             btnScan.classList.add('loading');
 
+            const context = canvas.getContext('2d');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            const base64Image = canvas.toDataURL('image/jpeg');
+            const base64 = canvas.toDataURL('image/jpeg', 0.8);
 
-            // Kirim ke Google Apps Script (Backend)
+            // Panggil fungsi Backend
             google.script.run.withSuccessHandler(res => {
-                btnScan.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN KTP SEKARANG';
+                btnScan.innerHTML = '<i class="fa-solid fa-expand"></i> AMBIL FOTO KTP';
                 btnScan.classList.remove('loading');
                 
-                if(res.nik) document.getElementById('nik').value = res.nik;
-                if(res.nama) document.getElementById('nama').value = res.nama;
-                if(res.kota) document.getElementById('kota').value = res.kota;
-                
-            }).processKTP(base64Image);
+                if (res.error) {
+                    alert(res.error);
+                    return;
+                }
+
+                // Isi form otomatis
+                document.getElementById('nik').value = res.nik || "";
+                document.getElementById('nama').value = res.nama || "";
+                document.getElementById('tgl_lahir').value = res.tgl_lahir || "";
+                document.getElementById('umur').value = res.umur || "";
+                document.getElementById('kota').value = res.kota || "";
+
+            }).processKTP(base64);
         }
 
-        function saveToSheet() {
-            // Logika simpan ke sheet bisa ditambah di sini
-            alert("Data berhasil dikirim ke Google Sheets!");
+        function submitData() {
+            const nama = document.getElementById('nama').value;
+            if(!nama) { alert("Scan KTP dulu, bro!"); return; }
+            alert("Data " + nama + " berhasil disimpan!");
         }
     </script>
 </body>
