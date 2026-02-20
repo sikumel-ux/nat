@@ -75,7 +75,7 @@
                 <div class="form-group"><label>Kabupaten/Kota</label><input type="text" id="kota"></div>
             </div>
 
-            <button class="btn-action" style="background:var(--deep-blue); color:white; margin-top:20px; width:100%" onclick="alert('Data Tersimpan!')">CONFIRM DATA</button>
+            <button class="btn-action" id="btnConfirm" style="background:var(--deep-blue); color:white; margin-top:20px; width:100%" onclick="alert('Data Terkonfirmasi!')">CONFIRM DATA</button>
         </div>
     </div>
 
@@ -86,13 +86,17 @@
         const canvas = document.getElementById('canvas');
         const btnCap = document.getElementById('btnCap');
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(s => video.srcObject = s);
+        // Memulai kamera belakang
+        navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "environment", width: { ideal: 1280 } } 
+        }).then(s => video.srcObject = s).catch(err => console.log("Kamera error: ", err));
 
         function takeSnapshot() {
             processStart();
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.width = video.videoWidth; 
+            canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
-            sendToBackend(canvas.toDataURL('image/jpeg'));
+            sendToBackend(canvas.toDataURL('image/jpeg', 0.8));
         }
 
         function fromGallery(input) {
@@ -110,16 +114,24 @@
         }
 
         function sendToBackend(base64) {
+            // Memanggil fungsi processKTP yang ada di Code.gs
             google.script.run.withSuccessHandler(res => {
                 btnCap.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN';
                 document.querySelector('.scan-card').classList.remove('loading');
+                
                 if(res.error) return alert(res.error);
                 
+                // Mengisi hasil scan ke input form
                 document.getElementById('nik').value = res.nik || "";
                 document.getElementById('nama').value = res.nama || "";
                 document.getElementById('tgl').value = res.tgl_lahir || "";
                 document.getElementById('umur').value = res.umur || "";
                 document.getElementById('kota').value = res.kota || "";
+                
+            }).withFailureHandler(err => {
+                alert("Gagal menghubungi server: " + err);
+                btnCap.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN';
+                document.querySelector('.scan-card').classList.remove('loading');
             }).processKTP(base64);
         }
     </script>
