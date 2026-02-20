@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Tiket Bus Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --bg-light: #f3f4f6;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { background-color: #dbeafe; display: flex; justify-content: center; padding: 20px; }
+
+        .phone-screen {
+            width: 100%;
+            max-width: 375px;
+            background: var(--bg-light);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* Header Biru */
+        .header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 40px 20px 80px 20px;
+            text-align: center;
+        }
+
+        .booking-id { font-size: 12px; opacity: 0.8; margin-bottom: 20px; display: block; }
+
+        .route-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .city-code { font-size: 28px; }
+        .bus-icon { font-size: 20px; position: relative; }
+        .bus-icon::after {
+            content: "----------------";
+            position: absolute;
+            left: -60px; top: 10px; font-weight: normal; font-size: 10px; opacity: 0.5;
+        }
+
+        /* Kartu Tiket Putih */
+        .ticket-card {
+            background: white;
+            margin: -50px 15px 20px 15px;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .operator-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .bus-name { font-weight: 700; color: var(--text-dark); }
+        .pnr-code { color: var(--text-muted); font-size: 12px; }
+
+        .divider {
+            border: none;
+            border-top: 2px dashed #e5e7eb;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        /* Detail Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .value { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+
+        /* Barcode */
+        .barcode-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .barcode-img {
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(90deg, #000 2px, transparent 2px, #000 5px, transparent 5px, #000 10px, transparent 10px);
+            background-size: 15px 100%;
+        }
+
+        /* Tombol */
+        .btn-download {
+            background: var(--primary-blue);
+            color: white;
+            width: calc(100% - 30px);
+            margin: 10px 15px 30px 15px;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-screen">
+    <div class="header">
+        <span class="booking-id">BOOKING ID - BUS2026JKT</span>
+        <div class="route-main">
+            <div class="city">
+                <div class="city-code">JKT</div>
+                <p style="font-size: 12px; font-weight: 400;">Jakarta</p>
+            </div>
+            <div class="bus-icon">🚌</div>
+            <div class="city">
+                <div class="city-code">SUB</div>
+                <p style="font-size: 12px; font-weight: 400;">Surabaya</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ticket-card">
+        <div class="operator-info">
+            <div class="bus-name">PO. Harapan Jaya</div>
+            <div class="pnr-code">PNR: **HJ-8890**</div>
+        </div>
+
+        <div class="details-grid">
+            <div>
+                <p class="label">Terminal Asal</p>
+                <p class="value">Pulo Gebang</p>
+            </div>
+            <div>
+                <p class="label">Terminal Tujuan</p>
+                <p class="value">Purabaya (Bungurasih)</p>
+            </div>
+            <div>
+                <p class="label">Tanggal & Waktu</p>
+                <p class="value">20 Feb 2026, 19:00</p>
+            </div>
+            <div>
+                <p class="label">Nomor Kursi</p>
+                <p class="value">12A (Executive)</p>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="details-grid">
+            <div>
+                <p class="label">Bagasi</p>
+                <p class="value">20 kg</p>
+            </div>
+            <div>
+                <p class="label">Tipe Perjalanan</p>
+                <p class="value">Satu Arah</p>
+            </div>
+        </div>
+
+        <div class="barcode-section">
+            <div class="barcode-img"></div>
+            <p style="font-size: 10px; margin-top: 10px; color: gray;">Scan barcode saat masuk terminal</p>
+        </div>
+    </div>
+
+    <button class="btn-download">Download E-Tiket</button>
+</div>
+
+</body>
+</html>
