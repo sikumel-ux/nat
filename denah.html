@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Kursi Bus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --booked: #ef4444;
+            --available: #ecfdf5;
+            --available-border: #10b981;
+            --selected: #3b82f6;
+            --toilet: #dbeafe;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { background-color: #f3f4f6; display: flex; justify-content: center; padding: 20px; }
+
+        .phone-screen {
+            width: 100%;
+            max-width: 375px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+
+        /* Header dengan Logo */
+        .header {
+            background-color: var(--primary-blue);
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .logo-img { height: 30px; vertical-align: middle; }
+
+        .bus-container {
+            padding: 20px;
+            margin: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .bus-title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e3a8a;
+        }
+
+        /* Area Depan (Sopir Kanan) */
+        .front-area {
+            display: flex;
+            justify-content: flex-end; /* Sopir di Kanan */
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .steering-wheel {
+            width: 40px; height: 40px;
+            border: 4px solid #4b5563;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .steering-wheel::after {
+            content: ""; width: 20px; height: 4px; background: #4b5563; position: absolute;
+        }
+
+        /* Grid Kursi (Konfigurasi 2 - lorong - 2) */
+        .seating-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr) 40px repeat(2, 1fr); /* 2 kiri, lorong, 2 kanan */
+            gap: 12px 8px;
+            align-items: center;
+        }
+
+        .seat {
+            aspect-ratio: 1/1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1.5px solid var(--available-border);
+            background: var(--available);
+            color: #065f46;
+        }
+
+        .seat.booked {
+            background: #fee2e2;
+            border-color: var(--booked);
+            color: var(--booked);
+            cursor: not-allowed;
+        }
+
+        .seat.selected {
+            background: var(--selected);
+            border-color: #1e40af;
+            color: white;
+        }
+
+        .aisle { grid-column: 3; } /* Lorong tengah */
+
+        /* Bagian Belakang (Toilet & Kursi Terakhir) */
+        .back-row {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 2fr 40px 1fr 1fr;
+            gap: 8px;
+        }
+
+        .toilet {
+            grid-column: 1 / span 2;
+            background: var(--toilet);
+            border: 1.5px solid #3b82f6;
+            color: #1e40af;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+        }
+
+        /* Legend */
+        .legend {
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .box { width: 15px; height: 15px; border-radius: 3px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<div class="phone-screen">
+    <div class="header">
+        <span style="font-size: 18px;">logo.png</span>
+    </div>
+
+    <div class="bus-container">
+        <div class="bus-title">EKSEKUTIF 32 SEAT</div>
+        
+        <div class="front-area">
+            <div class="steering-wheel"></div>
+        </div>
+
+        <div class="seating-grid">
+            <div class="seat" onclick="toggleSeat(this)">1</div>
+            <div class="seat" onclick="toggleSeat(this)">2</div>
+            <div class="aisle"></div>
+            <div class="seat" onclick="toggleSeat(this)">3</div>
+            <div class="seat" onclick="toggleSeat(this)">4</div>
+
+            <div class="seat" onclick="toggleSeat(this)">5</div>
+            <div class="seat" onclick="toggleSeat(this)">6</div>
+            <div class="aisle"></div>
+            <div class="seat booked">booked</div>
+            <div class="seat" onclick="toggleSeat(this)">12</div>
+
+            <div class="seat" onclick="toggleSeat(this)">9</div>
+            <div class="seat" onclick="toggleSeat(this)">10</div>
+            <div class="aisle"></div>
+            <div class="seat" onclick="toggleSeat(this)">15</div>
+            <div class="seat" onclick="toggleSeat(this)">16</div>
+
+            <div class="seat" onclick="toggleSeat(this)">17</div>
+            <div class="seat" onclick="toggleSeat(this)">18</div>
+            <div class="aisle"></div>
+            <div class="seat" onclick="toggleSeat(this)">19</div>
+            <div class="seat" onclick="toggleSeat(this)">20</div>
+        </div>
+
+        <div class="back-row">
+            <div class="toilet">TOILET</div>
+            <div class="aisle"></div>
+            <div class="seat booked">31</div>
+            <div class="seat booked">32</div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="box" style="background: var(--available); border-color: var(--available-border);"></div> Tersedia</div>
+        <div class="legend-item"><div class="box" style="background: #fee2e2; border-color: var(--booked);"></div> Terisi</div>
+        <div class="legend-item"><div class="box" style="background: var(--toilet); border-color: #3b82f6;"></div> Toilet</div>
+    </div>
+</div>
+
+<script>
+    function toggleSeat(el) {
+        if (!el.classList.contains('booked')) {
+            el.classList.toggle('selected');
+        }
+    }
+</script>
+
+</body>
+                                   </html>
+                                   
