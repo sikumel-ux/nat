@@ -14,70 +14,73 @@
         }
 
         * { box-sizing: border-box; }
+        
         body { 
             margin: 0; 
             background-color: var(--light-bg); 
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
+        /* Bagian Atas Biru yang diperpendek */
         .top-section {
             background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
-            height: 300px;
+            height: 220px; /* Dikurangi agar lebih rapat */
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 50px;
+            padding-top: 45px;
         }
 
-        /* Update Header Gede */
-        .brand-container { text-align: center; }
+        /* Brand Style - Gede & Rapat */
+        .brand-container { 
+            text-align: center; 
+            z-index: 5;
+        }
         
         .title-brand {
-            font-size: 44px; /* Setara text-4xl++ */
-            font-weight: 800; /* font-extrabold */
-            letter-spacing: -3px; /* tracking-tighter */
+            font-size: 44px; 
+            font-weight: 800; 
+            letter-spacing: -3px; 
             margin: 0;
-            line-height: 1;
+            line-height: 0.85; /* Rapat ke bawah */
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .brand-mahika { color: var(--mahika-yellow); }
-        
-        .brand-trans { 
-            color: var(--white-off); 
-            font-weight: 200; /* font-light */
-        }
+        .brand-trans { color: var(--white-off); font-weight: 200; }
 
         .brand-sub { 
             display: block; 
             color: var(--mahika-yellow); 
-            font-size: 11px; 
+            font-size: 10px; 
             font-weight: 600; 
             text-transform: uppercase; 
-            letter-spacing: 2.5px;
-            margin-top: 10px;
+            letter-spacing: 2px;
+            margin-top: 8px;
             opacity: 0.9;
         }
 
-        /* Layout Card */
+        /* Container Card - Ditarik naik lebih tinggi */
         .main-container {
             max-width: 400px;
-            margin: -110px auto 40px auto; 
+            margin: -95px auto 40px auto; /* Menempel lebih dekat ke teks header */
             padding: 0 20px;
+            position: relative;
+            z-index: 10;
         }
 
         .seat-card {
             background: white;
             border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             padding: 24px;
-            position: relative;
         }
 
+        /* Frame Bus */
         .bus-frame {
-            border: 2px solid #f1f5f9;
+            border: 1.5px solid #f1f5f9;
             border-radius: 20px;
             padding: 15px;
             background: #fafafa;
@@ -86,7 +89,7 @@
         .driver-row {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .steer {
@@ -94,13 +97,18 @@
             border: 4px solid var(--deep-blue);
             border-radius: 50%;
             position: relative;
-            opacity: 0.7;
+            opacity: 0.6;
+        }
+        .steer::after {
+            content: ""; position: absolute; width: 14px; height: 4px; 
+            background: var(--deep-blue); top: 10px; left: 5px;
         }
 
+        /* Grid Kursi */
         .grid-layout {
             display: grid;
             grid-template-columns: 1fr 1fr 30px 1fr 1fr;
-            gap: 12px 8px;
+            gap: 10px 8px;
         }
 
         .seat {
@@ -111,23 +119,31 @@
             justify-content: center;
             font-size: 14px;
             font-weight: 700;
-            border: 2px solid #e5e7eb;
+            border: 1.5px solid #e5e7eb;
             background: white;
             color: var(--deep-blue);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .seat:hover {
+            border-color: var(--mahika-yellow);
+            background: #fffdf0;
         }
 
         .aisle { grid-column: 3; }
 
+        /* Row Khusus Pintu & Toilet */
         .back-section {
-            margin-top: 12px;
+            margin-top: 10px;
             display: grid;
             grid-template-columns: 1fr 1fr 30px 1fr 1fr;
-            gap: 12px 8px;
+            gap: 10px 8px;
         }
 
         .box-large {
-            background: #e5e7eb;
-            border: 2px solid #d1d5db;
+            background: #f1f5f9;
+            border: 1.5px solid #e2e8f0;
             color: #64748b;
             border-radius: 10px;
             display: flex;
@@ -135,12 +151,20 @@
             justify-content: center;
             font-size: 10px;
             font-weight: 800;
-            min-height: 45px;
+            min-height: 48px;
             text-transform: uppercase;
         }
 
-        .pintu { grid-column: 1 / span 2; background: #fffbeb; border-color: #fde68a; color: #92400e; }
-        .toilet { grid-column: 1 / span 3; }
+        .pintu { 
+            grid-column: 1 / span 2; 
+            background: #fffbeb; 
+            border-color: #fde68a; 
+            color: #92400e; 
+        }
+
+        .toilet { 
+            grid-column: 1 / span 3; 
+        }
     </style>
 </head>
 <body>
@@ -187,5 +211,4 @@
     </div>
 
 </body>
-                                                          </html>
-                                                          
+</html>
