@@ -1,0 +1,91 @@
+body { font-family: 'Poppins', sans-serif; background: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: flex-start; }
+.etiket-container { width: 100%; max-width: 420px; background: #fff; display: flex; flex-direction: column; min-height: 100vh; overflow: visible; }
+
+/* HEADER & LOGO */
+.etiket-header { background: #0066AE; padding: 20px 20px 30px; text-align: center; border-radius: 0 0 30px 30px; position: relative; z-index: 5; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+.header-logo-box img { width: 210px; max-width: 85%; height: auto; }
+
+/* KODE BOOKING CARD */
+.kode-booking-card { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); background: #FFD700; color: #004a80; width: 70%; padding: 8px; font-weight: 900; font-size: 16px; border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.3); text-align: center; z-index: 100; }
+
+/* INFO GRID */
+.info-grid { display: flex; justify-content: space-between; padding: 35px 15px 10px; gap: 8px; }
+.kolom { width: 49%; }
+.kolom p { font-size: 13px; background: #fff; padding: 9px; border-radius: 6px; border: 1px solid #f0f0f0; display: flex; align-items: center; margin-bottom: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: #333; }
+.kolom i { margin-right: 8px; color: #0066AE; width: 14px; text-align: center; }
+
+/* TEAR LINE */
+.tear-line { width: 100%; height: 12px; margin: 10px 0; background-image: linear-gradient(to right, #ccc 2px, transparent 2px); background-size: 10px 100%; }
+
+/* QR SECTION */
+.barcode-section { text-align: center; padding: 10px 20px; }
+.qr-card { background: #fff; padding: 10px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; border: 1px solid #f0f0f0; }
+.qr-card img { width: 110px; height: 110px; display: block; }
+
+/* THANKS TEKS 2 BARIS */
+.thanks { font-size: 11px; font-weight: 600; margin: 15px auto 0; color: #333; line-height: 1.5; max-width: 220px; text-align: center; }
+
+/* KETERANGAN BOX SHADOW TEBAL */
+.keterangan-box { background: #f9f9f9; margin: 10px 15px 30px; padding: 12px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.18); border: 1px solid #eee; }
+.keterangan-box p, .keterangan-box li { font-size: 10px; color: #333; margin-bottom: 3px; }
+
+/* --- ERROR SCREEN STYLE --- */
+#error-screen {
+    position: fixed;
+    inset: 0;
+    background: #0066AE; /* Biru Mahika */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.error-content i {
+    color: #FFD700; /* Kuning Mahika */
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+}
+
+.error-content h2 {
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.btn-wa {
+    background: #FFD700;
+    color: #004a80 !important;
+    text-decoration: none;
+    padding: 14px 35px;
+    border-radius: 50px;
+    font-weight: 900;
+    font-size: 14px;
+    margin-top: 25px;
+    display: inline-block;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+}
+
+.btn-wa:active {
+    transform: scale(0.95);
+}
+
+/* Animasi Goyang untuk Icon Error */
+.bus-goyang-error {
+    display: inline-block;
+    animation: shake 0.5s infinite alternate ease-in-out;
+}
+
+@keyframes shake {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+}
+
+
+.hidden { display: none !important; }
+#loading-screen { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; }
