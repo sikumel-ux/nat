@@ -1,1 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Etiket Mahika Trans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { 
+            --deep-blue: #053a6f; 
+            --mahika-yellow: #facc15; 
+            --white-off: #fdfaf0; 
+            --light-bg: #f3f4f6;
+            --text-gray: #64748b;
+        }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            margin: 0; 
+            background-color: var(--light-bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--deep-blue);
+            display: flex;
+            justify-content: center;
+            padding: 20px 15px;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--deep-blue); color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100;
+        }
+        #loading-screen.hidden { display: none; }
+
+        .etiket-container {
+            width: 100%; max-width: 400px;
+            background: white; border-radius: 30px;
+            overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .etiket-container.hidden { display: none; }
+
+        /* Header Section */
+        .etiket-header {
+            background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
+            padding: 30px 25px; text-align: center; color: white;
+        }
+        .header-logo-box img { height: 45px; margin-bottom: 15px; }
+        .kode-booking-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px dashed var(--mahika-yellow);
+            padding: 10px 20px; border-radius: 12px;
+            display: inline-block; font-weight: 800; font-size: 1.2rem;
+            color: var(--mahika-yellow); letter-spacing: 1px;
+        }
+
+        /* Content Section */
+        .info-grid {
+            padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+        }
+        .kolom p { margin: 0 0 15px 0; font-size: 0.85rem; color: var(--text-gray); font-weight: 600; }
+        .kolom span { display: block; color: var(--deep-blue); font-size: 0.95rem; font-weight: 800; margin-top: 2px; }
+        .kolom i { color: var(--mahika-yellow); width: 20px; }
+
+        /* Tear Line (Garis Potong Tiket) */
+        .tear-line {
+            height: 2px; border-top: 2px dashed #e2e8f0; margin: 10px 25px; position: relative;
+        }
+        .tear-line::before, .tear-line::after {
+            content: ''; position: absolute; top: -11px; width: 20px; height: 20px;
+            background: var(--light-bg); border-radius: 50%;
+        }
+        .tear-line::before { left: -36px; }
+        .tear-line::after { right: -36px; }
+
+        /* Barcode Section */
+        .barcode-section { padding: 25px; text-align: center; }
+        .qr-card {
+            background: white; border: 2px solid #f1f5f9; padding: 15px;
+            display: inline-block; border-radius: 20px; margin-bottom: 15px;
+        }
+        .qr-card img { width: 140px; height: 140px; display: block; }
+        .thanks { font-size: 0.75rem; color: var(--text-gray); font-style: italic; }
+
+        /* Footer Box */
+        .keterangan-box {
+            background: #f8fafc; padding: 20px 25px; border-top: 1px solid #f1f5f9;
+        }
+        .keterangan-box p { font-size: 0.8rem; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; color: #ef4444; }
+        .keterangan-box ul { padding-left: 18px; margin: 0; }
+        .keterangan-box li { font-size: 0.75rem; color: var(--text-gray); margin-bottom: 5px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--mahika-yellow);"></i>
+    <p style="margin-top: 15px; font-weight: 600;">Memvalidasi Tiket Mahika...</p>
+</div>
+
+<div id="main-content" class="etiket-container hidden">
+    <div class="etiket-header">
+        <div class="header-logo-box">
+            <h1 style="margin:0; font-weight:800; color:var(--mahika-yellow); font-size: 24px; letter-spacing: -1px;">
+                MAHIKA <span style="color:white; font-weight:200;">TRANS</span>
+            </h1>
+        </div>
+        <div class="kode-booking-card">
+            MT-<span id="kodeBooking">------</span>
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <div class="kolom">
+            <p><i class="fas fa-user"></i> Penumpang <span id="nama">-</span></p>
+            <p><i class="fas fa-bus"></i> Armada <span id="armada">-</span></p> 
+            <p><i class="fas fa-map-marker-alt"></i> Tujuan <span id="tujuan">-</span></p>
+            <p><i class="fas fa-phone"></i> WhatsApp <span id="no_hp">-</span></p>
+        </div>
+        <div class="kolom">
+            <p><i class="fas fa-chair"></i> Kursi <span id="no_kursi">-</span></p>
+            <p><i class="fas fa-calendar-alt"></i> Tanggal <span id="tgl">-</span></p>
+            <p><i class="fas fa-clock"></i> Keberangkatan <span id="jam">-</span></p>
+            <p><i class="fa-solid fa-rupiah-sign"></i> Total Bayar <span id="harga">0</span></p>
+        </div>
+    </div>
+
+    <div class="tear-line"></div>
+
+    <div class="barcode-section">
+        <div class="qr-card">
+            <img id="qrImg" alt="QR Code">
+        </div>
+        <p class="thanks">Scan QR ini saat masuk ke armada.<br>Terimakasih atas kepercayaan Anda.</p>
+    </div>
+
+    <div class="keterangan-box">
+        <p>Syarat & Ketentuan:</p>
+        <ul>
+            <li>Tiket yang sudah dipesan tidak dapat dibatalkan.</li>
+            <li>Harap datang maksimal 30 menit sebelum jadwal.</li>
+            <li>Anak usia 3 tahun ke atas wajib memiliki tiket sendiri.</li>
+        </ul>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        let id = params.get("id") || window.location.pathname.split("/").pop();
+        const cleanID = id ? id.toUpperCase().replace("MT-", "") : null;
+        
+        if(!cleanID) {
+            alert("ID Tiket tidak ditemukan!");
+            return;
+        }
+        
+        try {
+            const docSnap = await getDoc(doc(db, "bookings", cleanID));
+            if(docSnap.exists()){
+                const d = docSnap.data();
+                document.getElementById("kodeBooking").innerText = cleanID;
+                document.getElementById("nama").innerText = d.nama || "-";
+                document.getElementById("no_hp").innerText = d.wa || "-";
+                document.getElementById("armada").innerText = d.armada || "-";
+                document.getElementById("tujuan").innerText = d.tujuan || "-";
+                document.getElementById("no_kursi").innerText = d.kursi || "-";
+                document.getElementById("jam").innerText = (d.jam || "--:--").replace(/WIB/gi, "").trim() + " WIB";
+                document.getElementById("harga").innerText = "Rp " + (d.harga ? Number(d.harga).toLocaleString("id-ID") : "0");
+                
+                const rawDate = d.tanggal || d.tgl;
+                if (rawDate && rawDate !== "-") {
+                    const parts = rawDate.split("-");
+                    const dt = new Date(parts[0], parts[1]-1, parts[2]);
+                    document.getElementById("tgl").innerText = dt.toLocaleDateString("id-ID", {day:"2-digit", month:"short", year:"numeric"});
+                }
+                
+                // Generate QR Code berdasarkan URL tiket saat ini
+                document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.href)}`;
+                
+                // Tampilkan konten
+                document.getElementById("loading-screen").classList.add("hidden");
+                document.getElementById("main-content").classList.remove("hidden");
+            } else {
+                alert("Tiket tidak valid atau tidak terdaftar!");
+            }
+        } catch (e) { 
+            console.error(e);
+            alert("Terjadi kesalahan sistem.");
+        }
+    }
+    init();
+</script>
+</body>
+  </html>
