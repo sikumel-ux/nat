@@ -1,0 +1,80 @@
+:root { 
+    --deep-blue: #053a6f; 
+    --mahika-yellow: #facc15; 
+}
+
+body { 
+    background-color: var(--deep-blue); 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    margin: 0; 
+}
+
+.bg-deep { 
+    background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%); 
+}
+
+.header-solid { 
+    background: #053a6f; 
+    border-radius: 0 0 50px 50px; 
+    border-bottom: 4px solid var(--mahika-yellow); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+}
+
+.search-floating-wrapper { 
+    position: absolute; 
+    bottom: -32px; 
+    left: 0; 
+    right: 0; 
+    pointer-events: none; 
+}
+
+.glass-search { 
+    background: rgba(5, 58, 111, 0.95); 
+    backdrop-filter: blur(20px); 
+    pointer-events: auto; 
+}
+
+.glass-card { 
+    background: rgba(255, 255, 255, 0.05); 
+    backdrop-filter: blur(15px); 
+}
+
+/* --- MARQUEE FIXED --- */
+.marquee-content { 
+    display: flex; 
+    white-space: nowrap; 
+    width: max-content; /* Biarkan konten memanjang sesuai teks */
+    animation: marquee 40s linear infinite; /* Diperlambat agar enak dibaca */
+}
+
+@keyframes marquee { 
+    0% { transform: translateX(0); } 
+    100% { transform: translateX(-50%); } /* Berhenti di titik tengah duplikasi */
+}
+
+/* --- PANEL PROFILE --- */
+.panel-deep { 
+    background: #053a6f !important; 
+    height: 85vh; 
+    border-top: 4px solid var(--mahika-yellow); 
+    border-top-left-radius: 40px; 
+    border-top-right-radius: 40px;
+    box-shadow: 0 -15px 40px rgba(0,0,0,0.5);
+}
+
+.section-title { 
+    font-size: 10px; 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    letter-spacing: 4px; 
+    margin-bottom: 15px; 
+    text-align: center; 
+}
+
+.info-fade { display: none; }
+.info-fade.active { display: block; animation: fadeIn 0.5s ease; }
+
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(5px); } 
+    to { opacity: 1; transform: translateY(0); } 
+        }
