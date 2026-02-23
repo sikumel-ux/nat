@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF to Editable Google Doc</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; }
+        .upload-box { border: 2px dashed #ccc; padding: 20px; border-radius: 10px; text-align: center; }
+        button { margin-top: 15px; padding: 10px 20px; cursor: pointer; background-color: #4285F4; color: white; border: none; border-radius: 5px; }
+        #status { margin-top: 20px; color: blue; }
+    </style>
+</head>
+<body>
+
+    <h2>Upload PDF untuk Edit Tulisan</h2>
+    <div class="upload-box">
+        <input type="file" id="pdfFile" accept="application/pdf">
+        <br>
+        <button onclick="uploadFile()">Konversi & Edit</button>
+    </div>
+
+    <div id="status"></div>
+
+    <script>
+        // Ganti dengan URL API Apps Script kamu
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxicuFB5Y0iRlVR8pWpJ4JV3MreB0e_CyGH_7R1UTLQouP92gYnb6uLXPy1OmxEgmDT/exec";
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('pdfFile');
+            const statusDiv = document.getElementById('status');
+            
+            if (fileInput.files.length === 0) {
+                alert("Pilih file PDF dulu ya!");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            statusDiv.innerText = "Sedang memproses... Tunggu sebentar (Google sedang melakukan OCR)";
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async function () {
+                const base64Data = reader.result.split(',')[1]; // Ambil data base64 saja
+
+                try {
+                    const response = await fetch(SCRIPT_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            base64: base64Data,
+                            fileName: file.name
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === "success") {
+                        statusDiv.innerHTML = `Berhasil! <a href="${result.docUrl}" target="_blank">Klik di sini untuk Edit Tulisan di Google Docs</a>`;
+                    } else {
+                        statusDiv.innerText = "Gagal: " + result.message;
+                    }
+                } catch (error) {
+                    statusDiv.innerText = "Error koneksi ke API. Pastikan API sudah di-deploy sebagai 'Anyone'.";
+                    console.error(error);
+                }
+            };
+        }
+    </script>
+</body>
+</html>
