@@ -1,45 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>PDF to Editable Google Doc</title>
-    <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; }
-        .upload-box { border: 2px dashed #ccc; padding: 20px; border-radius: 10px; text-align: center; }
-        button { margin-top: 15px; padding: 10px 20px; cursor: pointer; background-color: #4285F4; color: white; border: none; border-radius: 5px; }
-        #status { margin-top: 20px; color: blue; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen font-sans">
 
-    <h2>Upload PDF untuk Edit Tulisan</h2>
-    <div class="upload-box">
-        <input type="file" id="pdfFile" accept="application/pdf">
-        <br>
-        <button onclick="uploadFile()">Konversi & Edit</button>
-    </div>
+    <nav class="bg-white shadow-sm border-b border-slate-200 py-4 px-8">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <i class="fas fa-file-pdf text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold text-slate-800 tracking-tight">PDF<span class="text-blue-600">Edit</span>.io</span>
+            </div>
+            <div class="hidden md:flex space-x-6 text-slate-500 font-medium">
+                <a href="#" class="hover:text-blue-600 transition">Beranda</a>
+                <a href="#" class="hover:text-blue-600 transition">Fitur</a>
+                <a href="#" class="hover:text-blue-600 transition">Riwayat</a>
+            </div>
+        </div>
+    </nav>
 
-    <div id="status"></div>
+    <main class="max-w-3xl mx-auto mt-16 px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Edit Tulisan PDF dengan Mudah</h1>
+            <p class="text-slate-600 text-lg">Upload PDF Anda, kami akan mengubahnya menjadi dokumen yang bisa dihapus dan diedit teksnya secara gratis.</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100">
+            <div id="drop-area" class="border-2 border-dashed border-slate-300 rounded-xl p-10 flex flex-col items-center justify-center transition-all hover:border-blue-400 hover:bg-blue-50 cursor-pointer">
+                <div class="bg-blue-100 p-5 rounded-full mb-4">
+                    <i class="fas fa-cloud-upload-alt text-3xl text-blue-600"></i>
+                </div>
+                <p class="text-slate-700 font-semibold mb-1">Pilih file atau tarik ke sini</p>
+                <p class="text-slate-400 text-sm italic">Hanya mendukung file .PDF (Maks. 10MB)</p>
+                <input type="file" id="pdfFile" class="hidden" accept="application/pdf">
+            </div>
+
+            <div id="file-info" class="hidden mt-6 p-4 bg-slate-50 rounded-lg flex items-center justify-between border border-slate-200">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+                    <div>
+                        <p id="file-name" class="font-medium text-slate-800 truncate max-w-xs">document.pdf</p>
+                        <p id="file-size" class="text-xs text-slate-500">1.2 MB</p>
+                    </div>
+                </div>
+                <button onclick="resetFile()" class="text-slate-400 hover:text-red-500 transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <button onclick="uploadFile()" id="btn-convert" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2">
+                <span>Mulai Konversi Sekarang</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div id="status-container" class="hidden mt-6 p-5 rounded-xl text-center flex flex-col items-center animate-pulse">
+            <div id="loader" class="mb-3 w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+            <p id="status-text" class="text-slate-700 font-medium"></p>
+        </div>
+
+        <footer class="mt-20 text-center text-slate-400 text-sm pb-10">
+            &copy; 2026 PDFEdit.io - Powerred by Google Drive OCR API
+        </footer>
+    </main>
 
     <script>
-        // Ganti dengan URL API Apps Script kamu
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxicuFB5Y0iRlVR8pWpJ4JV3MreB0e_CyGH_7R1UTLQouP92gYnb6uLXPy1OmxEgmDT/exec";
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('pdfFile');
+        const fileInfo = document.getElementById('file-info');
+        const fileNameLabel = document.getElementById('file-name');
+        const fileSizeLabel = document.getElementById('file-size');
+        const statusContainer = document.getElementById('status-container');
+        const statusText = document.getElementById('status-text');
+
+        // Handle Klik Drop Area
+        dropArea.addEventListener('click', () => fileInput.click());
+
+        // Handle Pilih File
+        fileInput.addEventListener('change', function() {
+            if(this.files.length > 0) {
+                showFileInfo(this.files[0]);
+            }
+        });
+
+        function showFileInfo(file) {
+            fileNameLabel.innerText = file.name;
+            fileSizeLabel.innerText = (file.size / 1024 / 1024).toFixed(2) + " MB";
+            fileInfo.classList.remove('hidden');
+            dropArea.classList.add('hidden');
+        }
+
+        function resetFile() {
+            fileInput.value = "";
+            fileInfo.classList.add('hidden');
+            dropArea.classList.remove('hidden');
+            statusContainer.classList.add('hidden');
+        }
 
         async function uploadFile() {
-            const fileInput = document.getElementById('pdfFile');
-            const statusDiv = document.getElementById('status');
-            
             if (fileInput.files.length === 0) {
-                alert("Pilih file PDF dulu ya!");
+                alert("Pilih file dulu ya!");
                 return;
             }
 
             const file = fileInput.files[0];
-            statusDiv.innerText = "Sedang memproses... Tunggu sebentar (Google sedang melakukan OCR)";
+            const btn = document.getElementById('btn-convert');
+            
+            // UI Loading
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            statusContainer.classList.remove('hidden');
+            statusText.innerText = "Sistem sedang membaca teks di PDF kamu...";
 
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async function () {
-                const base64Data = reader.result.split(',')[1]; // Ambil data base64 saja
+                const base64Data = reader.result.split(',')[1];
 
                 try {
                     const response = await fetch(SCRIPT_URL, {
@@ -53,13 +136,21 @@
                     const result = await response.json();
 
                     if (result.status === "success") {
-                        statusDiv.innerHTML = `Berhasil! <a href="${result.docUrl}" target="_blank">Klik di sini untuk Edit Tulisan di Google Docs</a>`;
+                        statusContainer.classList.remove('animate-pulse');
+                        document.getElementById('loader').classList.add('hidden');
+                        statusText.innerHTML = `
+                            <div class="bg-green-100 text-green-700 p-4 rounded-lg w-full">
+                                <p class="mb-3">✨ Berhasil dikonversi!</p>
+                                <a href="${result.docUrl}" target="_blank" class="bg-green-600 text-white px-6 py-2 rounded-full font-bold inline-block hover:bg-green-700 transition">Buka Editor & Edit Teks</a>
+                            </div>
+                        `;
                     } else {
-                        statusDiv.innerText = "Gagal: " + result.message;
+                        throw new Error(result.message);
                     }
                 } catch (error) {
-                    statusDiv.innerText = "Error koneksi ke API. Pastikan API sudah di-deploy sebagai 'Anyone'.";
-                    console.error(error);
+                    statusText.innerText = "Gagal: " + error.message;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50');
                 }
             };
         }
