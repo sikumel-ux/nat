@@ -3,43 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika KTP Scanner</title>
+    <title>Mahika ID Scanner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --deep-blue: #053a6f; --mahika-yellow: #facc15; --white-off: #fdfaf0; --light-bg: #f3f4f6; }
-        * { box-sizing: border-box; }
-        body { margin: 0; background-color: var(--light-bg); font-family: 'Plus Jakarta Sans', sans-serif; }
+        :root { 
+            --deep-blue: #053a6f; 
+            --mahika-yellow: #facc15; 
+            --white-off: #fdfaf0; 
+            --light-bg: #f3f4f6; 
+            --border-color: #e2e8f0;
+        }
         
+        * { box-sizing: border-box; }
+        body { margin: 0; background-color: var(--light-bg); font-family: 'Plus Jakarta Sans', sans-serif; color: #334155; }
+        
+        /* HEADER SECTION */
         .top-section {
             background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
-            height: 220px; display: flex; flex-direction: column; align-items: center; padding-top: 45px;
+            height: 240px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 50px;
         }
-        .title-brand { font-size: 38px; font-weight: 800; letter-spacing: -2px; margin: 0; display: flex; gap: 8px; }
+
+        /* PERBAIKAN DI SINI: Nengahin Sub Brand */
+        .brand-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title-brand { 
+            font-size: 38px; 
+            font-weight: 800; 
+            letter-spacing: -2px; 
+            margin: 0; 
+            display: flex; 
+            gap: 8px; 
+            justify-content: center; /* Memastikan logo di tengah */
+        }
+        
         .brand-mahika { color: var(--mahika-yellow); }
         .brand-trans { color: var(--white-off); font-weight: 200; }
-        .brand-sub { display: block; color: var(--mahika-yellow); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
-
-        .main-container { max-width: 400px; margin: -95px auto 40px auto; padding: 0 20px; position: relative; z-index: 10; }
-        .scan-card { background: white; border-radius: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); padding: 24px; }
-
-        .camera-box { width: 100%; border-radius: 20px; overflow: hidden; position: relative; background: #000; aspect-ratio: 3/2; border: 2px solid #eee; }
-        #video { width: 100%; height: 100%; object-fit: cover; }
-        .overlay { position: absolute; top: 15%; left: 10%; right: 10%; bottom: 15%; border: 2px solid var(--mahika-yellow); border-radius: 10px; box-shadow: 0 0 0 1000px rgba(0,0,0,0.4); pointer-events: none; }
-
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-action {
-            flex: 1; background: var(--mahika-yellow); padding: 15px; border-radius: 14px; border: none;
-            color: var(--deep-blue); font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);
-        }
-        .btn-secondary { background: #e2e8f0; box-shadow: none; }
-        .btn-action:active { transform: scale(0.95); }
-
-        .form-group { margin-top: 15px; }
-        .form-group label { display: block; font-size: 9px; font-weight: 800; color: var(--deep-blue); margin-bottom: 4px; text-transform: uppercase; opacity: 0.6; }
-        .form-group input { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #f1f5f9; background: #fafafa; font-family: inherit; font-weight: 600; color: var(--deep-blue); }
         
-        .loading { opacity: 0.5; pointer-events: none; }
+        .brand-sub { 
+            display: block; 
+            color: var(--mahika-yellow); 
+            font-size: 10px; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; /* Tambah sedikit spasi biar mewah */
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        /* CONTAINER & CARD */
+        .main-container { 
+            max-width: 420px; 
+            margin: -90px auto 40px auto; 
+            padding: 0 20px; 
+            position: relative; 
+            z-index: 10; 
+        }
+        
+        .scan-card { 
+            background: white; 
+            border-radius: 32px; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); 
+            padding: 28px; 
+        }
+
+        /* CAMERA BOX */
+        .camera-box { 
+            width: 100%; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            position: relative; 
+            background: #000; 
+            aspect-ratio: 3/2; 
+            border: 2px solid #f1f5f9; 
+        }
+        
+        #video { width: 100%; height: 100%; object-fit: cover; }
+        
+        .overlay { 
+            position: absolute; 
+            top: 15%; left: 8%; right: 8%; bottom: 15%; 
+            border: 2px dashed var(--mahika-yellow); 
+            border-radius: 12px; 
+            box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); 
+            pointer-events: none; 
+        }
+
+        /* BUTTONS */
+        .btn-group { display: flex; gap: 12px; margin-top: 24px; }
+        
+        .btn-action {
+            flex: 1; 
+            background: var(--mahika-yellow); 
+            padding: 16px; 
+            border-radius: 16px; 
+            border: none;
+            color: var(--deep-blue); 
+            font-weight: 800; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary { 
+            background: #f1f5f9; 
+            color: #475569;
+            box-shadow: none; 
+        }
+        
+        .btn-action:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-action:active { transform: scale(0.96); }
+
+        /* FORM STYLING (Premium Look) */
+        .form-section { margin-top: 25px; }
+        
+        .form-group { margin-bottom: 16px; }
+        
+        .form-group label { 
+            display: block; 
+            font-size: 10px; 
+            font-weight: 800; 
+            color: var(--deep-blue); 
+            margin-bottom: 6px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            opacity: 0.7; 
+        }
+        
+        .form-group input { 
+            width: 100%; 
+            padding: 14px 16px; 
+            border-radius: 12px; 
+            border: 1.5px solid #e2e8f0; 
+            background: #f8fafc; 
+            font-family: inherit; 
+            font-weight: 600; 
+            font-size: 15px;
+            color: var(--deep-blue); 
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--mahika-yellow);
+            background: #fff;
+        }
+        
+        .loading { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); }
+
+        #btnConfirm {
+            background: var(--deep-blue); 
+            color: white; 
+            margin-top: 10px; 
+            width: 100%;
+            padding: 18px;
+            font-size: 15px;
+            box-shadow: 0 10px 20px rgba(5, 58, 111, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -48,7 +182,7 @@
         <div class="brand-container">
             <h1 class="title-brand">
                 <span class="brand-mahika">MAHIKA</span>
-                <span class="brand-trans">Scanner</span>
+                <span class="brand-trans">ID Scanner</span>
             </h1>
             <span class="brand-sub">Reservation Intelligence System</span>
         </div>
@@ -56,26 +190,52 @@
 
     <div class="main-container">
         <div class="scan-card">
-            <div class="camera-box"><video id="video" autoplay playsinline></video><div class="overlay"></div></div>
+            <div class="camera-box">
+                <video id="video" autoplay playsinline></video>
+                <div class="overlay"></div>
+            </div>
 
             <div class="btn-group">
-                <button class="btn-action" id="btnCap" onclick="takeSnapshot()"><i class="fa-solid fa-camera"></i> SCAN</button>
-                <button class="btn-action btn-secondary" onclick="document.getElementById('fileIn').click()"><i class="fa-solid fa-image"></i> GALLERY</button>
+                <button class="btn-action" id="btnCap" onclick="takeSnapshot()">
+                    <i class="fa-solid fa-camera"></i> SCAN KTP
+                </button>
+                <button class="btn-action btn-secondary" onclick="document.getElementById('fileIn').click()">
+                    <i class="fa-solid fa-image"></i> GALLERY
+                </button>
             </div>
             
             <input type="file" id="fileIn" accept="image/*" style="display:none" onchange="fromGallery(this)">
 
-            <div style="margin-top: 20px;">
-                <div class="form-group"><label>NIK</label><input type="text" id="nik"></div>
-                <div class="form-group"><label>Nama</label><input type="text" id="nama"></div>
-                <div style="display:flex; gap:10px">
-                    <div class="form-group" style="flex:2"><label>Tgl Lahir</label><input type="text" id="tgl"></div>
-                    <div class="form-group" style="flex:1"><label>Umur</label><input type="text" id="umur" readonly></div>
+            <div class="form-section">
+                <div class="form-group">
+                    <label>Nomor Induk Kependudukan (NIK)</label>
+                    <input type="text" id="nik" placeholder="...">
                 </div>
-                <div class="form-group"><label>Kabupaten/Kota</label><input type="text" id="kota"></div>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="...">
+                </div>
+                
+                <div style="display:flex; gap:12px">
+                    <div class="form-group" style="flex:2">
+                        <label>Tanggal Lahir</label>
+                        <input type="text" id="tgl" placeholder="DD-MM-YYYY">
+                    </div>
+                    <div class="form-group" style="flex:1">
+                        <label>Umur</label>
+                        <input type="text" id="umur" readonly style="background:#f1f5f9; color:#64748b">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Kabupaten / Kota</label>
+                    <input type="text" id="kota" placeholder="...">
+                </div>
             </div>
 
-            <button class="btn-action" id="btnConfirm" style="background:var(--deep-blue); color:white; margin-top:20px; width:100%" onclick="alert('Data Terkonfirmasi!')">CONFIRM DATA</button>
+            <button class="btn-action" id="btnConfirm" onclick="alert('Data Berhasil Disimpan!')">
+                <i class="fa-solid fa-check-circle"></i> KONFIRMASI DATA
+            </button>
         </div>
     </div>
 
@@ -89,7 +249,10 @@
         // Memulai kamera belakang
         navigator.mediaDevices.getUserMedia({ 
             video: { facingMode: "environment", width: { ideal: 1280 } } 
-        }).then(s => video.srcObject = s).catch(err => console.log("Kamera error: ", err));
+        }).then(s => video.srcObject = s).catch(err => {
+            console.log("Kamera error: ", err);
+            alert("Izin kamera ditolak atau tidak ditemukan.");
+        });
 
         function takeSnapshot() {
             processStart();
@@ -109,14 +272,14 @@
         }
 
         function processStart() {
-            btnCap.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> WAIT..';
+            btnCap.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PROCESSING..';
             document.querySelector('.scan-card').classList.add('loading');
         }
 
         function sendToBackend(base64) {
-            // Memanggil fungsi processKTP yang ada di Code.gs
+            // Memanggil fungsi processKTP yang ada di Code.gs (Google Apps Script)
             google.script.run.withSuccessHandler(res => {
-                btnCap.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN';
+                btnCap.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN KTP';
                 document.querySelector('.scan-card').classList.remove('loading');
                 
                 if(res.error) return alert(res.error);
@@ -130,10 +293,11 @@
                 
             }).withFailureHandler(err => {
                 alert("Gagal menghubungi server: " + err);
-                btnCap.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN';
+                btnCap.innerHTML = '<i class="fa-solid fa-camera"></i> SCAN KTP';
                 document.querySelector('.scan-card').classList.remove('loading');
             }).processKTP(base64);
         }
     </script>
 </body>
-</html>
+            </html>
+            
