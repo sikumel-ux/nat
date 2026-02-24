@@ -1,104 +1,187 @@
-            padding: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Quote Poster v2</title>
+    <style>
+        /* Import font Google biar lebih pro */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
+        :root {
+            --accent: #00f2ff; /* Warna neon bus */
+            --bg-dark: #0a0a0a;
         }
 
-        /* Efek Dekorasi Tipografi */
-        .quote-text {
-            font-size: 2.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 1;
+        body {
+            background-color: #1a1a1a;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+        }
+
+        /* Container Utama Poster */
+        .poster-canvas {
+            width: 380px;
+            height: 500px;
+            background-color: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            border: 1px solid #333;
+        }
+
+        /* Image Handling */
+        .bus-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.7) contrast(1.2);
+            transition: transform 0.5s ease;
+        }
+
+        /* Efek Gradasi supaya teks terbaca */
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent);
             z-index: 2;
-            text-align: left;
+        }
+
+        /* Konten Teks */
+        .content {
+            position: absolute;
+            bottom: 40px;
+            left: 25px;
+            right: 25px;
+            z-index: 3;
+        }
+
+        .category-tag {
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        #quote-display {
+            font-size: 2.5rem;
+            line-height: 0.95;
+            margin: 0;
+            text-transform: uppercase;
             word-wrap: break-word;
-            max-width: 100%;
         }
 
         .highlight {
-            color: var(--accent);
-            -webkit-text-stroke: 1px var(--accent);
-            text-shadow: 5px 5px 0px rgba(0, 242, 255, 0.2);
+            color: var(--bg-dark);
+            background-color: var(--accent);
+            padding: 2px 8px;
+            display: inline-block;
+            margin-top: 5px;
         }
 
-        /* Input Section */
+        /* Dekorasi Garis */
+        .line-deco {
+            width: 50px;
+            height: 4px;
+            background: white;
+            margin-top: 20px;
+        }
+
+        /* UI Input */
         .controls {
             margin-top: 30px;
             display: flex;
             gap: 10px;
-            z-index: 10;
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
         }
 
         input {
-            padding: 12px 20px;
+            padding: 12px;
+            border: none;
             border-radius: 5px;
-            border: 1px solid #333;
-            background: #1a1a1a;
+            background: #333;
             color: white;
-            width: 300px;
             outline: none;
+            width: 200px;
         }
 
         button {
-            padding: 12px 25px;
+            padding: 12px 20px;
             background: var(--accent);
+            color: black;
             border: none;
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.4);
-        }
-
-        /* Dekorasi background */
-        .bg-text {
-            position: absolute;
-            font-size: 8rem;
-            font-weight: 900;
-            opacity: 0.03;
-            user-select: none;
-            z-index: 1;
+            filter: brightness(1.2);
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-text">QUOTES</div>
-
-    <div class="canvas" id="capture">
-        <div class="quote-text" id="display">
-            INPUT <span class="highlight">SESUATU</span> DI BAWAH, BRO.
+    <div class="poster-canvas">
+        <img src="bus.png" alt="Bus" class="bus-image" id="busImg">
+        <div class="overlay"></div>
+        
+        <div class="content">
+            <div class="category-tag">Road Trip / 2026</div>
+            <h1 id="quote-display">
+                DI SANA <span class="highlight">BERDAMAI</span>
+            </h1>
+            <div class="line-deco"></div>
         </div>
     </div>
 
     <div class="controls">
-        <input type="text" id="userInput" placeholder="Tulis quote kamu di sini..." maxlength="60">
-        <button onclick="updateQuote()">GENERATE</button>
+        <input type="text" id="quoteInput" placeholder="Tulis kata-kata hari ini..." maxlength="50">
+        <button onclick="updatePoster()">GAS!</button>
     </div>
 
     <script>
-        function updateQuote() {
-            const input = document.getElementById('userInput').value;
-            const display = document.getElementById('display');
+        function updatePoster() {
+            const input = document.getElementById('quoteInput').value;
+            const display = document.getElementById('quote-display');
             
-            if(input.trim() === "") return;
+            if (!input) return;
 
-            // Logika memisahkan kata terakhir untuk dikasih highlight warna
-            let words = input.split(" ");
-            let lastWord = words.pop();
-            let mainText = words.join(" ");
+            // Logika pecah kata: kata terakhir jadi highlight kotak
+            let words = input.trim().split(" ");
+            if (words.length > 1) {
+                let lastWord = words.pop();
+                let rest = words.join(" ");
+                display.innerHTML = `${rest} <span class="highlight">${lastWord}</span>`;
+            } else {
+                display.innerHTML = `<span class="highlight">${words[0]}</span>`;
+            }
 
-            display.innerHTML = `${mainText} <span class="highlight">${lastWord}</span>`;
-            
-            // Random rotasi dikit biar makin estetik
-            const randomRot = (Math.random() * 4 - 2).toFixed(1);
-            display.style.transform = `rotate(${randomRot}deg)`;
+            // Animasi dikit pas ganti teks
+            const canvas = document.querySelector('.poster-canvas');
+            canvas.style.transform = "scale(0.98)";
+            setTimeout(() => canvas.style.transform = "scale(1)", 100);
         }
     </script>
+
 </body>
-  </html>
-  
+</html>
