@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Quote Generator</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --accent: #00f2ff;
+            --text: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Container Utama */
+        .canvas {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(45deg, #111, #222);
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        /* Efek Dekorasi Tipografi */
+        .quote-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1;
+            z-index: 2;
+            text-align: left;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .highlight {
+            color: var(--accent);
+            -webkit-text-stroke: 1px var(--accent);
+            text-shadow: 5px 5px 0px rgba(0, 242, 255, 0.2);
+        }
+
+        /* Input Section */
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        input {
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: white;
+            width: 300px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: var(--accent);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.4);
+        }
+
+        /* Dekorasi background */
+        .bg-text {
+            position: absolute;
+            font-size: 8rem;
+            font-weight: 900;
+            opacity: 0.03;
+            user-select: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-text">QUOTES</div>
+
+    <div class="canvas" id="capture">
+        <div class="quote-text" id="display">
+            INPUT <span class="highlight">SESUATU</span> DI BAWAH, BRO.
+        </div>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="userInput" placeholder="Tulis quote kamu di sini..." maxlength="60">
+        <button onclick="updateQuote()">GENERATE</button>
+    </div>
+
+    <script>
+        function updateQuote() {
+            const input = document.getElementById('userInput').value;
+            const display = document.getElementById('display');
+            
+            if(input.trim() === "") return;
+
+            // Logika memisahkan kata terakhir untuk dikasih highlight warna
+            let words = input.split(" ");
+            let lastWord = words.pop();
+            let mainText = words.join(" ");
+
+            display.innerHTML = `${mainText} <span class="highlight">${lastWord}</span>`;
+            
+            // Random rotasi dikit biar makin estetik
+            const randomRot = (Math.random() * 4 - 2).toFixed(1);
+            display.style.transform = `rotate(${randomRot}deg)`;
+        }
+    </script>
+</body>
+  </html>
+  
