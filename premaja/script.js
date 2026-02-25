@@ -1,80 +1,72 @@
-// Database Rute & Harga (Disembunyikan dari HTML)
-const busRoutes = [
-    // EXECUTIVE CLASS
-    { name: "Lampung", price: ["550.000", "600.000", "700.000", "600.000", "Normal"], type: "Executive" },
-    { name: "Metro", price: ["550.000", "600.000", "700.000", "600.000", "Normal"], type: "Executive" },
-    { name: "Pringsewu", price: ["550.000", "600.000", "700.000", "600.000", "Normal"], type: "Executive" },
-    { name: "Bandar Jaya", price: ["550.000", "600.000", "700.000", "600.000", "Normal"], type: "Executive" },
-    { name: "Unit 2", price: ["550.000", "600.000", "700.000", "600.000", "Normal"], type: "Executive" },
-    { name: "Kotabumi", price: ["600.000", "650.000", "750.000", "650.000", "Normal"], type: "Executive" },
-    { name: "Way Abung", price: ["600.000", "650.000", "750.000", "650.000", "Normal"], type: "Executive" },
-    { name: "Gaya Baru", price: ["600.000", "650.000", "750.000", "650.000", "Normal"], type: "Executive" },
-    { name: "Way Jepara", price: ["600.000", "650.000", "750.000", "650.000", "Normal"], type: "Executive" },
-    { name: "Tulang Bawang", price: ["600.000", "650.000", "750.000", "700.000", "600.000"], type: "Executive" },
-    { name: "Menggala", price: ["600.000", "650.000", "750.000", "700.000", "600.000"], type: "Executive" },
-    { name: "Palembang", price: ["650.000", "700.000", "800.000", "750.000", "650.000"], type: "Executive" },
-    { name: "Indralaya", price: ["650.000", "700.000", "800.000", "750.000", "650.000"], type: "Executive" },
-    { name: "Prabumulih", price: ["700.000", "750.000", "850.000", "800.000", "700.000"], type: "Executive" },
-    { name: "Jambi", price: ["750.000", "800.000", "900.000", "850.000", "800.000"], type: "Executive" },
-    { name: "Lubuk Linggau", price: ["850.000", "900.000", "1.000.000", "950.000", "900.000"], type: "Executive" },
-    { name: "Muara Bungo", price: ["900.000", "950.000", "1.050.000", "1.000.000", "950.000"], type: "Executive" },
-    { name: "Sungai Rumbai", price: ["950.000", "1.000.000", "1.100.000", "1.050.000", "1.000.000"], type: "Executive" },
-    
-    // SUPER EXECUTIVE / SUITES COMBI
-    { name: "Palembang (Super Exec)", price: ["850.000", "900.000", "1.000.000", "950.000", "900.000"], type: "Super Executive" },
-    { name: "Jambi (Super Exec)", price: ["900.000", "950.000", "1.100.000", "1.050.000", "950.000"], type: "Super Executive" },
-    { name: "Lubuk Linggau (Super Exec)", price: ["1.000.000", "1.050.000", "1.200.000", "1.150.000", "1.050.000"], type: "Super Executive" }
+// Database Rute & Harga - Dipisah satu per satu dari gambar
+const db = [
+    // EXECUTIVE
+    { n: "Lampung", p: ["550.000", "600.000", "700.000", "600.000", "NORMAL"], t: "Executive" },
+    { n: "Metro", p: ["550.000", "600.000", "700.000", "600.000", "NORMAL"], t: "Executive" },
+    { n: "Pringsewu", p: ["550.000", "600.000", "700.000", "600.000", "NORMAL"], t: "Executive" },
+    { n: "Bandar Jaya", p: ["550.000", "600.000", "700.000", "600.000", "NORMAL"], t: "Executive" },
+    { n: "Unit 2", p: ["550.000", "600.000", "700.000", "600.000", "NORMAL"], t: "Executive" },
+    { n: "Kotabumi", p: ["600.000", "650.000", "750.000", "650.000", "NORMAL"], t: "Executive" },
+    { n: "Way Abung", p: ["600.000", "650.000", "750.000", "650.000", "NORMAL"], t: "Executive" },
+    { n: "Gaya Baru", p: ["600.000", "650.000", "750.000", "650.000", "NORMAL"], t: "Executive" },
+    { n: "Rumbia", p: ["600.000", "650.000", "750.000", "650.000", "NORMAL"], t: "Executive" },
+    { n: "Tulang Bawang", p: ["600.000", "650.000", "750.000", "700.000", "600.000"], t: "Executive" },
+    { n: "Menggala", p: ["600.000", "650.000", "750.000", "700.000", "600.000"], t: "Executive" },
+    { n: "Baturaja", p: ["650.000", "700.000", "750.000", "700.000", "600.000"], t: "Executive" },
+    { n: "Palembang", p: ["650.000", "700.000", "800.000", "750.000", "650.000"], t: "Executive" },
+    { n: "Prabumulih", p: ["700.000", "750.000", "850.000", "800.000", "700.000"], t: "Executive" },
+    { n: "Jambi", p: ["750.000", "800.000", "900.000", "850.000", "800.000"], t: "Executive" },
+    { n: "Muara Bulian", p: ["800.000", "850.000", "950.000", "900.000", "850.000"], t: "Executive" },
+    { n: "Lubuk Linggau", p: ["850.000", "900.000", "1.000.000", "950.000", "900.000"], t: "Executive" },
+    { n: "Muara Bungo", p: ["900.000", "950.000", "1.050.000", "1.000.000", "950.000"], t: "Executive" },
+    { n: "Sungai Rumbai", p: ["950.000", "1.000.000", "1.100.000", "1.050.000", "1.000.000"], t: "Executive" },
+
+    // SUPER EXECUTIVE
+    { n: "Palembang (Super Exec)", p: ["850.000", "900.000", "1.000.000", "950.000", "900.000"], t: "Super Executive" },
+    { n: "Jambi (Super Exec)", p: ["900.000", "950.000", "1.100.000", "1.050.000", "950.000"], t: "Super Executive" },
+    { n: "Lubuk Linggau (Super Exec)", p: ["1.000.000", "1.050.000", "1.200.000", "1.150.000", "1.050.000"], t: "Super Executive" },
+    { n: "Muara Bungo (Super Exec)", p: ["1.050.000", "1.100.000", "1.250.000", "1.200.000", "1.100.000"], t: "Super Executive" }
 ];
 
-const inputRoute = document.getElementById('routeInput');
+const input = document.getElementById('routeInput');
 const sBox = document.getElementById('suggestionBox');
-let activeRoute = null;
+let selected = null;
 
-// Logic Pencarian (Autocomplete)
-inputRoute.addEventListener('input', () => {
-    const val = inputRoute.value.toLowerCase();
+// Suggestion Logic
+input.addEventListener('input', () => {
+    const v = input.value.toLowerCase();
     sBox.innerHTML = '';
-    if (!val) { sBox.style.display = 'none'; return; }
-
-    const matches = busRoutes.filter(r => r.name.toLowerCase().includes(val));
+    if (!v) { sBox.style.display = 'none'; return; }
+    const matches = db.filter(r => r.n.toLowerCase().includes(v));
     if (matches.length > 0) {
         sBox.style.display = 'block';
         matches.forEach(r => {
-            const div = document.createElement('div');
-            div.className = 'suggestion-item';
-            div.innerText = `${r.name} (${r.type})`;
-            div.onclick = () => {
-                inputRoute.value = r.name;
-                activeRoute = r;
-                sBox.style.display = 'none';
-            };
-            sBox.appendChild(div);
+            const d = document.createElement('div');
+            d.className = 'suggestion-item';
+            d.innerText = `${r.n} (${r.t})`;
+            d.onclick = () => { input.value = r.n; selected = r; sBox.style.display = 'none'; };
+            sBox.appendChild(d);
         });
-    } else {
-        sBox.style.display = 'none';
-    }
+    } else { sBox.style.display = 'none'; }
 });
 
-// Logic Hitung Harga
+// Search Logic
 document.getElementById('searchBtn').onclick = () => {
-    if (!activeRoute) {
-        alert("Silakan ketik dan pilih rute dari saran yang muncul!");
-        return;
-    }
+    if (!selected) { alert('Pilih rute dari saran yang muncul!'); return; }
+    
+    const dIdx = document.getElementById('selectDate').value;
+    const dText = document.getElementById('selectDate').options[dIdx].text;
+    const price = selected.p[dIdx];
 
-    const dateVal = document.getElementById('selectDate').value;
-    const finalPrice = activeRoute.price[dateVal];
+    document.getElementById('resultArea').classList.remove('hidden');
+    document.getElementById('outPrice').innerText = price === "NORMAL" ? "Tarif Normal" : "Rp " + price;
+    document.getElementById('outRouteName').innerText = `Tujuan: ${selected.n}`;
+    document.getElementById('resTags').innerHTML = `<span class="tag">${selected.t}</span>`;
 
-    const resultArea = document.getElementById('resultArea');
-    resultArea.classList.remove('hidden');
-
-    document.getElementById('outPrice').innerText = finalPrice === "Normal" ? "Tarif Normal" : "Rp " + finalPrice;
-    document.getElementById('outRouteName').innerText = "Rute: " + activeRoute.name;
-    document.getElementById('resTags').innerHTML = `<span class="tag">${activeRoute.type}</span>`;
+    // Update WA Link
+    const msg = `Halo Mahika, saya cek tarif ${selected.t} rute ${selected.n} untuk tanggal ${dText}. Harganya Rp ${price}, apakah kursi masih tersedia?`;
+    document.getElementById('waLink').href = `https://wa.me/091234567890?text=${encodeURIComponent(msg)}`;
 };
 
-// Tutup suggestion box kalau klik luar
-document.addEventListener('click', (e) => {
-    if (e.target !== inputRoute) sBox.style.display = 'none';
-});
-  
+document.addEventListener('click', (e) => { if (e.target !== input) sBox.style.display = 'none'; });
+                        
