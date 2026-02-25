@@ -13,28 +13,29 @@
             --light-bg: #f3f4f6;
         }
 
-        * { box-sizing: border-box; font-size: 13px; } /* Global font size diperkecil */
+        * { box-sizing: border-box; font-size: 12px; }
         
         body { 
             margin: 0; 
             background-color: var(--light-bg); 
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #334155;
+            overflow-x: hidden;
         }
 
         .top-section {
             background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
-            height: 180px; 
+            height: 160px; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 35px;
+            padding-top: 30px;
         }
 
         .brand-container { text-align: center; z-index: 5; }
         
         .title-brand {
-            font-size: 38px; 
+            font-size: 32px; 
             font-weight: 800; 
             letter-spacing: -2px; 
             margin: 0;
@@ -55,100 +56,112 @@
             text-transform: uppercase; 
             letter-spacing: 1.5px;
             margin-top: 5px;
-            opacity: 0.9;
         }
 
         .main-container {
-            max-width: 500px;
-            margin: -70px auto 20px auto;
-            padding: 0 15px;
+            max-width: 600px;
+            margin: -60px auto 20px auto;
+            padding: 0 10px;
             position: relative;
             z-index: 10;
         }
 
         .price-card {
             background: white;
-            border-radius: 24px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            padding: 16px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 12px;
         }
 
         /* Tab Switcher */
         .tabs {
             display: flex;
-            gap: 5px;
+            gap: 4px;
             background: #f1f5f9;
             padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 8px;
+            padding: 6px;
             border: none;
-            border-radius: 8px;
+            border-radius: 7px;
             background: transparent;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 10px;
             color: #64748b;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .tab-btn.active {
             background: white;
             color: var(--deep-blue);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         /* Table Area */
         .table-container {
-            max-height: 400px; /* Batas tinggi biar ga scrolling body */
-            overflow-y: auto;
+            max-height: 450px; 
+            overflow: auto;
             border: 1px solid #f1f5f9;
-            border-radius: 15px;
+            border-radius: 12px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            text-align: left;
+            white-space: nowrap; /* Biar data tanggal ke samping */
         }
 
         th {
             position: sticky;
             top: 0;
             background: #f8fafc;
-            padding: 10px;
-            font-size: 10px;
+            padding: 8px;
+            font-size: 9px;
             text-transform: uppercase;
-            color: #94a3b8;
-            border-bottom: 1px solid #f1f5f9;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 20;
         }
+
+        /* Freeze kolom Rute */
+        th:first-child, td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 10;
+            border-right: 1px solid #f1f5f9;
+        }
+        th:first-child { background: #f8fafc; z-index: 30; }
 
         td {
-            padding: 10px;
+            padding: 8px;
             border-bottom: 1px solid #f8fafc;
-            font-size: 11px;
+            font-size: 10px;
+            text-align: center;
         }
 
-        .rute-name { font-weight: 600; color: var(--deep-blue); display: block; }
-        .price-text { font-family: monospace; font-weight: 700; color: #e11d48; }
+        td:first-child { text-align: left; }
+
+        .rute-name { font-weight: 700; color: var(--deep-blue); font-size: 10px; }
+        .price-text { font-family: 'Courier New', monospace; font-weight: 600; }
+        .peak { color: #e11d48; font-weight: 800; } /* Harga tertinggi merah */
 
         .footer-info {
-            margin-top: 15px;
-            padding: 10px;
+            margin-top: 10px;
+            padding: 8px;
             background: #fffbeb;
-            border-radius: 10px;
-            font-size: 10px;
+            border-radius: 8px;
+            font-size: 9px;
             color: #92400e;
             text-align: center;
-            font-weight: 600;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -159,7 +172,7 @@
                 <span class="brand-mahika">PUTRA</span>
                 <span class="brand-trans">Remaja</span>
             </h1>
-            <span class="brand-sub">Tarif Lebaran 2026</span>
+            <span class="brand-sub">Daftar Harga Tiket 2026</span>
         </div>
     </div>
 
@@ -167,7 +180,7 @@
         <div class="price-card">
             <div class="tabs">
                 <button class="tab-btn active" onclick="showData('exec', this)">EXECUTIVE</button>
-                <button class="tab-btn" onclick="showData('super', this)">SUPER EXEC & SUITES</button>
+                <button class="tab-btn" onclick="showData('super', this)">SUPER EXEC / SUITES</button>
             </div>
 
             <div class="table-container">
@@ -175,7 +188,11 @@
                     <thead>
                         <tr>
                             <th>Rute Tujuan</th>
-                            <th>26 Mar - 06 Apr</th>
+                            <th>14-20 Mar</th>
+                            <th>23-25 Mar</th>
+                            <th>26 Mar-06 Apr</th>
+                            <th>07-13 Apr</th>
+                            <th>14-19 Apr</th>
                         </tr>
                     </thead>
                     <tbody id="content-body">
@@ -184,50 +201,55 @@
             </div>
 
             <div class="footer-info">
-                * Mulai 20 April 2026 berlaku Tarif Normal.
+                * Mulai 20 April 2026 berlaku Tarif Normal. Geser tabel ke kanan untuk lihat semua tanggal.
             </div>
         </div>
     </div>
 
     <script>
         const dataExec = [
-            { r: "Yogya - Lampung/Metro", p: "700.000" },
-            { r: "Yogya - Kotabumi", p: "750.000" },
-            { r: "Yogya - Way Abung", p: "750.000" },
-            { r: "Yogya - Tulang Bawang", p: "750.000" },
-            { r: "Yogya - Palembang/KM32", p: "800.000" },
-            { r: "Yogya - Jambi/Betung", p: "900.000" },
-            { r: "Yogya - Lubuk Linggau", p: "1.000.000" },
-            { r: "Yogya - Muara Bungo", p: "1.050.000" },
-            { r: "Yogya - Sungai Rumbai", p: "1.100.000" }
+            { r: "Lampung / Metro", p: ["550k", "600k", "700k", "600k", "Norm"] },
+            { r: "Kotabumi / Way Abung", p: ["600k", "650k", "750k", "650k", "Norm"] },
+            { r: "Tulang Bawang / Menggala", p: ["600k", "650k", "750k", "700k", "600k"] },
+            { r: "Teluk Gelam / Tugu Jaya", p: ["650k", "700k", "800k", "750k", "650k"] },
+            { r: "Palembang / KM32", p: ["650k", "700k", "800k", "750k", "650k"] },
+            { r: "Prabumulih", p: ["700k", "750k", "850k", "800k", "700k"] },
+            { r: "Simpang Belimbing", p: ["750k", "800k", "900k", "850k", "750k"] },
+            { r: "Jambi s/d Penerokan", p: ["750k", "800k", "900k", "850k", "800k"] },
+            { r: "Muara Tembesi / Bulian", p: ["800k", "850k", "950k", "900k", "850k"] },
+            { r: "L. Linggau / Sekayu", p: ["850k", "900k", "1000k", "950k", "900k"] },
+            { r: "Muara Bungo / Bangko", p: ["900k", "950k", "1050k", "1000k", "950k"] },
+            { r: "Sungai Rumbai", p: ["950k", "1000k", "1100k", "1050k", "1000k"] }
         ];
 
         const dataSuper = [
-            { r: "Yogya - Palembang", p: "1.000.000" },
-            { r: "Yogya - Jambi", p: "1.100.000" },
-            { r: "Yogya - Muara Tembesi", p: "1.150.000" },
-            { r: "Yogya - Lubuk Linggau", p: "1.200.000" },
-            { r: "Yogya - Muara Bungo", p: "1.250.000" },
-            { r: "Yogya - Sungai Rumbai", p: "1.300.000" }
+            { r: "Palembang / Itera", p: ["850k", "900k", "1000k", "950k", "900k"] },
+            { r: "Jambi", p: ["900k", "950k", "1100k", "1050k", "950k"] },
+            { r: "Muara Tembesi", p: ["950k", "1000k", "1150k", "1100k", "1000k"] },
+            { r: "Lubuk Linggau", p: ["1000k", "1050k", "1200k", "1150k", "1050k"] },
+            { r: "Muara Bungo", p: ["1050k", "1100k", "1250k", "1200k", "1100k"] },
+            { r: "Sungai Rumbai", p: ["1100k", "1150k", "1300k", "1250k", "1150k"] }
         ];
 
         function showData(type, btn) {
             const body = document.getElementById('content-body');
             const items = type === 'exec' ? dataExec : dataSuper;
             
-            // Toggle active button
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
             body.innerHTML = items.map(item => `
                 <tr>
                     <td><span class="rute-name">${item.r}</span></td>
-                    <td><span class="price-text">Rp ${item.p}</span></td>
+                    <td><span class="price-text">${item.p[0]}</span></td>
+                    <td><span class="price-text">${item.p[1]}</span></td>
+                    <td><span class="price-text peak">${item.p[2]}</span></td>
+                    <td><span class="price-text">${item.p[3]}</span></td>
+                    <td><span class="price-text">${item.p[4]}</span></td>
                 </tr>
             `).join('');
         }
 
-        // Init
         showData('exec', document.querySelector('.tab-btn'));
     </script>
 </body>
