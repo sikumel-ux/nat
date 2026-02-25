@@ -1,0 +1,68 @@
+:root { 
+    --deep-blue: #053a6f; 
+    --mahika-yellow: #facc15; 
+    --light-bg: #f3f4f6;
+    --white: #ffffff;
+}
+
+* { box-sizing: border-box; }
+body { 
+    margin: 0; 
+    background-color: var(--light-bg); 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    color: #334155; 
+}
+
+.top-section {
+    background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
+    height: 140px; 
+    display: flex; 
+    justify-content: center; 
+    padding-top: 25px;
+}
+
+.title-brand { font-size: 30px; font-weight: 800; letter-spacing: -2px; margin: 0; color: var(--white); }
+.brand-mahika { color: var(--mahika-yellow); }
+.subtitle { font-size: 9px; color: var(--mahika-yellow); text-align: center; letter-spacing: 2px; font-weight: 600; margin-top: 5px; }
+
+.main-container { max-width: 400px; margin: -40px auto; padding: 0 15px; position: relative; }
+
+.search-card { background: var(--white); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; }
+
+.form-group { margin-bottom: 12px; position: relative; }
+label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin: 0 0 5px 4px; }
+
+input, select {
+    width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #f1f5f9;
+    background-color: #f8fafc; font-family: inherit; font-weight: 600; color: var(--deep-blue); font-size: 14px; outline: none;
+}
+
+input:focus { border-color: var(--mahika-yellow); }
+
+.suggestions {
+    position: absolute; width: 100%; background: var(--white); border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; max-height: 180px; overflow-y: auto;
+    border: 1px solid #f1f5f9; display: none; margin-top: 5px;
+}
+
+.suggestion-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f8fafc; font-size: 12px; transition: 0.2s; }
+.suggestion-item:hover { background: #eff6ff; color: var(--deep-blue); }
+
+.btn-search {
+    width: 100%; padding: 14px; background: var(--deep-blue); color: var(--white); border: none;
+    border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 10px; transition: 0.2s;
+}
+
+.btn-search:active { transform: scale(0.98); }
+
+.hidden { display: none; }
+
+.result-card {
+    margin-top: 15px; background: #fdfaf0; border: 2px solid var(--mahika-yellow); 
+    border-radius: 18px; padding: 16px; text-align: center;
+}
+
+.res-price { font-size: 28px; font-weight: 800; color: var(--deep-blue); margin: 5px 0; }
+.tag { font-size: 9px; font-weight: 700; background: var(--deep-blue); color: var(--white); padding: 3px 10px; border-radius: 10px; text-transform: uppercase; }
+.label-price { font-size: 11px; color: #64748b; margin: 0; }
+.res-route-detail { font-size: 10px; color: #94a3b8; margin: 5px 0 0 0; }
