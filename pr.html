@@ -3,132 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarif Putra Remaja Sentosa 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Putra Remaja x Mahika</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .mahika-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
-        .price-tag { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; border-radius: 12px; }
-        .sidebar-item:hover { background-color: #eff6ff; transform: translateX(8px); }
-        .sidebar-item { transition: all 0.3s ease; }
-        .active-tab { border-left: 4px solid #1e40af; background-color: #eff6ff; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        :root { 
+            --deep-blue: #053a6f; 
+            --mahika-yellow: #facc15; 
+            --white-off: #fdfaf0; 
+            --light-bg: #f3f4f6;
+        }
+
+        * { box-sizing: border-box; font-size: 13px; } /* Global font size diperkecil */
+        
+        body { 
+            margin: 0; 
+            background-color: var(--light-bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #334155;
+        }
+
+        .top-section {
+            background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
+            height: 180px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 35px;
+        }
+
+        .brand-container { text-align: center; z-index: 5; }
+        
+        .title-brand {
+            font-size: 38px; 
+            font-weight: 800; 
+            letter-spacing: -2px; 
+            margin: 0;
+            line-height: 0.85;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .brand-mahika { color: var(--mahika-yellow); }
+        .brand-trans { color: var(--white-off); font-weight: 200; }
+
+        .brand-sub { 
+            display: block; 
+            color: var(--mahika-yellow); 
+            font-size: 9px; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            max-width: 500px;
+            margin: -70px auto 20px auto;
+            padding: 0 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .price-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            padding: 16px;
+        }
+
+        /* Tab Switcher */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            font-weight: 700;
+            font-size: 11px;
+            color: #64748b;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--deep-blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* Table Area */
+        .table-container {
+            max-height: 400px; /* Batas tinggi biar ga scrolling body */
+            overflow-y: auto;
+            border: 1px solid #f1f5f9;
+            border-radius: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            padding: 10px;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #f8fafc;
+            font-size: 11px;
+        }
+
+        .rute-name { font-weight: 600; color: var(--deep-blue); display: block; }
+        .price-text { font-family: monospace; font-weight: 700; color: #e11d48; }
+
+        .footer-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fffbeb;
+            border-radius: 10px;
+            font-size: 10px;
+            color: #92400e;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
 
-    <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-800">PT. Putra Remaja Sentosa</h1>
-                <p class="text-slate-500">Daftar Harga Tiket Mudik Lebaran 2026</p>
-            </div>
-            <div class="text-right hidden md:block">
-                <p class="text-xs text-slate-400">Jl. Ring Road Barat No. 15</p>
-                <p class="text-xs text-slate-400">Yogyakarta (0274) 621322</p>
-            </div>
+    <div class="top-section">
+        <div class="brand-container">
+            <h1 class="title-brand">
+                <span class="brand-mahika">PUTRA</span>
+                <span class="brand-trans">Remaja</span>
+            </h1>
+            <span class="brand-sub">Tarif Lebaran 2026</span>
         </div>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <div class="lg:col-span-4 space-y-4">
-                <div class="mahika-card p-6 h-full">
-                    <h2 class="text-lg font-semibold mb-4 text-slate-700 border-b pb-2">Pilih Layanan</h2>
-                    
-                    <div class="space-y-3">
-                        <button onclick="switchTab('executive')" id="btn-exec" class="sidebar-item active-tab w-full text-left p-4 rounded-xl">
-                            <span class="block font-bold text-blue-900">EXECUTIVE</span>
-                            <span class="text-xs text-slate-500">Yogya - Jakarta - Sumatera</span>
-                        </button>
-                        
-                        <button onclick="switchTab('super-exec')" id="btn-super" class="sidebar-item w-full text-left p-4 rounded-xl">
-                            <span class="block font-bold text-slate-700">SUPER EXECUTIVE</span>
-                            <span class="text-xs text-slate-500">Suites Combi (Layanan Mewah)</span>
-                        </button>
-                    </div>
-
-                    <div class="mt-8 p-4 bg-amber-50 rounded-2xl border border-amber-100">
-                        <p class="text-xs text-amber-700 font-medium">* Mulai tanggal 20 April 2026 berlaku Tarif Normal.</p>
-                    </div>
-                </div>
+    <div class="main-container">
+        <div class="price-card">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showData('exec', this)">EXECUTIVE</button>
+                <button class="tab-btn" onclick="showData('super', this)">SUPER EXEC & SUITES</button>
             </div>
 
-            <div class="lg:col-span-8">
-                <div class="mahika-card p-2 md:p-6 overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse" id="priceTable">
-                            <thead>
-                                <tr class="text-slate-400 text-xs uppercase tracking-wider">
-                                    <th class="p-4 font-semibold">Rute Tujuan</th>
-                                    <th class="p-4 font-semibold bg-slate-50 rounded-t-lg">Peak 1 (14-20 Mar)</th>
-                                    <th class="p-4 font-semibold">Peak 2 (26 Mar-06 Apr)</th>
-                                    <th class="p-4 font-semibold">Post (07-13 Apr)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody" class="text-slate-700">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rute Tujuan</th>
+                            <th>26 Mar - 06 Apr</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content-body">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="footer-info">
+                * Mulai 20 April 2026 berlaku Tarif Normal.
             </div>
         </div>
     </div>
 
     <script>
-        const data = {
-            executive: [
-                { rute: "Yogya - Lampung / Metro", p1: "550.000", p2: "700.000", p3: "600.000" },
-                { rute: "Yogya - Kotabumi / Way Abung", p1: "600.000", p2: "750.000", p3: "650.000" },
-                { rute: "Yogya - Tulang Bawang", p1: "600.000", p2: "750.000", p3: "700.000" },
-                { rute: "Yogya - Palembang / KM32", p1: "650.000", p2: "800.000", p3: "750.000" },
-                { rute: "Yogya - Jambi / Betung", p1: "750.000", p2: "900.000", p3: "850.000" },
-                { rute: "Yogya - Lubuk Linggau", p1: "850.000", p2: "1.000.000", p3: "950.000" },
-                { rute: "Yogya - Muara Bungo", p1: "900.000", p2: "1.050.000", p3: "1.000.000" },
-                { rute: "Yogya - Sungai Rumbai", p1: "950.000", p2: "1.100.000", p3: "1.050.000" }
-            ],
-            super: [
-                { rute: "Yogya - Palembang / Itera", p1: "850.000", p2: "1.000.000", p3: "950.000" },
-                { rute: "Yogya - Jambi", p1: "900.000", p2: "1.100.000", p3: "1.050.000" },
-                { rute: "Yogya - Muara Tembesi", p1: "950.000", p2: "1.150.000", p3: "1.100.000" },
-                { rute: "Yogya - Lubuk Linggau", p1: "1.000.000", p2: "1.200.000", p3: "1.150.000" },
-                { rute: "Yogya - Muara Bungo", p1: "1.050.000", p2: "1.250.000", p3: "1.200.000" },
-                { rute: "Yogya - Sungai Rumbai", p1: "1.100.000", p2: "1.300.000", p3: "1.250.000" }
-            ]
-        };
+        const dataExec = [
+            { r: "Yogya - Lampung/Metro", p: "700.000" },
+            { r: "Yogya - Kotabumi", p: "750.000" },
+            { r: "Yogya - Way Abung", p: "750.000" },
+            { r: "Yogya - Tulang Bawang", p: "750.000" },
+            { r: "Yogya - Palembang/KM32", p: "800.000" },
+            { r: "Yogya - Jambi/Betung", p: "900.000" },
+            { r: "Yogya - Lubuk Linggau", p: "1.000.000" },
+            { r: "Yogya - Muara Bungo", p: "1.050.000" },
+            { r: "Yogya - Sungai Rumbai", p: "1.100.000" }
+        ];
 
-        function switchTab(type) {
-            const body = document.getElementById('tableBody');
-            const btnExec = document.getElementById('btn-exec');
-            const btnSuper = document.getElementById('btn-super');
+        const dataSuper = [
+            { r: "Yogya - Palembang", p: "1.000.000" },
+            { r: "Yogya - Jambi", p: "1.100.000" },
+            { r: "Yogya - Muara Tembesi", p: "1.150.000" },
+            { r: "Yogya - Lubuk Linggau", p: "1.200.000" },
+            { r: "Yogya - Muara Bungo", p: "1.250.000" },
+            { r: "Yogya - Sungai Rumbai", p: "1.300.000" }
+        ];
+
+        function showData(type, btn) {
+            const body = document.getElementById('content-body');
+            const items = type === 'exec' ? dataExec : dataSuper;
             
-            // Toggle Classes
-            if(type === 'executive') {
-                btnExec.classList.add('active-tab');
-                btnSuper.classList.remove('active-tab');
-                renderTable(data.executive);
-            } else {
-                btnSuper.classList.add('active-tab');
-                btnExec.classList.remove('active-tab');
-                renderTable(data.super);
-            }
-        }
+            // Toggle active button
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-        function renderTable(items) {
-            const body = document.getElementById('tableBody');
             body.innerHTML = items.map(item => `
-                <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                    <td class="p-4 font-medium text-slate-800">${item.rute}</td>
-                    <td class="p-4 bg-slate-50/30 text-blue-700 font-semibold">Rp ${item.p1}</td>
-                    <td class="p-4 text-rose-600 font-bold">Rp ${item.p2}</td>
-                    <td class="p-4 text-slate-600">Rp ${item.p3}</td>
+                <tr>
+                    <td><span class="rute-name">${item.r}</span></td>
+                    <td><span class="price-text">Rp ${item.p}</span></td>
                 </tr>
             `).join('');
         }
 
-        // Initial Load
-        renderTable(data.executive);
+        // Init
+        showData('exec', document.querySelector('.tab-btn'));
     </script>
 </body>
 </html>
