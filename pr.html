@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarif Putra Remaja Sentosa 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .mahika-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+        .price-tag { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; border-radius: 12px; }
+        .sidebar-item:hover { background-color: #eff6ff; transform: translateX(8px); }
+        .sidebar-item { transition: all 0.3s ease; }
+        .active-tab { border-left: 4px solid #1e40af; background-color: #eff6ff; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">PT. Putra Remaja Sentosa</h1>
+                <p class="text-slate-500">Daftar Harga Tiket Mudik Lebaran 2026</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="text-xs text-slate-400">Jl. Ring Road Barat No. 15</p>
+                <p class="text-xs text-slate-400">Yogyakarta (0274) 621322</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 space-y-4">
+                <div class="mahika-card p-6 h-full">
+                    <h2 class="text-lg font-semibold mb-4 text-slate-700 border-b pb-2">Pilih Layanan</h2>
+                    
+                    <div class="space-y-3">
+                        <button onclick="switchTab('executive')" id="btn-exec" class="sidebar-item active-tab w-full text-left p-4 rounded-xl">
+                            <span class="block font-bold text-blue-900">EXECUTIVE</span>
+                            <span class="text-xs text-slate-500">Yogya - Jakarta - Sumatera</span>
+                        </button>
+                        
+                        <button onclick="switchTab('super-exec')" id="btn-super" class="sidebar-item w-full text-left p-4 rounded-xl">
+                            <span class="block font-bold text-slate-700">SUPER EXECUTIVE</span>
+                            <span class="text-xs text-slate-500">Suites Combi (Layanan Mewah)</span>
+                        </button>
+                    </div>
+
+                    <div class="mt-8 p-4 bg-amber-50 rounded-2xl border border-amber-100">
+                        <p class="text-xs text-amber-700 font-medium">* Mulai tanggal 20 April 2026 berlaku Tarif Normal.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8">
+                <div class="mahika-card p-2 md:p-6 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="priceTable">
+                            <thead>
+                                <tr class="text-slate-400 text-xs uppercase tracking-wider">
+                                    <th class="p-4 font-semibold">Rute Tujuan</th>
+                                    <th class="p-4 font-semibold bg-slate-50 rounded-t-lg">Peak 1 (14-20 Mar)</th>
+                                    <th class="p-4 font-semibold">Peak 2 (26 Mar-06 Apr)</th>
+                                    <th class="p-4 font-semibold">Post (07-13 Apr)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="text-slate-700">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            executive: [
+                { rute: "Yogya - Lampung / Metro", p1: "550.000", p2: "700.000", p3: "600.000" },
+                { rute: "Yogya - Kotabumi / Way Abung", p1: "600.000", p2: "750.000", p3: "650.000" },
+                { rute: "Yogya - Tulang Bawang", p1: "600.000", p2: "750.000", p3: "700.000" },
+                { rute: "Yogya - Palembang / KM32", p1: "650.000", p2: "800.000", p3: "750.000" },
+                { rute: "Yogya - Jambi / Betung", p1: "750.000", p2: "900.000", p3: "850.000" },
+                { rute: "Yogya - Lubuk Linggau", p1: "850.000", p2: "1.000.000", p3: "950.000" },
+                { rute: "Yogya - Muara Bungo", p1: "900.000", p2: "1.050.000", p3: "1.000.000" },
+                { rute: "Yogya - Sungai Rumbai", p1: "950.000", p2: "1.100.000", p3: "1.050.000" }
+            ],
+            super: [
+                { rute: "Yogya - Palembang / Itera", p1: "850.000", p2: "1.000.000", p3: "950.000" },
+                { rute: "Yogya - Jambi", p1: "900.000", p2: "1.100.000", p3: "1.050.000" },
+                { rute: "Yogya - Muara Tembesi", p1: "950.000", p2: "1.150.000", p3: "1.100.000" },
+                { rute: "Yogya - Lubuk Linggau", p1: "1.000.000", p2: "1.200.000", p3: "1.150.000" },
+                { rute: "Yogya - Muara Bungo", p1: "1.050.000", p2: "1.250.000", p3: "1.200.000" },
+                { rute: "Yogya - Sungai Rumbai", p1: "1.100.000", p2: "1.300.000", p3: "1.250.000" }
+            ]
+        };
+
+        function switchTab(type) {
+            const body = document.getElementById('tableBody');
+            const btnExec = document.getElementById('btn-exec');
+            const btnSuper = document.getElementById('btn-super');
+            
+            // Toggle Classes
+            if(type === 'executive') {
+                btnExec.classList.add('active-tab');
+                btnSuper.classList.remove('active-tab');
+                renderTable(data.executive);
+            } else {
+                btnSuper.classList.add('active-tab');
+                btnExec.classList.remove('active-tab');
+                renderTable(data.super);
+            }
+        }
+
+        function renderTable(items) {
+            const body = document.getElementById('tableBody');
+            body.innerHTML = items.map(item => `
+                <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                    <td class="p-4 font-medium text-slate-800">${item.rute}</td>
+                    <td class="p-4 bg-slate-50/30 text-blue-700 font-semibold">Rp ${item.p1}</td>
+                    <td class="p-4 text-rose-600 font-bold">Rp ${item.p2}</td>
+                    <td class="p-4 text-slate-600">Rp ${item.p3}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Initial Load
+        renderTable(data.executive);
+    </script>
+</body>
+</html>
