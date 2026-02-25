@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika Trans - Cek Tarif</title>
+    <title>Mahika x Putra Remaja - Cek Tarif</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="top-section">
         <div class="brand-container">
-            <h1 class="title-brand"><span class="brand-mahika">CARI</span><span class="brand-trans">Tiket</span></h1>
+            <h1 class="title-brand">
+                <span class="brand-mahika">CARI</span><span class="brand-trans">Tiket</span>
+            </h1>
             <p class="subtitle">PT. PUTRA REMAJA SENTOSA</p>
         </div>
     </div>
@@ -19,20 +22,26 @@
     <div class="main-container">
         <div class="search-card">
             <div class="form-group">
-                <label>Tujuan Perjalanan</label>
-                <input type="text" id="routeInput" placeholder="Ketik rute (contoh: Metro atau Jambi)" autocomplete="off">
+                <label>Mau Pergi Ke Mana?</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <input type="text" id="routeInput" placeholder="Ketik rute (contoh: Metro atau Jambi)" autocomplete="off">
+                </div>
                 <div id="suggestionBox" class="suggestions"></div>
             </div>
 
             <div class="form-group">
-                <label>Tanggal Keberangkatan</label>
-                <select id="selectDate">
-                    <option value="0">14 - 20 Maret 2026</option>
-                    <option value="1">23 - 25 Maret 2026</option>
-                    <option value="2">26 Mar - 06 Apr (PUNCAK)</option>
-                    <option value="3">07 - 13 April 2026</option>
-                    <option value="4">14 - 19 April 2026</option>
-                </select>
+                <label>Periode Keberangkatan</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <select id="selectDate">
+                        <option value="0">14 - 20 Maret 2026</option>
+                        <option value="1">23 - 25 Maret 2026</option>
+                        <option value="2">26 Mar - 06 Apr (PUNCAK)</option>
+                        <option value="3">07 - 13 April 2026</option>
+                        <option value="4">14 - 19 April 2026</option>
+                    </select>
+                </div>
             </div>
 
             <button class="btn-search" id="searchBtn">CEK HARGA SEKARANG</button>
@@ -45,6 +54,14 @@
                     <p class="res-route-detail" id="outRouteName"></p>
                 </div>
             </div>
+        </div>
+
+        <div class="reservation-card">
+            <p>Informasi & Reservasi</p>
+            <a href="https://wa.me/091234567890" target="_blank" class="wa-btn" id="waLink">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>0912-3456-7890</span>
+            </a>
         </div>
     </div>
 
