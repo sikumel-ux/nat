@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Tarif Putra Remaja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --deep-blue: #053a6f; 
+            --mahika-yellow: #facc15; 
+            --white-off: #fdfaf0; 
+            --light-bg: #f3f4f6;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            margin: 0; 
+            background-color: var(--light-bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #334155;
+        }
+
+        .top-section {
+            background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
+            height: 180px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+        }
+
+        .brand-container { text-align: center; z-index: 5; }
+        .title-brand {
+            font-size: 36px; font-weight: 800; letter-spacing: -2px; margin: 0; line-height: 0.85;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .brand-mahika { color: var(--mahika-yellow); }
+        .brand-trans { color: var(--white-off); font-weight: 200; }
+
+        .main-container {
+            max-width: 400px;
+            margin: -60px auto 40px auto;
+            padding: 0 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            padding: 24px;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; margin-left: 4px; }
+
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1.5px solid #f1f5f9;
+            background-color: #f8fafc;
+            font-family: inherit;
+            font-weight: 600;
+            color: var(--deep-blue);
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .btn-search {
+            width: 100%;
+            padding: 14px;
+            background: var(--deep-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .btn-search:hover { background: #074a8d; transform: translateY(-2px); }
+
+        /* Result Section */
+        #resultArea { margin-top: 20px; display: none; }
+        .result-card {
+            background: var(--white-off);
+            border: 2px solid var(--mahika-yellow);
+            border-radius: 18px;
+            padding: 16px;
+            text-align: center;
+        }
+        .res-rute { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+        .res-price { font-size: 28px; font-weight: 800; color: var(--deep-blue); margin: 5px 0; }
+        .res-class { 
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--deep-blue);
+            color: white;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-section">
+        <div class="brand-container">
+            <h1 class="title-brand">
+                <span class="brand-mahika">CEK</span>
+                <span class="brand-trans">Tarif</span>
+            </h1>
+            <span style="color:var(--mahika-yellow); font-size: 9px; font-weight: 600; letter-spacing: 2px;">PUTRA REMAJA SENTOSA</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="search-card">
+            <div class="form-group">
+                <label>Pilih Kelas</label>
+                <select id="selectClass" onchange="updateRute()">
+                    <option value="exec">EXECUTIVE</option>
+                    <option value="super">SUPER EXECUTIVE / SUITES</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Tujuan</label>
+                <select id="selectRute">
+                    </select>
+            </div>
+
+            <div class="form-group">
+                <label>Periode Keberangkatan</label>
+                <select id="selectDate">
+                    <option value="0">14 - 20 Maret 2026</option>
+                    <option value="1">23 - 25 Maret 2026</option>
+                    <option value="2">26 Maret - 06 April 2026 (Puncak)</option>
+                    <option value="3">07 - 13 April 2026</option>
+                    <option value="4">14 - 19 April 2026</option>
+                </select>
+            </div>
+
+            <button class="btn-search" onclick="searchTicket()">CARI HARGA</button>
+
+            <div id="resultArea">
+                <div class="result-card">
+                    <div class="res-class" id="outClass">EXECUTIVE</div>
+                    <div class="res-rute" id="outRute">Yogya - Lampung</div>
+                    <div class="res-price" id="outPrice">Rp 700.000</div>
+                    <div style="font-size: 9px; color: #94a3b8;">*Harga per kursi. Syarat & ketentuan berlaku.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const database = {
+            exec: [
+                { r: "Lampung / Metro", p: ["550.000", "600.000", "700.000", "600.000", "NORMAL"] },
+                { r: "Kotabumi / Way Abung", p: ["600.000", "650.000", "750.000", "650.000", "NORMAL"] },
+                { r: "Tulang Bawang / Menggala", p: ["600.000", "650.000", "750.000", "700.000", "600.000"] },
+                { r: "Palembang / KM32", p: ["650.000", "700.000", "800.000", "750.000", "650.000"] },
+                { r: "Jambi / Betung", p: ["750.000", "800.000", "900.000", "850.000", "800.000"] },
+                { r: "Lubuk Linggau / Sekayu", p: ["850.000", "900.000", "1.000.000", "950.000", "900.000"] },
+                { r: "Muara Bungo / Bangko", p: ["900.000", "950.000", "1.050.000", "1.000.000", "950.000"] },
+                { r: "Sungai Rumbai", p: ["950.000", "1.000.000", "1.100.000", "1.050.000", "1.000.000"] }
+            ],
+            super: [
+                { r: "Palembang / Itera", p: ["850.000", "900.000", "1.000.000", "950.000", "900.000"] },
+                { r: "Jambi", p: ["900.000", "950.000", "1.100.000", "1.050.000", "950.000"] },
+                { r: "Muara Tembesi", p: ["950.000", "1.000.000", "1.150.000", "1.100.000", "1.000.000"] },
+                { r: "Lubuk Linggau", p: ["1.000.000", "1.050.000", "1.200.000", "1.150.000", "1.050.000"] },
+                { r: "Muara Bungo", p: ["1.050.000", "1.100.000", "1.250.000", "1.200.000", "1.100.000"] },
+                { r: "Sungai Rumbai", p: ["1.100.000", "1.150.000", "1.300.000", "1.250.000", "1.150.000"] }
+            ]
+        };
+
+        function updateRute() {
+            const classType = document.getElementById('selectClass').value;
+            const ruteSelect = document.getElementById('selectRute');
+            const ruteData = database[classType];
+            
+            ruteSelect.innerHTML = ruteData.map((item, index) => 
+                `<option value="${index}">${item.r}</option>`
+            ).join('');
+        }
+
+        function searchTicket() {
+            const classType = document.getElementById('selectClass').value;
+            const ruteIndex = document.getElementById('selectRute').value;
+            const dateIndex = document.getElementById('selectDate').value;
+            
+            const selectedData = database[classType][ruteIndex];
+            const price = selectedData.p[dateIndex];
+            
+            // Tampilkan Result
+            document.getElementById('resultArea').style.display = 'block';
+            document.getElementById('outClass').innerText = classType === 'exec' ? 'EXECUTIVE' : 'SUPER EXEC / SUITES';
+            document.getElementById('outRute').innerText = "Yogyakarta - " + selectedData.r;
+            document.getElementById('outPrice').innerText = price === "NORMAL" ? "Tarif Normal" : "Rp " + price;
+        }
+
+        // Jalankan saat start
+        updateRute();
+    </script>
+</body>
+</html>
+  
