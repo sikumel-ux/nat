@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahika x Putra Remaja - Cek Tarif</title>
+    <title>Cari Tiket Putra Remaja</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -12,9 +12,7 @@
 
     <div class="top-section">
         <div class="brand-container">
-            <h1 class="title-brand">
-                <span class="brand-mahika">CARI</span><span class="brand-trans">Tiket</span>
-            </h1>
+            <h1 class="title-brand"><span class="brand-mahika">CARI</span><span class="brand-trans">Tiket</span></h1>
             <p class="subtitle">PT. PUTRA REMAJA SENTOSA</p>
         </div>
     </div>
@@ -25,13 +23,13 @@
                 <label>Mau Pergi Ke Mana?</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-location-dot"></i>
-                    <input type="text" id="routeInput" placeholder="Ketik rute (contoh: Metro atau Jambi)" autocomplete="off">
+                    <input type="text" id="routeInput" placeholder="Ketik rute tujuan..." autocomplete="off">
                 </div>
                 <div id="suggestionBox" class="suggestions"></div>
             </div>
 
             <div class="form-group">
-                <label>Periode Keberangkatan</label>
+                <label>Periode Tanggal</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-calendar-days"></i>
                     <select id="selectDate">
@@ -44,7 +42,7 @@
                 </div>
             </div>
 
-            <button class="btn-search" id="searchBtn">CEK HARGA SEKARANG</button>
+            <button class="btn-search" id="searchBtn">LIHAT HARGA</button>
 
             <div id="resultArea" class="hidden">
                 <div class="result-card">
@@ -56,11 +54,11 @@
             </div>
         </div>
 
-        <div class="reservation-card">
-            <p>Informasi & Reservasi</p>
-            <a href="https://wa.me/091234567890" target="_blank" class="wa-btn" id="waLink">
+        <div class="action-area">
+            <p class="action-label">Informasi & Reservasi</p>
+            <a href="https://wa.me/091234567890" target="_blank" class="btn-whatsapp" id="waLink">
                 <i class="fa-brands fa-whatsapp"></i>
-                <span>0912-3456-7890</span>
+                <span>HUBUNGI VIA WHATSAPP</span>
             </a>
         </div>
     </div>
