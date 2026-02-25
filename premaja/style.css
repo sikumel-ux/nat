@@ -1,68 +1,82 @@
 :root { 
     --deep-blue: #053a6f; 
     --mahika-yellow: #facc15; 
-    --light-bg: #f3f4f6;
     --white: #ffffff;
+    --light-bg: #f3f4f6;
 }
 
 * { box-sizing: border-box; }
 body { 
-    margin: 0; 
-    background-color: var(--light-bg); 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    color: #334155; 
+    margin: 0; background-color: var(--light-bg); 
+    font-family: 'Plus Jakarta Sans', sans-serif; color: #334155; 
 }
 
 .top-section {
     background: radial-gradient(circle at 50% 0%, #074a8d 0%, #053a6f 100%);
-    height: 140px; 
-    display: flex; 
-    justify-content: center; 
-    padding-top: 25px;
+    height: 160px; display: flex; justify-content: center; padding-top: 30px;
 }
 
-.title-brand { font-size: 30px; font-weight: 800; letter-spacing: -2px; margin: 0; color: var(--white); }
+.title-brand { font-size: 34px; font-weight: 800; letter-spacing: -2px; margin: 0; color: var(--white); }
 .brand-mahika { color: var(--mahika-yellow); }
-.subtitle { font-size: 9px; color: var(--mahika-yellow); text-align: center; letter-spacing: 2px; font-weight: 600; margin-top: 5px; }
+.brand-trans { font-weight: 200; opacity: 0.9; }
+.subtitle { font-size: 9px; color: var(--mahika-yellow); text-align: center; letter-spacing: 2.5px; font-weight: 600; margin-top: 5px; text-transform: uppercase; }
 
-.main-container { max-width: 400px; margin: -40px auto; padding: 0 15px; position: relative; }
+.main-container { max-width: 400px; margin: -55px auto 40px auto; padding: 0 15px; position: relative; }
 
-.search-card { background: var(--white); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; }
+.search-card { 
+    background: var(--white); border-radius: 28px; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12); padding: 24px; 
+}
 
-.form-group { margin-bottom: 12px; position: relative; }
-label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin: 0 0 5px 4px; }
+.form-group { margin-bottom: 15px; position: relative; }
+label { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin: 0 0 6px 4px; }
+
+.input-wrapper { position: relative; display: flex; align-items: center; }
+.input-wrapper i { position: absolute; left: 15px; color: var(--deep-blue); font-size: 14px; }
 
 input, select {
-    width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #f1f5f9;
-    background-color: #f8fafc; font-family: inherit; font-weight: 600; color: var(--deep-blue); font-size: 14px; outline: none;
+    width: 100%; padding: 14px 14px 14px 40px; border-radius: 14px; border: 1.5px solid #f1f5f9;
+    background-color: #f8fafc; font-family: inherit; font-weight: 600; color: var(--deep-blue); 
+    font-size: 14px; outline: none; transition: 0.2s;
 }
 
-input:focus { border-color: var(--mahika-yellow); }
+input:focus { border-color: var(--mahika-yellow); background: var(--white); }
 
 .suggestions {
-    position: absolute; width: 100%; background: var(--white); border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; max-height: 180px; overflow-y: auto;
-    border: 1px solid #f1f5f9; display: none; margin-top: 5px;
+    position: absolute; width: 100%; background: var(--white); border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 100; max-height: 200px; 
+    overflow-y: auto; border: 1px solid #f1f5f9; display: none; margin-top: 5px;
 }
 
-.suggestion-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f8fafc; font-size: 12px; transition: 0.2s; }
-.suggestion-item:hover { background: #eff6ff; color: var(--deep-blue); }
+.suggestion-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f8fafc; font-size: 13px; }
+.suggestion-item:hover { background: #eff6ff; color: var(--deep-blue); font-weight: 600; }
 
 .btn-search {
-    width: 100%; padding: 14px; background: var(--deep-blue); color: var(--white); border: none;
-    border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 10px; transition: 0.2s;
+    width: 100%; padding: 16px; background: var(--deep-blue); color: var(--white); 
+    border: none; border-radius: 14px; font-weight: 800; font-size: 14px; 
+    cursor: pointer; margin-top: 10px; transition: 0.3s;
 }
-
-.btn-search:active { transform: scale(0.98); }
+.btn-search:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(5,58,111,0.3); }
 
 .hidden { display: none; }
 
 .result-card {
-    margin-top: 15px; background: #fdfaf0; border: 2px solid var(--mahika-yellow); 
-    border-radius: 18px; padding: 16px; text-align: center;
+    margin-top: 20px; background: #fffdf0; border: 2.5px solid var(--mahika-yellow); 
+    border-radius: 20px; padding: 20px; text-align: center;
 }
 
-.res-price { font-size: 28px; font-weight: 800; color: var(--deep-blue); margin: 5px 0; }
-.tag { font-size: 9px; font-weight: 700; background: var(--deep-blue); color: var(--white); padding: 3px 10px; border-radius: 10px; text-transform: uppercase; }
-.label-price { font-size: 11px; color: #64748b; margin: 0; }
-.res-route-detail { font-size: 10px; color: #94a3b8; margin: 5px 0 0 0; }
+.res-price { font-size: 32px; font-weight: 800; color: var(--deep-blue); margin: 8px 0; }
+.tag { font-size: 9px; font-weight: 700; background: var(--deep-blue); color: var(--white); padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
+.label-price { font-size: 12px; color: #64748b; margin: 0; }
+.res-route-detail { font-size: 11px; color: #94a3b8; font-weight: 600; }
+
+/* Reservasi Styling */
+.reservation-card { margin-top: 25px; text-align: center; }
+.reservation-card p { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 10px; }
+.wa-btn {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    background: var(--deep-blue); color: var(--mahika-yellow); text-decoration: none;
+    padding: 14px; border-radius: 16px; font-weight: 800; font-size: 15px; transition: 0.3s;
+}
+.wa-btn:hover { background: #074a8d; transform: scale(1.02); }
+    
