@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Komisi | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-blue: #065084; 
+            --bg-darker: #043a60; 
+            --gold: #FFD700; 
+            --white-gading: #fffdf5;
+        }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; color: #333; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); padding: 40px 20px 60px; border-radius: 0 0 40px 40px; color: white; text-align: center; }
+        .header h2 { margin: 0; font-size: 20px; color: var(--gold); letter-spacing: 1px; }
+        .header p { margin: 5px 0 0; font-size: 12px; opacity: 0.8; }
+
+        /* Filter Section */
+        .filter-section { margin: -30px 20px 20px; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .filter-section label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
+        .filter-section input { width: 100%; border: 1.5px solid #f0f0f0; padding: 12px 15px; border-radius: 15px; font-family: 'Poppins'; font-size: 14px; box-sizing: border-box; outline: none; background: #f9f9f9; }
+
+        /* Summary Card */
+        .summary-card { margin: 0 20px 25px; background: var(--primary-blue); color: white; padding: 25px; border-radius: 25px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; }
+        .summary-card::after { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+        .summary-info h3 { margin: 0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
+        .summary-info p { margin: 5px 0 0; font-size: 26px; font-weight: 700; color: var(--gold); }
+        .summary-card i { font-size: 35px; color: var(--gold); opacity: 0.3; }
+
+        /* List History */
+        .list-container { padding: 0 20px; }
+        .list-header { font-size: 12px; font-weight: 700; color: #555; margin-bottom: 15px; padding-left: 5px; display: flex; justify-content: space-between; }
+        
+        .item-komisi { background: white; padding: 18px; border-radius: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.02); border-left: 4px solid var(--primary-blue); }
+        .item-left h4 { margin: 0; font-size: 14px; color: #333; font-weight: 600; }
+        .item-left p { margin: 4px 0 0; font-size: 11px; color: #888; }
+        .item-right { text-align: right; }
+        .amount { display: block; font-weight: 700; color: #27ae60; font-size: 15px; }
+        .code-ref { font-size: 10px; color: #bbb; display: block; margin-top: 2px; }
+
+        /* Bottom Nav */
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #bbb; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+        .nav-bottom i { font-size: 20px; }
+
+        /* Loading & Empty state */
+        .empty-state { text-align: center; padding: 40px 20px; color: #999; font-size: 13px; }
+        .empty-state i { font-size: 40px; margin-bottom: 10px; opacity: 0.2; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>DATA KOMISI</h2>
+    <p>Mahika Trans Management</p>
+</div>
+
+<div class="filter-section">
+    <label>Pilih Periode Bulan</label>
+    <input type="month" id="filterBulan">
+</div>
+
+<div class="summary-card">
+    <div class="summary-info">
+        <h3>Total Pendapatan</h3>
+        <p id="totalNominal">Rp 0</p>
+    </div>
+    <i class="fas fa-wallet"></i>
+</div>
+
+<div class="list-container">
+    <div class="list-header">
+        <span>Riwayat Booking</span>
+        <span id="countData">0 Data</span>
+    </div>
+    <div id="listKomisi">
+        <!-- Data loaded here -->
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="pwa-dash.html"><i class="fas fa-house"></i>Home</a>
+    <a href="pwa-booking.html"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="#" class="active"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="#" id="logoutBtn"><i class="fas fa-power-off"></i>Off</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const filterBulan = document.getElementById('filterBulan');
+    const listKomisi = document.getElementById('listKomisi');
+    const totalNominal = document.getElementById('totalNominal');
+    const countData = document.getElementById('countData');
+
+    // Default ke bulan sekarang
+    const now = new Date();
+    const currentMonth = now.toISOString().substring(0, 7); // Hasil: YYYY-MM
+    filterBulan.value = currentMonth;
+
+    // Cek Login
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            fetchKomisi(filterBulan.value);
+        } else {
+            location.href = "login.html";
+        }
+    });
+
+    // Event saat filter berubah
+    filterBulan.onchange = () => fetchKomisi(filterBulan.value);
+
+    async function fetchKomisi(bulan) {
+        listKomisi.innerHTML = '<div class="empty-state">Memuat data...</div>';
+        let total = 0;
+        let count = 0;
+
+        try {
+            // Kita query berdasarkan field 'tgl' yang formatnya YYYY-MM-DD
+            // Query: tgl >= YYYY-MM-01 AND tgl <= YYYY-MM-31
+            const q = query(
+                collection(db, "bookings"),
+                where("tgl", ">=", bulan + "-01"),
+                where("tgl", "<=", bulan + "-31"),
+                orderBy("tgl", "desc")
+            );
+
+            const querySnapshot = await getDocs(q);
+            listKomisi.innerHTML = "";
+
+            if (querySnapshot.empty) {
+                listKomisi.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>Belum ada data komisi untuk bulan ini.</p>
+                    </div>`;
+                totalNominal.innerText = "Rp 0";
+                countData.innerText = "0 Data";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const item = doc.data();
+                const komisiVal = parseInt(item.komisi) || 0;
+                total += komisiVal;
+                count++;
+
+                const card = `
+                    <div class="item-komisi">
+                        <div class="item-left">
+                            <h4>${item.nama}</h4>
+                            <p>${item.tgl} • ${item.tujuan}</p>
+                        </div>
+                        <div class="item-right">
+                            <span class="amount">Rp ${komisiVal.toLocaleString('id-ID')}</span>
+                            <span class="code-ref">MT-${doc.id}</span>
+                        </div>
+                    </div>
+                `;
+                listKomisi.innerHTML += card;
+            });
+
+            totalNominal.innerText = "Rp " + total.toLocaleString('id-ID');
+            countData.innerText = count + " Data";
+
+        } catch (err) {
+            console.error(err);
+            listKomisi.innerHTML = '<div class="empty-state" style="color:red;">Gagal mengambil data.</div>';
+        }
+    }
+
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => location.href = "login.html");
+    }
+</script>
+
+</body>
+</html>
