@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Mahika Trans</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#065084">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <link rel="stylesheet" href="dash.css">
+    <link rel="stylesheet" href="nav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="header-dash">
+    <h2>MAHIKA Trans</h2>
+    <h1>Management System</h1>
+</div>
+
+<div class="stats-container">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <span>HARI INI</span>
+            <strong id="statPax">0</strong>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-clipboard-check"></i>
+            <span>TOTAL</span>
+            <strong id="statTotal">0</strong>
+        </div>
+        <a href="pwa-komisi.html" class="stat-card">
+            <i class="fas fa-wallet"></i>
+            <span>KOMISI</span>
+            <strong id="statKomisi">0</strong>
+        </a>
+    </div>
+</div>
+
+<div class="section-title">Jadwal Terdekat</div>
+<div id="antreanList" class="antrean-list">
+    <p style="text-align: center; opacity: 0.5; font-size: 11px; margin-top: 25px;">Sinkronisasi data...</p>
+</div>
+    
+<div class="nav-bottom">
+    <a href="pwa-dash.html" class="active"><i class="fas fa-house"></i>Home</a>
+    <a href="pwa-booking.html"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="pwa-komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="#" id="logoutBtn" style="color: #ef4444;"><i class="fas fa-power-off"></i>Off</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU",
+        authDomain: "mahika-trans.firebaseapp.com",
+        projectId: "mahika-trans",
+        storageBucket: "mahika-trans.firebasestorage.app",
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Jalankan load data
+    loadDashboardData(); 
+
+    async function loadDashboardData() {
+        const list = document.getElementById("antreanList");
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0]; // Format YYYY-MM-DD
+        const currentMonth = todayStr.substring(0, 7); // Format YYYY-MM
+
+        try {
+            // Ambil data dari koleksi bookings
+            const qBook = query(collection(db, "bookings"), orderBy("tgl", "asc"));
+            const snapBook = await getDocs(qBook);
+            
+            let hariIniCount = 0;
+            let totalAktif = 0;
+            let totalKomisiBulanIni = 0;
+            let html = "";
+
+            snapBook.forEach(doc => {
+                const d = doc.data();
+                
+                // 1. Hitung Komisi (Filter Bulan Sekarang)
+                if (d.tgl && d.tgl.startsWith(currentMonth)) {
+                    totalKomisiBulanIni += Number(d.komisi || 0);
+                }
+
+                // 2. Filter untuk List Jadwal (Hari ini ke depan)
+                if (d.tgl >= todayStr) {
+                    totalAktif++;
+                    if (d.tgl === todayStr) hariIniCount++;
+
+                    // Format Tanggal Indonesia untuk Card
+                    const bDate = new Date(d.tgl);
+                    const tglIndo = bDate.getDate();
+                    const blnIndo = bDate.toLocaleDateString('id-ID', { month: 'short' });
+
+                    html += `
+                        <div class="card-mini">
+                            <div class="tgl-badge"><b>${tglIndo}</b>${blnIndo}</div>
+                            <div class="info-mini">
+                                <b>${d.nama}</b>
+                                <small>${d.armada} • ${d.jam} • ${d.tujuan}</small>
+                            </div>
+                        </div>`;
+                }
+            });
+
+            // Update Stats di UI
+            document.getElementById('statPax').innerText = hariIniCount;
+            document.getElementById('statTotal').innerText = totalAktif;
+            
+            // Format Komisi (K = Ribuan, M = Jutaan)
+            const statKms = document.getElementById('statKomisi');
+            if (totalKomisiBulanIni >= 1000000) {
+                statKms.innerText = (totalKomisiBulanIni / 1000000).toFixed(1) + "M";
+            } else if (totalKomisiBulanIni >= 1000) {
+                statKms.innerText = (totalKomisiBulanIni / 1000).toFixed(0) + "K";
+            } else {
+                statKms.innerText = totalKomisiBulanIni;
+            }
+            
+            list.innerHTML = html || "<p style='text-align:center; opacity:0.5; font-size:11px; margin-top:25px;'>Belum ada jadwal masuk.</p>";
+
+        } catch (e) {
+            console.error(e);
+            list.innerHTML = "<p style='text-align:center; font-size:11px; color:red;'>Gagal sinkron data.</p>";
+        }
+    }
+
+    // Tombol Refresh
+    document.getElementById('logoutBtn').onclick = (e) => { 
+        e.preventDefault(); 
+        location.reload(); 
+    };
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Error', err));
+    });
+  }
+</script>
+    
+</body>
+</html>
