@@ -1,7 +1,7 @@
 {
-  "name": "Mahika",
+  "name": "Mahika v.02",
   "short_name": "Mahika",
-  "start_url": "pwa-dash.html",
+  "start_url": "pwa-home.html",
   "display": "standalone",
   "background_color": "#065084",
   "theme_color": "#065084",
