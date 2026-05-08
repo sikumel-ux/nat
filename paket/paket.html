@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Paket | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 50px; }
+        .header { background: var(--primary-blue); padding: 40px 20px; color: white; text-align: center; border-radius: 0 0 30px 30px; }
+        .form-container { margin: -30px 20px 20px 20px; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .field { margin-bottom: 15px; }
+        .field label { display: block; font-size: 11px; font-weight: 700; color: #777; margin-bottom: 5px; }
+        .field input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .btn-simpan { width: 100%; padding: 15px; background: var(--primary-blue); color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; }
+        /* Modal simple */
+        #modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding:20px; z-index:100; }
+        .modal-box { background:white; padding:30px; border-radius:20px; text-align:center; width:100%; max-width:300px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2 style="margin:0">MAHIKA TRANS</h2>
+    <p style="margin:0; font-size:12px">Input Pengiriman Barang</p>
+</div>
+
+<div class="form-container">
+    <div class="field"><label>NAMA PENGIRIM</label><input type="text" id="pengirim"></div>
+    <div class="field"><label>WA PENGIRIM</label><input type="tel" id="wa_pengirim"></div>
+    <hr>
+    <div class="field"><label>NAMA PENERIMA</label><input type="text" id="penerima"></div>
+    <div class="field"><label>WA PENERIMA</label><input type="tel" id="wa_penerima"></div>
+    <div class="field"><label>TUJUAN</label><input type="text" id="tujuan"></div>
+    <div class="field"><label>BARANG & BERAT</label><input type="text" id="barang" placeholder="Contoh: Paket Baju (5kg)"></div>
+    <div class="field"><label>ONGKIR (RP)</label><input type="number" id="harga"></div>
+    
+    <button id="btnSimpan" class="btn-simpan">SIMPAN & KIRIM RESI</button>
+</div>
+
+<div id="modal">
+    <div class="modal-box">
+        <i class="fas fa-check-circle" style="font-size:50px; color:var(--primary-blue)"></i>
+        <h3>BERHASIL!</h3>
+        <p style="font-size:12px; color:#666">Data paket sudah masuk sistem.</p>
+        <a id="linkWA" href="" style="display:block; background:#25d366; color:white; padding:12px; text-decoration:none; border-radius:10px; margin-top:10px;">Kirim WhatsApp</a>
+        <button onclick="location.reload()" style="margin-top:15px; border:none; background:none; color:var(--primary-blue)">Input Lagi</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Konfigurasi ini harus sesuai dengan Project Firebase kamu
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById('btnSimpan').onclick = async function() {
+        this.innerText = "PROSES...";
+        this.disabled = true;
+
+        const resi = "MT-" + Math.floor(100000 + Math.random() * 900000);
+        const data = {
+            pengirim: document.getElementById('pengirim').value,
+            wa_pengirim: document.getElementById('wa_pengirim').value,
+            penerima: document.getElementById('penerima').value,
+            wa_penerima: document.getElementById('wa_penerima').value,
+            tujuan: document.getElementById('tujuan').value,
+            barang: document.getElementById('barang').value,
+            harga: document.getElementById('harga').value,
+            timestamp: serverTimestamp()
+        };
+
+        try {
+            await setDoc(doc(db, "packages", resi), data);
+            
+            const msg = `*RESI MAHIKA TRANS*%0A` +
+                        `No. Resi: *${resi}*%0A%0A` +
+                        `Pengirim: ${data.pengirim}%0A` +
+                        `Penerima: ${data.penerima}%0A` +
+                        `Barang: ${data.barang}%0A` +
+                        `Tujuan: ${data.tujuan}%0A` +
+                        `Total: Rp ${data.harga}%0A%0A` +
+                        `Cek Kuitansi: https://go.mahikatrans.my.id/${resi}`;
+
+            let waFix = data.wa_pengirim.replace(/^0/, '62');
+            document.getElementById('linkWA').href = `https://wa.me/${waFix}?text=${msg}`;
+            document.getElementById('modal').style.display = 'flex';
+        } catch (e) {
+            alert("Gagal: " + e.message);
+            this.innerText = "SIMPAN & KIRIM RESI";
+            this.disabled = false;
+        }
+    };
+</script>
+</body>
+</html>
