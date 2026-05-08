@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifes | Mahika Trans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; }
+        .header-curvy { background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); padding: 50px 25px 80px; border-radius: 0 0 50px 50px; text-align: center; color: white; }
+        .manifes-container { margin-top: -50px; padding: 0 20px 120px; }
+        .card-manifes { background: white; border-radius: 25px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--primary-blue); }
+        .tgl-box { width: 50px; height: 50px; background: #f1f5f9; color: var(--primary-blue); border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-right: 15px; }
+        .info-pax { flex: 1; }
+        .info-pax b { font-size: 14px; color: var(--primary-blue); display: block; text-transform: uppercase; }
+        .info-pax span { font-size: 11px; color: #666; }
+        .seat-badge { background: var(--bg-darker); color: var(--gold); padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 800; min-width: 35px; text-align: center; }
+        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; flex: 1; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-curvy">
+    <h2 class="text-2xl font-bold text-[#FFD700]">MANIFES PENUMPANG</h2>
+    <p class="text-xs opacity-70">Jadwal Keberangkatan Mahika Trans</p>
+</div>
+
+<div class="manifes-container">
+    <div id="loading" class="text-center p-10 text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><br>Sinkronisasi...</div>
+    <div id="listManifes"></div>
+</div>
+
+<div class="nav-bottom">
+    <a href="pwa-home.html"><i class="fas fa-house block text-xl mb-1"></i>Home</a>
+    <a href="pwa-order.html"><i class="fas fa-plus-circle block text-xl mb-1"></i>Booking</a>
+    <a href="pwa-manifes.html" class="active"><i class="fas fa-list block text-xl mb-1"></i>Manifes</a>
+    <a href="pwa-kmsi.html"><i class="fas fa-wallet block text-xl mb-1"></i>Komisi</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, getDocs, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", authDomain: "mahika-trans.firebaseapp.com", projectId: "mahika-trans", storageBucket: "mahika-trans.firebasestorage.app", appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadManifes() {
+        const listDiv = document.getElementById('listManifes');
+        const todayStr = new Date().toISOString().split('T')[0];
+        try {
+            const q = query(collection(db, "bookings"), where("tgl", ">=", todayStr), orderBy("tgl", "asc"));
+            const snap = await getDocs(q);
+            document.getElementById('loading').style.display = 'none';
+            listDiv.innerHTML = "";
+            
+            let countShow = 0;
+            snap.forEach(docSnap => {
+                const d = docSnap.data();
+                
+                // FILTER: Jangan tampilkan jika datanya adalah input manual komisi
+                if (d.type === "manual") return;
+
+                countShow++;
+                const dObj = new Date(d.tgl);
+                listDiv.innerHTML += `
+                    <div class="card-manifes">
+                        <div class="tgl-box"><b>${dObj.getDate()}</b>${dObj.toLocaleDateString('id-ID',{month:'short'})}</div>
+                        <div class="info-pax">
+                            <b>${d.nama || '-'}</b>
+                            <span>${d.jam || '--:--'} • ${d.armada || '-'}</span><br>
+                            <span class="text-blue-500 font-bold"><i class="fas fa-map-marker-alt"></i> ${d.tujuan || '-'}</span>
+                        </div>
+                        <div class="seat-badge">${d.kursi || '-'}</div>
+                    </div>`;
+            });
+            if(countShow === 0) listDiv.innerHTML = "<p class='text-center text-gray-400 mt-10'>Belum ada jadwal booking.</p>";
+        } catch (e) { console.error(e); }
+    }
+    loadManifes();
+</script>
+</body>
+</html>
