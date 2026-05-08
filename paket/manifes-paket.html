@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifes Paket | Mahika Trans</title>
+    <link rel="stylesheet" href="nav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; }
+        .header-slim { background: var(--primary-blue); padding: 30px 20px; border-radius: 0 0 30px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .header-slim h2 { margin: 0; font-size: 18px; text-transform: uppercase; }
+        .search-box { padding: 20px; margin-top: -20px; }
+        .search-box input { width: 100%; padding: 15px 20px; border-radius: 15px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05); outline: none; box-sizing: border-box; }
+        .list-container { padding: 0 20px; }
+        .card-paket { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; border-left: 5px solid var(--gold); }
+        .info-left h4 { margin: 0; font-size: 14px; color: var(--primary-blue); }
+        .info-left p { margin: 2px 0; font-size: 11px; color: #888; }
+        .btn-action { display: flex; gap: 12px; }
+        .btn-action a { font-size: 18px; color: var(--primary-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header-slim">
+    <div><h2>Manifes Paket</h2></div>
+    <i class="fas fa-boxes-stacked" style="font-size: 24px; color: var(--gold);"></i>
+</div>
+
+<div class="search-box">
+    <input type="text" id="cari" placeholder="Cari Resi / Nama Penerima...">
+</div>
+
+<div class="list-container" id="listPaket">
+    <p style="text-align:center; color:#999; margin-top:50px;">Memuat data...</p>
+</div>
+
+<div class="nav-bottom">
+    <a href="pwa-home.html"><i class="fas fa-house"></i>Home</a>
+    <a href="input-paket.html"><i class="fas fa-box"></i>Paket</a>
+    <a href="manifes-paket.html" class="active"><i class="fas fa-list"></i>Manifes</a>
+    <a href="pwa-kmsi.html"><i class="fas fa-wallet"></i>Komisi</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const listContainer = document.getElementById('listPaket');
+
+    onSnapshot(query(collection(db, "packages"), orderBy("createdAt", "desc")), (snap) => {
+        let html = "";
+        snap.forEach(d => {
+            const p = d.data();
+            html += `
+            <div class="card-paket" data-search="${d.id} ${p.penerima}">
+                <div class="info-left">
+                    <h4>${p.penerima}</h4>
+                    <p>ID: <b>${d.id}</b> | 📅 ${p.tgl}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${p.tujuan}</p>
+                    <p><i class="fas fa-box"></i> ${p.barang} (${p.berat})</p>
+                </div>
+                <div class="btn-action">
+                    <a href="https://go.mahikatrans.my.id/${d.id}" target="_blank" style="color:var(--gold)"><i class="fas fa-receipt"></i></a>
+                    <a href="#" onclick="hapus('${d.id}')" style="color:#ef4444"><i class="fas fa-trash"></i></a>
+                </div>
+            </div>`;
+        });
+        listContainer.innerHTML = html || '<p style="text-align:center; color:#999;">Belum ada paket.</p>';
+    });
+
+    document.getElementById('cari').oninput = function() {
+        const val = this.value.toLowerCase();
+        document.querySelectorAll('.card-paket').forEach(card => {
+            card.style.display = card.getAttribute('data-search').toLowerCase().includes(val) ? 'flex' : 'none';
+        });
+    };
+
+    window.hapus = async (id) => {
+        if(confirm("Hapus data resi " + id + "?")) {
+            await deleteDoc(doc(db, "packages", id));
+        }
+    };
+</script>
+</body>
+</html>
