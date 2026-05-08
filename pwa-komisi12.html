@@ -22,17 +22,20 @@
         .item-left h4 { margin: 0; font-size: 14px; display: flex; align-items: center; gap: 8px; }
         .item-left p { margin: 4px 0 0; font-size: 11px; color: #888; }
         .amount { font-weight: 700; color: #27ae60; font-size: 15px; display: block; }
+        
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 30px; position: relative; max-height: 85vh; overflow-y: auto; }
         .modal-field { margin-bottom: 15px; }
         .modal-field label { display: block; font-size: 11px; font-weight: 700; color: #999; margin-bottom: 5px; }
         .modal-field input, .modal-field select { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 12px; font-family: 'Poppins'; box-sizing: border-box; }
-        .btn-update { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 700; cursor: pointer; }
+        
+        .btn-update { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
+        .btn-delete { width: 100%; background: #fee2e2; color: #ef4444; border: none; padding: 12px; border-radius: 15px; font-weight: 600; cursor: pointer; font-size: 13px; }
+        
         .fab-add { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background: var(--gold); color: var(--primary-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: none; z-index: 99; }
         .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
         .nav-bottom a { text-decoration: none; color: #bbb; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .nav-bottom a.active { color: var(--primary-blue); }
-        .icon-tag { font-size: 10px; padding: 3px 6px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -49,7 +52,7 @@
 
 <div class="summary-card">
     <div class="summary-info">
-        <h3 id="txtPeriode" style="font-size: 11px; margin:0; opacity:0.8;">Total Bulan Ini</h3>
+        <h3 style="font-size: 11px; margin:0; opacity:0.8;">Total Pendapatan Komisi</h3>
         <p id="totalNominal">Rp 0</p>
     </div>
     <i class="fas fa-wallet" style="font-size: 30px; opacity:0.3;"></i>
@@ -57,7 +60,7 @@
 
 <div class="list-container">
     <div class="list-header">
-        <span>Riwayat</span>
+        <span>Riwayat Komisi</span>
         <span id="countData">0 Data</span>
     </div>
     <div id="listKomisi"></div>
@@ -68,7 +71,7 @@
 <div id="modalTambah" class="modal">
     <div class="modal-content">
         <button onclick="closeModal('modalTambah')" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:20px; color:#ccc;">&times;</button>
-        <h3 style="color:var(--primary-blue); margin-top:0;">Input Komisi</h3>
+        <h3 style="color:var(--primary-blue); margin-top:0;">Input Komisi Manual</h3>
         <div class="modal-field"><label>Tanggal</label><input type="date" id="addTgl"></div>
         <div class="modal-field"><label>Nama/Keterangan</label><input type="text" id="addNama" placeholder="Contoh: Paket Cargo"></div>
         <div class="modal-field"><label>Tujuan</label><input type="text" id="addTujuan" placeholder="Contoh: Semarang"></div>
@@ -79,7 +82,20 @@
             </select>
         </div>
         <div class="modal-field"><label>Nominal (Rp)</label><input type="number" id="addNominal" placeholder="0"></div>
-        <button id="btnSimpanManual" class="btn-update">SIMPAN</button>
+        <button id="btnSimpanManual" class="btn-update">SIMPAN DATA</button>
+    </div>
+</div>
+
+<div id="modalEdit" class="modal">
+    <div class="modal-content">
+        <button onclick="closeModal('modalEdit')" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:20px; color:#ccc;">&times;</button>
+        <h3 style="color:var(--primary-blue); margin-top:0;">Edit Data</h3>
+        <div class="modal-field">
+            <label id="labelNamaEdit">Nama: -</label>
+            <input type="number" id="inputKomisiEdit" placeholder="Masukkan Nominal Komisi">
+        </div>
+        <button id="btnUpdateData" class="btn-update">UPDATE NOMINAL</button>
+        <button id="btnHapusData" class="btn-delete"><i class="fas fa-trash-alt mr-2"></i> HAPUS DATA</button>
     </div>
 </div>
 
@@ -93,7 +109,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs, orderBy, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, orderBy, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", authDomain: "mahika-trans.firebaseapp.com", projectId: "mahika-trans", storageBucket: "mahika-trans.firebasestorage.app", appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" };
@@ -104,14 +120,19 @@
     const filterBulan = document.getElementById('filterBulan');
     const listKomisi = document.getElementById('listKomisi');
     const totalNominal = document.getElementById('totalNominal');
-    
+    let currentEditId = null;
+
     filterBulan.value = new Date().toISOString().substring(0, 7);
 
-    onAuthStateChanged(auth, (user) => { if (user) fetchKomisi(filterBulan.value); else location.href="login.html"; });
+    onAuthStateChanged(auth, (user) => { 
+        if (user) fetchKomisi(filterBulan.value); 
+        else location.href="login.html"; 
+    });
+
     filterBulan.onchange = () => fetchKomisi(filterBulan.value);
 
     async function fetchKomisi(bulan) {
-        listKomisi.innerHTML = '<p style="text-align:center; font-size:12px; color:#999;">Loading...</p>';
+        listKomisi.innerHTML = '<p style="text-align:center; font-size:12px; color:#999;">Memuat data...</p>';
         let total = 0; let count = 0;
         try {
             const q = query(collection(db, "bookings"), where("tgl", ">=", bulan + "-01"), where("tgl", "<=", bulan + "-31"), orderBy("tgl", "desc"));
@@ -122,25 +143,59 @@
                 const nominal = parseInt(item.komisi) || 0;
                 total += nominal; count++;
                 const isPaket = item.kategori === 'paket';
-                listKomisi.innerHTML += `
-                    <div class="item-komisi">
-                        <div class="item-left">
-                            <h4>${item.nama} <i class="fas ${isPaket?'fa-box':'fa-user'}" style="font-size:10px; color:${isPaket?'#e67e22':'#065084'}; opacity:0.6;"></i></h4>
-                            <p>${item.tgl} • ${item.tujuan || '-'}</p>
-                        </div>
-                        <div class="item-right"><span class="amount">Rp ${nominal.toLocaleString('id-ID')}</span></div>
-                    </div>`;
+                
+                const div = document.createElement('div');
+                div.className = 'item-komisi';
+                div.onclick = () => openEdit(docSnap.id, item.nama, nominal);
+                div.innerHTML = `
+                    <div class="item-left">
+                        <h4>${item.nama} <i class="fas ${isPaket?'fa-box':'fa-user'}" style="font-size:10px; color:${isPaket?'#e67e22':'#065084'}; opacity:0.6;"></i></h4>
+                        <p>${item.tgl} • ${item.tujuan || '-'}</p>
+                    </div>
+                    <div class="item-right"><span class="amount">Rp ${nominal.toLocaleString('id-ID')}</span></div>`;
+                listKomisi.appendChild(div);
             });
             totalNominal.innerText = "Rp " + total.toLocaleString('id-ID');
             document.getElementById('countData').innerText = count + " Data";
-        } catch (e) { listKomisi.innerHTML = "Gagal memuat."; }
+        } catch (e) { listKomisi.innerHTML = "Gagal memuat data."; }
     }
 
+    // Modal Edit/Delete Logic
+    window.openEdit = (id, nama, nominal) => {
+        currentEditId = id;
+        document.getElementById('labelNamaEdit').innerText = "Nama: " + nama;
+        document.getElementById('inputKomisiEdit').value = nominal;
+        document.getElementById('modalEdit').style.display = 'flex';
+    };
+
+    document.getElementById('btnUpdateData').onclick = async function() {
+        const newVal = document.getElementById('inputKomisiEdit').value;
+        this.innerText = "PROSES...";
+        try {
+            await updateDoc(doc(db, "bookings", currentEditId), { komisi: newVal });
+            closeModal('modalEdit');
+            fetchKomisi(filterBulan.value);
+        } catch (e) { alert("Gagal Update: " + e.message); }
+        this.innerText = "UPDATE NOMINAL";
+    };
+
+    document.getElementById('btnHapusData').onclick = async function() {
+        if(confirm("Yakin ingin menghapus data komisi ini?")) {
+            this.innerText = "MENGHAPUS...";
+            try {
+                await deleteDoc(doc(db, "bookings", currentEditId));
+                closeModal('modalEdit');
+                fetchKomisi(filterBulan.value);
+            } catch (e) { alert("Gagal Hapus: " + e.message); }
+            this.innerText = "HAPUS DATA";
+        }
+    };
+
+    // Tambah Manual Logic
     document.getElementById('btnBukaTambah').onclick = () => {
         document.getElementById('addTgl').value = new Date().toISOString().substring(0, 10);
         document.getElementById('modalTambah').style.display = 'flex';
     };
-    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
     document.getElementById('btnSimpanManual').onclick = async function() {
         const data = {
@@ -149,18 +204,20 @@
             tujuan: document.getElementById('addTujuan').value,
             kategori: document.getElementById('addKategori').value,
             komisi: document.getElementById('addNominal').value,
-            type: "manual", // PENANDA AGAR TIDAK MASUK MANIFES
+            type: "manual",
             createdAt: new Date()
         };
-        if(!data.nama || !data.komisi) return alert("Isi Nama & Nominal!");
-        this.disabled = true; this.innerText = "...";
+        if(!data.nama || !data.komisi) return alert("Harap isi Nama dan Nominal!");
+        this.disabled = true; this.innerText = "MEMPROSES...";
         try {
             await addDoc(collection(db, "bookings"), data);
             closeModal('modalTambah');
             fetchKomisi(filterBulan.value);
         } catch (e) { alert(e.message); }
-        this.disabled = false; this.innerText = "SIMPAN";
+        this.disabled = false; this.innerText = "SIMPAN DATA";
     };
+
+    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 </script>
 </body>
 </html>
