@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Resi Mahika Trans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="index.css"> </head>
+<body>
+
+<div id="loading-screen">
+    <i class="fas fa-box fa-spin fa-3x" style="color:#065084"></i>
+    <p>Memvalidasi Resi...</p>
+</div>
+
+<div id="main-content" class="etiket-container hidden">
+    <div class="etiket-header">
+        <div class="header-logo-box"><img src="../logo.png" alt="Mahika Trans"></div>
+        <div class="kode-booking-card" style="background: #065084; color: #FFD700;">
+            <span id="noResi">------</span>
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <div class="kolom">
+            <p><label style="font-size: 8px; display: block; color: #999;">PENGIRIM</label> <strong><span id="pengirim">-</span></strong></p>
+            <p><label style="font-size: 8px; display: block; color: #999;">PENERIMA</label> <strong><span id="penerima">-</span></strong></p>
+            <p><i class="fas fa-map-marker-alt"></i> <span id="tujuan">-</span></p>
+            <p><i class="fas fa-bus"></i> <span id="armada">-</span></p> 
+        </div>
+        <div class="kolom">
+            <p><i class="fas fa-box"></i> <span id="barang">-</span></p>
+            <p><i class="fas fa-weight-hanging"></i> <span id="berat">-</span></p>
+            <p><i class="fas fa-calendar-alt"></i> <span id="tgl">-</span></p>
+            <p><i class="fa-solid fa-rupiah-sign"></i> <span id="harga">0</span></p>
+        </div>
+    </div>
+
+    <div class="tear-line"></div>
+
+    <div class="barcode-section">
+        <div class="qr-card">
+            <img id="qrImg" alt="QR Code">
+        </div>
+        <p class="thanks">Paket Anda akan segera kami kirimkan dengan aman sampai tujuan.</p>
+    </div>
+
+    <div class="keterangan-box">
+        <p><strong>Syarat & Ketentuan:</strong></p>
+        <ul style="font-size: 10px;">
+            <li>Barang dilarang berupa zat cair berbahaya atau narkotika</li>
+            <li>Kerusakan akibat packing yang tidak standar diluar tanggung jawab kami</li>
+            <li>Klaim kehilangan maksimal 1x24 jam setelah barang sampai</li>
+        </ul>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        let id = params.get("id");
+        if(!id) return;
+        
+        try {
+            const docSnap = await getDoc(doc(db, "packages", id));
+            if(docSnap.exists()){
+                const d = docSnap.data();
+                document.getElementById("noResi").innerText = id;
+                document.getElementById("pengirim").innerText = d.pengirim || "-";
+                document.getElementById("penerima").innerText = d.penerima || "-";
+                document.getElementById("armada").innerText = d.armada || "-";
+                document.getElementById("tujuan").innerText = d.tujuan || "-";
+                document.getElementById("barang").innerText = d.barang || "-";
+                document.getElementById("berat").innerText = d.berat || "-";
+                document.getElementById("harga").innerText = d.harga ? Number(d.harga).toLocaleString("id-ID") : "0";
+                
+                const rawDate = d.tgl;
+                if (rawDate) {
+                    const parts = rawDate.split("-");
+                    const dt = new Date(parts[0], parts[1]-1, parts[2]);
+                    document.getElementById("tgl").innerText = dt.toLocaleDateString("id-ID", {day:"2-digit", month:"short", year:"numeric"});
+                }
+                document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
+                document.getElementById("loading-screen").style.display = "none";
+                document.getElementById("main-content").classList.remove("hidden");
+            } else {
+                alert("Resi tidak ditemukan!");
+            }
+        } catch (e) { console.error(e); }
+    }
+    init();
+</script>
+</body>
+</html>
