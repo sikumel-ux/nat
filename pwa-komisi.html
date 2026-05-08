@@ -3,234 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Komisi | Mahika Trans</title>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#065084">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Laporan Komisi | Mahika Trans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-blue: #065084; --bg-darker: #043a60; --white: #ffffff; --gold: #FFD700; }
-        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; color: #333; min-height: 100vh; overflow-x: hidden; }
-        
-        .header-komisi { 
-            background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); 
-            padding: 50px 25px 90px 25px; 
-            border-radius: 0 0 50px 50px; 
-            box-shadow: 0 15px 30px rgba(4, 58, 96, 0.3);
-            text-align: center;
+        :root { 
+            --primary-blue: #065084; 
+            --bg-darker: #043a60; 
+            --gold: #FFD700; 
+            --white-gading: #fffdf5;
+            --orange-paket: #e67e22;
         }
-        .header-komisi span { color: white; opacity: 0.8; font-size: 12px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
-        .header-komisi h1 { color: var(--gold); font-weight: 800; font-size: 34px; margin-top: 5px; }
-
-        .content-komisi { margin-top: -50px; padding: 0 20px 120px; position: relative; z-index: 10; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; color: #333; }
         
-        .filter-bulan { background: white; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; }
-        .filter-bulan select { border: none; font-weight: 700; color: var(--primary-blue); outline: none; background: transparent; cursor: pointer; font-size: 14px; }
-
-        .card-komisi { background: white; border-radius: 22px; padding: 18px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); position: relative; }
-        .pax-circle { width: 45px; height: 45px; background: #e0f2fe; color: var(--primary-blue); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-right: 15px; font-size: 14px; }
-        .info-komisi { flex: 1; }
-        .info-komisi b { font-size: 14px; color: #333; display: block; text-transform: uppercase; padding-right: 25px; }
-        .info-komisi small { font-size: 11px; color: #999; font-weight: 500; }
-        .amount-komisi { font-weight: 700; color: #10b981; font-size: 15px; }
+        .header { background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); padding: 40px 20px 60px; border-radius: 0 0 40px 40px; color: white; text-align: center; }
+        .header h2 { margin: 0; font-size: 20px; color: var(--gold); letter-spacing: 1px; }
         
-        .btn-delete { position: absolute; top: 18px; right: 15px; color: #ef4444; opacity: 0.3; font-size: 14px; padding: 5px; }
-        .btn-delete:active { opacity: 1; transform: scale(1.2); }
+        .filter-section { margin: -30px 20px 20px; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .filter-section label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
+        .filter-section input { width: 100%; border: 1.5px solid #f0f0f0; padding: 12px 15px; border-radius: 15px; font-family: 'Poppins'; font-size: 14px; box-sizing: border-box; outline: none; background: #f9f9f9; }
 
-        .fab-add { position: fixed; bottom: 100px; right: 25px; width: 65px; height: 65px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 10px 25px rgba(6, 80, 132, 0.4); z-index: 90; cursor: pointer; transition: 0.3s; }
+        .summary-card { margin: 0 20px 25px; background: var(--primary-blue); color: white; padding: 25px; border-radius: 25px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; }
+        .summary-info h3 { margin: 0; font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
+        .summary-info p { margin: 5px 0 0; font-size: 26px; font-weight: 700; color: var(--gold); }
+        .summary-card i { font-size: 35px; color: var(--gold); opacity: 0.3; }
 
-        #bottomSheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-radius: 35px 35px 0 0; padding: 35px 25px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; box-shadow: 0 -10px 50px rgba(0,0,0,0.3); }
-        #bottomSheet.active { bottom: 0; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 999; backdrop-filter: blur(4px); }
-        .overlay.active { display: block; }
+        .list-container { padding: 0 20px; }
+        .list-header { font-size: 12px; font-weight: 700; color: #555; margin-bottom: 15px; padding-left: 5px; display: flex; justify-content: space-between; }
+        
+        .item-komisi { background: white; padding: 18px; border-radius: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.02); border-left: 4px solid var(--primary-blue); cursor: pointer; }
+        .item-left h4 { margin: 0; font-size: 14px; color: #333; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .item-left p { margin: 4px 0 0; font-size: 11px; color: #888; }
+        .item-right { text-align: right; }
+        .amount { display: block; font-weight: 700; color: #27ae60; font-size: 15px; }
+        .edit-label { font-size: 9px; color: var(--primary-blue); font-weight: 700; text-transform: uppercase; }
 
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.98); display: flex; justify-content: space-around; padding: 15px 0; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 100; }
-        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; font-weight: 600; flex: 1; }
-        .nav-bottom a i { font-size: 20px; margin-bottom: 4px; display: block; }
+        /* Modal Style */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 30px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-content h3 { margin-top: 0; font-size: 18px; color: var(--primary-blue); margin-bottom: 20px; }
+        .modal-field { margin-bottom: 15px; }
+        .modal-field label { display: block; font-size: 11px; font-weight: 700; color: #999; margin-bottom: 6px; }
+        .modal-field input, .modal-field select { width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 12px; font-family: 'Poppins'; outline: none; box-sizing: border-box; font-size: 14px; background: #f9f9f9; }
+        
+        .btn-update { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 700; cursor: pointer; font-family: 'Poppins'; margin-top: 10px; }
+        .btn-close { position: absolute; top: 20px; right: 20px; color: #ccc; border: none; background: none; font-size: 20px; cursor: pointer; }
+
+        /* Floating Button */
+        .fab-add { position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; background: var(--gold); color: var(--primary-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 90; border: none; cursor: pointer; }
+
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 100; }
+        .nav-bottom a { text-decoration: none; color: #bbb; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .nav-bottom a.active { color: var(--primary-blue); }
+        .nav-bottom i { font-size: 20px; }
+        
+        /* Icon box style */
+        .icon-box { background: #fff4e5; color: var(--orange-paket); padding: 4px; border-radius: 6px; font-size: 10px; }
+        .icon-user { background: #e5f1ff; color: var(--primary-blue); padding: 4px; border-radius: 6px; font-size: 10px; }
     </style>
 </head>
 <body>
 
-<div class="header-komisi">
-    <span>Estimasi Komisi</span>
-    <h1 id="totalKomisi">Rp 0</h1>
+<div class="header">
+    <h2 id="judulBulan">LAPORAN KOMISI</h2>
+    <p>Mahika Trans Management</p>
 </div>
 
-<div class="content-komisi">
-    <div class="filter-bulan">
-        <span class="text-xs font-bold text-gray-400">FILTER BULAN</span>
-        <select id="selectBulan" onchange="loadKomisi()">
-            <option value="2026-01">Januari 2026</option>
-            <option value="2026-02">Februari 2026</option>
-            <option value="2025-12">Desember 2025</option>
-        </select>
-    </div>
+<div class="filter-section">
+    <label>Pilih Periode</label>
+    <input type="month" id="filterBulan">
+</div>
 
-    <div id="listKomisi">
-        <p class="text-center text-gray-400 mt-10">Memuat data...</p>
+<div class="summary-card">
+    <div class="summary-info">
+        <h3 id="txtPeriode">Komisi Bulan Ini</h3>
+        <p id="totalNominal">Rp 0</p>
+    </div>
+    <i class="fas fa-wallet"></i>
+</div>
+
+<div class="list-container">
+    <div class="list-header">
+        <span>Riwayat Komisi</span>
+        <span id="countData">0 Data</span>
+    </div>
+    <div id="listKomisi"></div>
+</div>
+
+<button class="fab-add" id="btnBukaTambah">
+    <i class="fas fa-plus"></i>
+</button>
+
+<div id="modalTambah" class="modal">
+    <div class="modal-content">
+        <button class="btn-close" onclick="closeModal('modalTambah')">&times;</button>
+        <h3>Tambah Komisi</h3>
+        <div class="modal-field">
+            <label>Tanggal</label>
+            <input type="date" id="addTgl">
+        </div>
+        <div class="modal-field">
+            <label>Nama / Keterangan</label>
+            <input type="text" id="addNama" placeholder="Nama penumpang / paket">
+        </div>
+        <div class="modal-field">
+            <label>Tujuan</label>
+            <input type="text" id="addTujuan" placeholder="Contoh: Yogyakarta">
+        </div>
+        <div class="modal-field">
+            <label>Kategori</label>
+            <select id="addKategori">
+                <option value="penumpang">Penumpang</option>
+                <option value="paket">Paket (Barang)</option>
+            </select>
+        </div>
+        <div class="modal-field">
+            <label>Nominal Komisi (Rp)</label>
+            <input type="number" id="addKomisi" placeholder="0">
+        </div>
+        <button id="btnSimpanManual" class="btn-update">SIMPAN DATA</button>
     </div>
 </div>
 
-<div class="fab-add" onclick="toggleForm(true)"><i class="fas fa-plus"></i></div>
-<div class="overlay" id="overlay" onclick="toggleForm(false)"></div>
-
-<div id="bottomSheet">
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h3 class="text-xl font-bold text-[#065084]">Tambah Komisi</h3>
-            <p class="text-[10px] text-gray-400">Input data pendapatan baru</p>
+<div id="modalEdit" class="modal">
+    <div class="modal-content">
+        <button class="btn-close" onclick="closeModal('modalEdit')">&times;</button>
+        <h3>Update Komisi</h3>
+        <div class="modal-field">
+            <label id="labelNamaEdit">Nama: -</label>
+            <input type="number" id="inputKomisiEdit">
         </div>
-        <div class="bg-gray-100 w-10 h-10 rounded-full flex items-center justify-center" onclick="toggleForm(false)">
-            <i class="fas fa-times text-gray-400"></i>
-        </div>
-    </div>
-    <div class="space-y-4">
-        <div>
-            <label class="text-[10px] font-bold ml-2 text-gray-400">TANGGAL</label>
-            <input type="date" id="k-tgl" class="w-full p-4 bg-gray-50 rounded-2xl outline-none text-sm border border-gray-100">
-        </div>
-        <div>
-            <label class="text-[10px] font-bold ml-2 text-gray-400">KETERANGAN / NAMA</label>
-            <input type="text" id="k-nama" placeholder="Contoh: Bpk. Ahmad (Carter)" class="w-full p-4 bg-gray-50 rounded-2xl outline-none text-sm border border-gray-100">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-            <div>
-                <label class="text-[10px] font-bold ml-2 text-gray-400">PAX</label>
-                <input type="number" id="k-pax" placeholder="0" class="w-full p-4 bg-gray-50 rounded-2xl outline-none text-sm border border-gray-100">
-            </div>
-            <div>
-                <label class="text-[10px] font-bold ml-2 text-gray-400">KOMISI (RP)</label>
-                <input type="number" id="k-rp" placeholder="50000" class="w-full p-4 bg-gray-50 rounded-2xl outline-none text-sm border border-gray-100">
-            </div>
-        </div>
-        <button id="btnSaveKomisi" class="w-full bg-[#065084] text-white font-bold py-5 rounded-2xl shadow-lg mt-6 active:scale-95 transition-all">
-            SIMPAN DATA KOMISI
-        </button>
+        <button id="btnUpdateData" class="btn-update">SIMPAN PERUBAHAN</button>
     </div>
 </div>
 
 <div class="nav-bottom">
-    <a href="pwa-dash.html"><i class="fas fa-house"></i>Home</a>
-    <a href="pwa-inputnya.html"><i class="fas fa-circle-plus"></i>Booking</a>
-    <a href="pwa-manifes.html"><i class="fas fa-clipboard-list"></i>Manifes</a>
-<a href="pwa-komisi.html" class="active"><i class="fas fa-wallet"></i>Komisi</a>
-<a href="input-rute.html" ><i class="fas fa-route"></i>Rute</a>
-    <a href="logout.html" id="logoutBtn"><i class="fas fa-power-off"></i>Logout</a>
+    <a href="pwa-home.html"><i class="fas fa-house"></i>Home</a>
+    <a href="pwa-order.html"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="pwa-kmsi.html" class="active"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="logout.html" id="logoutBtn" style="color: #ef4444;"><i class="fas fa-power-off"></i>Off</a>
 </div>
-        
-  
-
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, getDocs, orderBy, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    
-    const firebaseConfig = { apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", authDomain: "mahika-trans.firebaseapp.com", projectId: "mahika-trans", storageBucket: "mahika-trans.firebasestorage.app", messagingSenderId: "1087881066133", appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" };
+    import { getFirestore, collection, query, where, getDocs, orderBy, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
+        authDomain: "mahika-trans.firebaseapp.com", 
+        projectId: "mahika-trans", 
+        storageBucket: "mahika-trans.firebasestorage.app", 
+        appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
+    };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    window.toggleForm = (show) => {
-        document.getElementById('bottomSheet').classList.toggle('active', show);
-        document.getElementById('overlay').classList.toggle('active', show);
-    };
-
-    // FUNGSI HAPUS DATA
-    window.hapusKomisi = async (id, nama) => {
-        if (confirm(`Hapus data komisi "${nama}"?`)) {
-            try {
-                await deleteDoc(doc(db, "komisi", id));
-                window.loadKomisi(); // Reload list
-            } catch (e) {
-                alert("Gagal hapus: " + e.message);
-            }
-        }
-    };
-
-    window.loadKomisi = async () => {
-        const listDiv = document.getElementById('listKomisi');
-        const filterVal = document.getElementById('selectBulan').value;
-        
-        try {
-            const q = query(collection(db, "komisi"), orderBy("tgl", "desc"));
-            const snap = await getDocs(q);
-            
-            listDiv.innerHTML = "";
-            let total = 0;
-            let count = 0;
-
-            snap.forEach(docSnap => {
-                const d = docSnap.data();
-                const id = docSnap.id;
-                if (d.bulan === filterVal) {
-                    count++;
-                    total += parseInt(d.komisi);
-                    listDiv.innerHTML += `
-                        <div class="card-komisi">
-                            <div class="pax-circle">${d.pax || 0}</div>
-                            <div class="info-komisi">
-                                <b>${d.nama}</b>
-                                <small><i class="far fa-calendar-alt mr-1"></i>${d.tgl}</small>
-                            </div>
-                            <div class="amount-komisi">Rp ${parseInt(d.komisi).toLocaleString('id-ID')}</div>
-                            <div class="btn-delete" onclick="hapusKomisi('${id}', '${d.nama}')">
-                                <i class="fas fa-trash-can"></i>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-
-            document.getElementById('totalKomisi').innerText = "Rp " + total.toLocaleString('id-ID');
-            if (count === 0) {
-                listDiv.innerHTML = `<div class="text-center mt-10"><i class="fas fa-folder-open text-gray-200 text-5xl mb-3"></i><p class="text-gray-400 text-sm italic">Kosong, Bro.</p></div>`;
-            }
-        } catch (e) {
-            listDiv.innerHTML = "<p class='text-center text-red-500 mt-10'>Koneksi Error.</p>";
-        }
-    };
-
-    document.getElementById('btnSaveKomisi').onclick = async () => {
-        const btn = document.getElementById('btnSaveKomisi');
-        const tgl = document.getElementById('k-tgl').value;
-        const nama = document.getElementById('k-nama').value;
-        const pax = document.getElementById('k-pax').value;
-        const rp = document.getElementById('k-rp').value;
-
-        if(!tgl || !nama || !rp) return alert("Isi semua dulu!");
-
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>';
-
-        try {
-            await addDoc(collection(db, "komisi"), {
-                tgl: tgl, bulan: tgl.substring(0, 7), nama: nama, pax: pax || 0, komisi: rp, createdAt: serverTimestamp()
-            });
-            toggleForm(false);
-            window.loadKomisi();
-            document.getElementById('k-nama').value = ""; document.getElementById('k-pax').value = ""; document.getElementById('k-rp').value = "";
-            btn.disabled = false; btn.innerText = "SIMPAN DATA KOMISI";
-        } catch (e) {
-            alert("Gagal: " + e.message);
-            btn.disabled = false;
-        }
-    };
-
-    window.onload = loadKomisi;
-</script>
-    <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('PWA Ready!', reg))
-        .catch(err => console.log('PWA Failed', err));
-    });
-  }
-    </script>
+    const filterBulan = document.getElementById('filterBulan');
+    const listKomisi = document.getElementById('listKomisi');
+    const totalNominal = document.getElementById('totalNominal');
+    const countData = document.getElementById('countData');
+    const txtPeriode = document.getElementById('txtPeriode');
     
+    let currentEditId = null;
+
+    // Format Tanggal
+    function formatTglIndo(tglSql) {
+        if(!tglSql) return "-";
+        const [y, m, d] = tglSql.split('-');
+        return `${d}-${m}-${y}`;
+    }
+
+    function formatBulanIndo(valMonth) {
+        const [y, m] = valMonth.split('-');
+        const namaBulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return `${namaBulan[parseInt(m)]} ${y}`;
+    }
+
+    // Init Date
+    const now = new Date();
+    filterBulan.value = now.toISOString().substring(0, 7);
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) { fetchKomisi(filterBulan.value); } 
+        else { location.href = "login.html"; }
+    });
+
+    filterBulan.onchange = () => fetchKomisi(filterBulan.value);
+
+    // Ambil Data
+    async function fetchKomisi(bulan) {
+        listKomisi.innerHTML = '<div style="text-align:center; padding:20px; font-size:12px; color:#999;">Memuat data...</div>';
+        txtPeriode.innerText = "Total " + formatBulanIndo(bulan);
+        let total = 0;
+        let count = 0;
+
+        try {
+            const q = query(
+                collection(db, "bookings"),
+                where("tgl", ">=", bulan + "-01"),
+                where("tgl", "<=", bulan + "-31"),
+                orderBy("tgl", "desc")
+            );
+
+            const querySnapshot = await getDocs(q);
+            listKomisi.innerHTML = "";
+
+            if (querySnapshot.empty) {
+                listKomisi.innerHTML = '<div style="text-align:center; padding:40px; color:#ccc; font-size:13px;">Belum ada komisi di bulan ini.</div>';
+                totalNominal.innerText = "Rp 0";
+                countData.innerText = "0 Data";
+                return;
+            }
+
+            querySnapshot.forEach((docSnap) => {
+                const item = docSnap.data();
+                const nominal = parseInt(item.komisi) || 0;
+                total += nominal;
+                count++;
+
+                // Logika Icon Box
+                const isPaket = item.kategori === 'paket';
+                const iconHtml = isPaket 
+                    ? `<span class="icon-box"><i class="fas fa-box"></i></span>` 
+                    : `<span class="icon-user"><i class="fas fa-user"></i></span>`;
+
+                const div = document.createElement('div');
+                div.className = 'item-komisi';
+                div.onclick = () => openEdit(docSnap.id, item.nama, nominal);
+                div.innerHTML = `
+                    <div class="item-left">
+                        <h4>${item.nama} ${iconHtml}</h4>
+                        <p>${formatTglIndo(item.tgl)} • ${item.tujuan || 'Tanpa Tujuan'}</p>
+                    </div>
+                    <div class="item-right">
+                        <span class="amount">Rp ${nominal.toLocaleString('id-ID')}</span>
+                        <span class="edit-label"><i class="fas fa-pen"></i> Edit</span>
+                    </div>
+                `;
+                listKomisi.appendChild(div);
+            });
+
+            totalNominal.innerText = "Rp " + total.toLocaleString('id-ID');
+            countData.innerText = count + " Data";
+
+        } catch (err) {
+            console.error(err);
+            listKomisi.innerHTML = '<div style="color:red; text-align:center; padding:20px;">Gagal memuat data.</div>';
+        }
+    }
+
+    // Modal Controls
+    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+    // Edit Komisi
+    window.openEdit = (id, nama, komisiLama) => {
+        currentEditId = id;
+        document.getElementById('labelNamaEdit').innerText = "Nama: " + nama;
+        document.getElementById('inputKomisiEdit').value = komisiLama;
+        document.getElementById('modalEdit').style.display = 'flex';
+    };
+
+    document.getElementById('btnUpdateData').onclick = async function() {
+        const newKomisi = document.getElementById('inputKomisiEdit').value;
+        this.innerText = "PROSES...";
+        try {
+            await updateDoc(doc(db, "bookings", currentEditId), { komisi: newKomisi });
+            closeModal('modalEdit');
+            fetchKomisi(filterBulan.value);
+        } catch (e) { alert("Gagal: " + e.message); }
+        this.innerText = "SIMPAN PERUBAHAN";
+    };
+
+    // Tambah Manual
+    document.getElementById('btnBukaTambah').onclick = () => {
+        document.getElementById('addTgl').value = new Date().toISOString().substring(0, 10);
+        document.getElementById('modalTambah').style.display = 'flex';
+    };
+
+    document.getElementById('btnSimpanManual').onclick = async function() {
+        const data = {
+            tgl: document.getElementById('addTgl').value,
+            nama: document.getElementById('addNama').value,
+            tujuan: document.getElementById('addTujuan').value,
+            kategori: document.getElementById('addKategori').value,
+            komisi: document.getElementById('addKomisi').value,
+            createdAt: new Date()
+        };
+
+        if(!data.nama || !data.komisi) return alert("Lengkapi nama & nominal!");
+
+        this.innerText = "MENYIMPAN...";
+        this.disabled = true;
+
+        try {
+            await addDoc(collection(db, "bookings"), data);
+            closeModal('modalTambah');
+            fetchKomisi(filterBulan.value);
+            // Reset
+            document.getElementById('addNama').value = "";
+            document.getElementById('addKomisi').value = "";
+            document.getElementById('addTujuan').value = "";
+        } catch (e) { alert("Error: " + e.message); }
+        finally {
+            this.innerText = "SIMPAN DATA";
+            this.disabled = false;
+        }
+    };
+
+    document.getElementById('logoutBtn').onclick = (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => location.href = "login.html");
+    }
+</script>
+
 </body>
 </html>
