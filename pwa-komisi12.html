@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Komisi | Mahika Trans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; --orange-paket: #e67e22; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 100px; color: #333; }
+        .header { background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); padding: 40px 20px 60px; border-radius: 0 0 40px 40px; color: white; text-align: center; }
+        .header h2 { margin: 0; font-size: 20px; color: var(--gold); letter-spacing: 1px; }
+        .filter-section { margin: -30px 20px 20px; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .filter-section label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 8px; }
+        .filter-section input { width: 100%; border: 1.5px solid #f0f0f0; padding: 12px 15px; border-radius: 15px; font-family: 'Poppins'; outline: none; background: #f9f9f9; box-sizing: border-box; }
+        .summary-card { margin: 0 20px 25px; background: var(--primary-blue); color: white; padding: 25px; border-radius: 25px; display: flex; align-items: center; justify-content: space-between; }
+        .summary-info p { margin: 5px 0 0; font-size: 26px; font-weight: 700; color: var(--gold); }
+        .list-container { padding: 0 20px; }
+        .list-header { font-size: 12px; font-weight: 700; color: #555; margin-bottom: 15px; display: flex; justify-content: space-between; }
+        .item-komisi { background: white; padding: 18px; border-radius: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.02); border-left: 4px solid var(--primary-blue); cursor: pointer; }
+        .item-left h4 { margin: 0; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .item-left p { margin: 4px 0 0; font-size: 11px; color: #888; }
+        .amount { font-weight: 700; color: #27ae60; font-size: 15px; display: block; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 30px; position: relative; max-height: 85vh; overflow-y: auto; }
+        .modal-field { margin-bottom: 15px; }
+        .modal-field label { display: block; font-size: 11px; font-weight: 700; color: #999; margin-bottom: 5px; }
+        .modal-field input, .modal-field select { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 12px; font-family: 'Poppins'; box-sizing: border-box; }
+        .btn-update { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 700; cursor: pointer; }
+        .fab-add { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background: var(--gold); color: var(--primary-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: none; z-index: 99; }
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        .nav-bottom a { text-decoration: none; color: #bbb; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .nav-bottom a.active { color: var(--primary-blue); }
+        .icon-tag { font-size: 10px; padding: 3px 6px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>LAPORAN KOMISI</h2>
+    <p style="font-size: 12px; opacity: 0.8;">Mahika Trans Management</p>
+</div>
+
+<div class="filter-section">
+    <label>Periode Laporan</label>
+    <input type="month" id="filterBulan">
+</div>
+
+<div class="summary-card">
+    <div class="summary-info">
+        <h3 id="txtPeriode" style="font-size: 11px; margin:0; opacity:0.8;">Total Bulan Ini</h3>
+        <p id="totalNominal">Rp 0</p>
+    </div>
+    <i class="fas fa-wallet" style="font-size: 30px; opacity:0.3;"></i>
+</div>
+
+<div class="list-container">
+    <div class="list-header">
+        <span>Riwayat</span>
+        <span id="countData">0 Data</span>
+    </div>
+    <div id="listKomisi"></div>
+</div>
+
+<button class="fab-add" id="btnBukaTambah"><i class="fas fa-plus"></i></button>
+
+<div id="modalTambah" class="modal">
+    <div class="modal-content">
+        <button onclick="closeModal('modalTambah')" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:20px; color:#ccc;">&times;</button>
+        <h3 style="color:var(--primary-blue); margin-top:0;">Input Komisi</h3>
+        <div class="modal-field"><label>Tanggal</label><input type="date" id="addTgl"></div>
+        <div class="modal-field"><label>Nama/Keterangan</label><input type="text" id="addNama" placeholder="Contoh: Paket Cargo"></div>
+        <div class="modal-field"><label>Tujuan</label><input type="text" id="addTujuan" placeholder="Contoh: Semarang"></div>
+        <div class="modal-field"><label>Kategori</label>
+            <select id="addKategori">
+                <option value="penumpang">Penumpang</option>
+                <option value="paket">Paket (Barang)</option>
+            </select>
+        </div>
+        <div class="modal-field"><label>Nominal (Rp)</label><input type="number" id="addNominal" placeholder="0"></div>
+        <button id="btnSimpanManual" class="btn-update">SIMPAN</button>
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="pwa-home.html"><i class="fas fa-house"></i>Home</a>
+    <a href="pwa-order.html"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="pwa-kmsi.html" class="active"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="logout.html" style="color:#ef4444;"><i class="fas fa-power-off"></i>Off</a>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, orderBy, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = { apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", authDomain: "mahika-trans.firebaseapp.com", projectId: "mahika-trans", storageBucket: "mahika-trans.firebasestorage.app", appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const filterBulan = document.getElementById('filterBulan');
+    const listKomisi = document.getElementById('listKomisi');
+    const totalNominal = document.getElementById('totalNominal');
+    
+    filterBulan.value = new Date().toISOString().substring(0, 7);
+
+    onAuthStateChanged(auth, (user) => { if (user) fetchKomisi(filterBulan.value); else location.href="login.html"; });
+    filterBulan.onchange = () => fetchKomisi(filterBulan.value);
+
+    async function fetchKomisi(bulan) {
+        listKomisi.innerHTML = '<p style="text-align:center; font-size:12px; color:#999;">Loading...</p>';
+        let total = 0; let count = 0;
+        try {
+            const q = query(collection(db, "bookings"), where("tgl", ">=", bulan + "-01"), where("tgl", "<=", bulan + "-31"), orderBy("tgl", "desc"));
+            const snap = await getDocs(q);
+            listKomisi.innerHTML = "";
+            snap.forEach(docSnap => {
+                const item = docSnap.data();
+                const nominal = parseInt(item.komisi) || 0;
+                total += nominal; count++;
+                const isPaket = item.kategori === 'paket';
+                listKomisi.innerHTML += `
+                    <div class="item-komisi">
+                        <div class="item-left">
+                            <h4>${item.nama} <i class="fas ${isPaket?'fa-box':'fa-user'}" style="font-size:10px; color:${isPaket?'#e67e22':'#065084'}; opacity:0.6;"></i></h4>
+                            <p>${item.tgl} • ${item.tujuan || '-'}</p>
+                        </div>
+                        <div class="item-right"><span class="amount">Rp ${nominal.toLocaleString('id-ID')}</span></div>
+                    </div>`;
+            });
+            totalNominal.innerText = "Rp " + total.toLocaleString('id-ID');
+            document.getElementById('countData').innerText = count + " Data";
+        } catch (e) { listKomisi.innerHTML = "Gagal memuat."; }
+    }
+
+    document.getElementById('btnBukaTambah').onclick = () => {
+        document.getElementById('addTgl').value = new Date().toISOString().substring(0, 10);
+        document.getElementById('modalTambah').style.display = 'flex';
+    };
+    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+    document.getElementById('btnSimpanManual').onclick = async function() {
+        const data = {
+            tgl: document.getElementById('addTgl').value,
+            nama: document.getElementById('addNama').value,
+            tujuan: document.getElementById('addTujuan').value,
+            kategori: document.getElementById('addKategori').value,
+            komisi: document.getElementById('addNominal').value,
+            type: "manual", // PENANDA AGAR TIDAK MASUK MANIFES
+            createdAt: new Date()
+        };
+        if(!data.nama || !data.komisi) return alert("Isi Nama & Nominal!");
+        this.disabled = true; this.innerText = "...";
+        try {
+            await addDoc(collection(db, "bookings"), data);
+            closeModal('modalTambah');
+            fetchKomisi(filterBulan.value);
+        } catch (e) { alert(e.message); }
+        this.disabled = false; this.innerText = "SIMPAN";
+    };
+</script>
+</body>
+</html>
