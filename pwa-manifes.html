@@ -6,6 +6,7 @@
     <title>Manifes | Mahika Trans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="nav.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
@@ -18,9 +19,7 @@
         .info-pax b { font-size: 14px; color: var(--primary-blue); display: block; text-transform: uppercase; }
         .info-pax span { font-size: 11px; color: #666; }
         .seat-badge { background: var(--bg-darker); color: var(--gold); padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 800; min-width: 35px; text-align: center; }
-        .nav-bottom { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        .nav-bottom a { text-decoration: none; color: #aaa; text-align: center; font-size: 10px; flex: 1; }
-        .nav-bottom a.active { color: var(--primary-blue); }
+        
     </style>
 </head>
 <body>
@@ -36,10 +35,13 @@
 </div>
 
 <div class="nav-bottom">
-    <a href="pwa-home.html"><i class="fas fa-house block text-xl mb-1"></i>Home</a>
-    <a href="pwa-order.html"><i class="fas fa-plus-circle block text-xl mb-1"></i>Booking</a>
-    <a href="pwa-manifes.html" class="active"><i class="fas fa-list block text-xl mb-1"></i>Manifes</a>
-    <a href="pwa-kmsi.html"><i class="fas fa-wallet block text-xl mb-1"></i>Komisi</a>
+    <a href="pwa-home.html" class="active"><i class="fas fa-house"></i>Home</a>
+    <a href="pwa-order.html"><i class="fas fa-plus-circle"></i>Booking</a>
+    <a href="pwa-paket.html"><i class="fa fa-box"></i>Paket</a>
+    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
+    <a href="pwa-komisi.html"><i class="fas fa-wallet"></i>Komisi</a>
+    <a href="input-rute.html"><i class="fas fa-route"></i>Rute</a>
+    <a href="#" id="logoutBtn" style="color: #ef4444;"><i class="fas fa-power-off"></i>Off</a>
 </div>
 
 <script type="module">
