@@ -4,191 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Paket | Mahika Trans</title>
-    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="nav.css">
-    <meta name="theme-color" content="#065084">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary-blue: #065084; 
-            --bg-darker: #043a60; 
-            --gold: #FFD700; 
-            --white-gading: #fffdf5;
-        }
-        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 120px; color: #333; }
-        
+        :root { --primary-blue: #065084; --bg-darker: #043a60; --gold: #FFD700; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding-bottom: 120px; }
         .header-curvy { background: linear-gradient(135deg, var(--bg-darker), var(--primary-blue)); padding: 50px 25px 80px 25px; border-radius: 0 0 50px 50px; text-align: center; }
-        .header-curvy h2 { color: var(--gold); font-weight: 700; font-size: 24px; margin: 0; text-transform: uppercase; }
-        .header-curvy p { color: var(--white-gading) !important; font-size: 13px; margin: 0; font-weight: 400; opacity: 0.9; letter-spacing: 0.5px; }
-
-        .form-container { margin-top: -50px; padding: 0 20px; position: relative; z-index: 10; }
+        .header-curvy h2 { color: var(--gold); font-weight: 700; margin: 0; text-transform: uppercase; }
+        .form-container { margin-top: -50px; padding: 0 20px; }
         .card-input { background: white; border-radius: 30px; padding: 30px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid var(--gold); }
-        
-        .group-field { margin-bottom: 18px; }
-        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 6px; }
-        .group-field input { width: 100%; border: 1.5px solid #eee; padding: 14px; border-radius: 15px; font-family: 'Poppins'; font-size: 13px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        .group-field input:focus { border-color: var(--primary-blue); }
-        
-        .row-flex { display: flex; gap: 15px; }
+        .group-field { margin-bottom: 15px; }
+        .group-field label { display: block; font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 5px; }
+        .group-field input { width: 100%; border: 1.5px solid #eee; padding: 12px; border-radius: 12px; font-family: 'Poppins'; box-sizing: border-box; outline: none; }
+        .row-flex { display: flex; gap: 12px; }
         .half { flex: 1; }
-        
-        .btn-save { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 18px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 14px; }
-        .btn-save:active { transform: scale(0.98); }
-
+        .btn-save { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 18px; font-weight: 700; cursor: pointer; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(4, 58, 96, 0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
-        .modal-content { background: white; width: 100%; max-width: 300px; border-radius: 40px; padding: 40px 25px; text-align: center; border-bottom: 8px solid var(--gold); }
-        .icon-check { color: var(--gold); font-size: 70px; margin-bottom: 15px; }
-        .btn-modal { display: block; width: 100%; padding: 16px; border-radius: 15px; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 12px; text-transform: uppercase; box-sizing: border-box; }
-        .btn-wa { background: var(--primary-blue); color: white; }
-        .btn-manifes { background: #f0f4f8; color: #666; }
+        .modal-content { background: white; width: 100%; max-width: 300px; border-radius: 40px; padding: 40px 25px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="header-curvy">
     <h2>MAHIKA TRANS</h2>
-    <p>Input Pengiriman Paket</p>
+    <p style="color: white; font-size: 12px;">Input Pengiriman Paket</p>
 </div>
 
 <div class="form-container">
     <div class="card-input">
-        <div class="group-field"><label>Nama Pengirim</label><input type="text" id="pengirim" placeholder="Nama pengirim"></div>
-        <div class="group-field"><label>No. WhatsApp Pengirim</label><input type="tel" id="whatsapp" placeholder="0812..."></div>
-        
-        <hr style="border: 0; border-top: 1px dashed #eee; margin: 20px 0;">
-
-        <div class="group-field"><label>Nama Penerima</label><input type="text" id="penerima" placeholder="Nama penerima"></div>
-        <div class="group-field"><label>Tujuan & Alamat</label><input type="text" id="tujuan" placeholder="Kota / Alamat Lengkap"></div>
-        
+        <div class="group-field"><label><i class="fas fa-circle-user"></i> Pengirim</label><input type="text" id="pengirim"></div>
+        <div class="group-field"><label><i class="fab fa-whatsapp"></i> No HP Pengirim</label><input type="tel" id="wa_pengirim"></div>
+        <hr style="border:0; border-top:1px dashed #eee; margin:15px 0;">
+        <div class="group-field"><label><i class="fas fa-user"></i> Penerima</label><input type="text" id="penerima"></div>
+        <div class="group-field"><label><i class="fas fa-phone"></i> No HP Penerima</label><input type="tel" id="wa_penerima"></div>
+        <div class="group-field"><label><i class="fas fa-map-marker-alt"></i> Tujuan</label><input type="text" id="tujuan"></div>
+        <div class="group-field"><label><i class="fas fa-boxes"></i> Jumlah Barang</label><input type="text" id="jumlah" placeholder="Contoh: 2 Koli"></div>
         <div class="row-flex">
-            <div class="group-field half"><label>Jenis Barang</label><input type="text" id="barang" placeholder="Contoh: Dokumen"></div>
-            <div class="group-field half"><label>Berat/Koli</label><input type="text" id="berat" placeholder="5kg / 1 Dus"></div>
-        </div>
-        
-        <div class="group-field"><label>Armada</label><input type="text" id="armada" placeholder="Mahika Jaya"></div>
-
-        <div class="row-flex">
-            <div class="group-field half"><label>Ongkir (Rp)</label><input type="number" id="harga" placeholder="50000"></div>
-            <div class="group-field half"><label>Komisi</label><input type="number" id="komisi" placeholder="5000"></div>
-        </div>
-
-        <div class="row-flex">
-            <div class="group-field half"><label>Tanggal Kirim</label><input type="date" id="tgl_only"></div>
-            <div class="group-field half"><label>Jam</label><input type="text" id="jam_only" placeholder="17:30"></div>
+            <div class="group-field half"><label>Tanggal</label><input type="date" id="tgl"></div>
+            <div class="group-field half"><label>Harga</label><input type="number" id="harga"></div>
         </div>
         <button id="btnSimpan" class="btn-save">SIMPAN & KIRIM RESI</button>
     </div>
 </div>
 
-<div class="nav-bottom">
-    <a href="pwa-home.html"><i class="fas fa-house"></i>Home</a>
-    <a href="pwa-order.html" class="active"><i class="fas fa-box"></i>Paket</a>
-    <a href="pwa-manifes.html"><i class="fas fa-list"></i>Manifes</a>
-    <a href="pwa-kmsi.html"><i class="fas fa-wallet"></i>Komisi</a>
-<a href="logout.html" id="logoutBtn" style="color: #ef4444;"><i class="fas fa-power-off"></i>Off</a>
-</div>
-
 <div id="modalSukses" class="modal">
     <div class="modal-content">
-        <i class="fas fa-box-open icon-check"></i>
-        <h3 style="font-weight:700; margin:0; color: var(--primary-blue);">BERHASIL!</h3>
-        <p style="font-size:12px; color:#777; margin-bottom:25px;">Data paket telah tersimpan.</p>
-        <a id="linkWA" href="#" target="_blank" class="btn-modal btn-wa"><i class="fab fa-whatsapp"></i> KIRIM RESI</a>
-        <a href="pwa-manifes.html" class="btn-modal btn-manifes">DAFTAR PAKET</a>
-        <button onclick="location.reload()" style="background:none; border:none; color:var(--primary-blue); font-size:11px; font-weight:600; cursor:pointer; margin-top:10px;">INPUT BARU</button>
+        <i class="fas fa-check-circle" style="color:var(--gold); font-size:60px; margin-bottom:15px;"></i>
+        <h3 style="color: var(--primary-blue); margin: 0;">BERHASIL!</h3>
+        <p style="font-size:12px; color:#777; margin-bottom:20px;">Resi berhasil disimpan.</p>
+        <a id="linkWA" href="#" target="_blank" style="display:block; background:var(--primary-blue); color:white; padding:15px; border-radius:15px; text-decoration:none; font-weight:700;">KIRIM WA</a>
+        <button onclick="location.reload()" style="margin-top:15px; background:none; border:none; color:var(--primary-blue); font-weight:600; cursor:pointer;">INPUT LAGI</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyAmTAWHcHpolaIHegLceyMqExVgzufJzaU", 
         authDomain: "mahika-trans.firebaseapp.com", 
         projectId: "mahika-trans", 
-        storageBucket: "mahika-trans.firebasestorage.app", 
         appId: "1:1087881066133:web:148d51c88f1de3466ecd9c" 
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
 
-    document.getElementById('tgl_only').valueAsDate = new Date();
+    document.getElementById('tgl').valueAsDate = new Date();
 
     document.getElementById('btnSimpan').onclick = async function() {
         const btn = this;
         const vPengirim = document.getElementById('pengirim').value;
-        const vWA = document.getElementById('whatsapp').value;
-        const vPenerima = document.getElementById('penerima').value;
-        const vTujuan = document.getElementById('tujuan').value;
-        const vBarang = document.getElementById('barang').value;
-        const vBerat = document.getElementById('berat').value;
-        const vArmada = document.getElementById('armada').value;
-        const vHarga = document.getElementById('harga').value;
-        const vKomisi = document.getElementById('komisi').value;
-        const vTglRaw = document.getElementById('tgl_only').value;
-        const vJamRaw = document.getElementById('jam_only').value;
+        const vWA = document.getElementById('wa_pengirim').value;
 
-        if(!vPengirim || !vWA || !vPenerima) return alert("Data pengirim & penerima harus diisi!");
-
-        btn.innerText = "SEDANG MENYIMPAN...";
+        if(!vPengirim || !vWA) return alert("Nama & WA Pengirim wajib diisi!");
+        
+        btn.innerText = "PROSES...";
         btn.disabled = true;
 
-        const randomID = "PKG-" + Math.floor(100000 + Math.random() * 900000).toString();
-
+        const randomNumber = Math.floor(100000 + Math.random() * 900000).toString();
+        
         try {
-            // Kita simpan ke koleksi 'packages' agar terpisah dari tiket penumpang
-            await setDoc(doc(db, "packages", randomID), {
-                pengirim: vPengirim, 
-                wa_pengirim: vWA, 
-                penerima: vPenerima,
-                tujuan: vTujuan,
-                barang: vBarang,
-                berat: vBerat,
-                armada: vArmada,
-                harga: vHarga, 
-                komisi: vKomisi,
-                tgl: vTglRaw, 
-                jam: vJamRaw + " WIB",
-                status: "Proses",
+            await setDoc(doc(db, "packages", randomNumber), {
+                pengirim: vPengirim,
+                wa_pengirim: vWA,
+                penerima: document.getElementById('penerima').value,
+                wa_penerima: document.getElementById('wa_penerima').value,
+                tujuan: document.getElementById('tujuan').value,
+                jumlah: document.getElementById('jumlah').value,
+                harga: document.getElementById('harga').value,
+                tgl: document.getElementById('tgl').value,
                 createdAt: serverTimestamp()
             });
 
-            const textWA = `*RESI PENGIRIMAN - MAHIKA TRANS*%0A` +
+            // FORMAT LINK FIX: resi.html?id=
+            const linkResi = `https://go.mahikatrans.my.id/resi.html?id=${randomNumber}`;
+            const textWA = `*RESI MAHIKA TRANS*%0A` +
+                           `No. Resi: *MT-${randomNumber}*%0A` +
+                           `Penerima: ${document.getElementById('penerima').value}%0A` +
                            `----------------------------------------%0A` +
-                           `No. Resi: *${randomID}*%0A` +
-                           `Pengirim: ${vPengirim}%0A` +
-                           `Penerima: ${vPenerima}%0A` +
-                           `Tujuan: ${vTujuan}%0A` +
-                           `Barang: ${vBarang} (${vBerat})%0A` +
-                           `Armada: ${vArmada}%0A` +
+                           `${linkResi}%0A` +
                            `----------------------------------------%0A` +
-                           `Tanggal: ${vTglRaw} | ${vJamRaw} WIB%0A` +
-                           `Total Ongkir: Rp ${Number(vHarga).toLocaleString('id-ID')}%0A` +
-                           `----------------------------------------%0A` +
-                           `Paket akan segera diberangkatkan. Terimakasih telah menggunakan layanan Mahika Trans.`;
+                           `Terimakasih.`;
 
             let formattedWA = vWA.startsWith('0') ? '62' + vWA.substring(1) : vWA;
             document.getElementById('linkWA').href = `https://wa.me/${formattedWA}?text=${textWA}`;
             document.getElementById('modalSukses').style.display = 'flex';
-
-        } catch (e) { 
-            alert("Error: " + e.message); 
-        } finally { 
-            btn.innerText = "SIMPAN & KIRIM RESI"; 
-            btn.disabled = false; 
+        } catch (e) {
+            alert("Error: " + e.message);
+        } finally {
+            btn.innerText = "SIMPAN & KIRIM RESI";
+            btn.disabled = false;
         }
     }
-
-    document.getElementById('logoutBtn').onclick = (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => location.href = "login.html");
-    }
 </script>
-
 </body>
 </html>
